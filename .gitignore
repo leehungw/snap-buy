@@ -1,0 +1,33 @@
+# 🛠 General Xcode & macOS files
+.DS_Store
+*.xcuserstate
+*.xcscmblueprint
+*.xcworkspace/
+*.xccheckout
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# ⚙️ Build & Derived Data
+DerivedData/
+build/
+*.ipa
+*.app
+*.dSYM.zip
+*.dSYM
+
+# 🚀 Swift Package Manager (SPM)
+.swiftpm/
+Package.resolved
+SourcePackages/
+SourcePackages/checkouts/
+SourcePackages/artifacts/
+
+# 🔑 Keychain
+*.keychain
+*.keychain-db
+
+# 🗑️ Thùng rác
+*.swp
+*.swo
+
