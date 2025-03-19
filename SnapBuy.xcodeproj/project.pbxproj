@@ -6,34 +6,181 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXFileReference section */
-		DA6A84AB2D809E7700454EEF /* SnapBuy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapBuy.app; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
+/* Begin PBXBuildFile section */
+		0AA7A0082D8A638C00EB5684 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA79FFD2D8A638C00EB5684 /* ContentView.swift */; };
+		0AA7A0092D8A638C00EB5684 /* SnapBuyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A0012D8A638C00EB5684 /* SnapBuyApp.swift */; };
+		0AA7A00A2D8A638C00EB5684 /* SBAppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A0032D8A638C00EB5684 /* SBAppConstants.swift */; };
+		0AA7A00B2D8A638C00EB5684 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AA79FF72D8A638C00EB5684 /* Assets.xcassets */; };
+		0AA7A00C2D8A638C00EB5684 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0AA79FF92D8A638C00EB5684 /* Localizable.strings */; };
+		0AA7A00D2D8A638C00EB5684 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AA79FFF2D8A638C00EB5684 /* Preview Assets.xcassets */; };
+		0AA7A00F2D8A639700EB5684 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A00E2D8A639700EB5684 /* R.generated.swift */; };
+		0AA7A0112D8A648F00EB5684 /* SBBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A0102D8A648700EB5684 /* SBBaseView.swift */; };
+		0AA7A0162D8A67FF00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0122D8A67FF00EB5684 /* Inter-Bold.ttf */; };
+		0AA7A0172D8A67FF00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0132D8A67FF00EB5684 /* Inter-Regular.ttf */; };
+		0AA7A0182D8A67FF00EB5684 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0142D8A67FF00EB5684 /* Inter-SemiBold.ttf */; };
+		6E441F00FAE29C61FBD3F2D0 /* Pods_SnapBuy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD3DBCF3BEB65DC603201FA1 /* Pods_SnapBuy.framework */; };
+/* End PBXBuildFile section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		DA6A84AD2D809E7700454EEF /* SnapBuy */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SnapBuy;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
+/* Begin PBXFileReference section */
+		0AA79FF72D8A638C00EB5684 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0AA79FF82D8A638C00EB5684 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0AA79FFD2D8A638C00EB5684 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0AA79FFF2D8A638C00EB5684 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		0AA7A0012D8A638C00EB5684 /* SnapBuyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapBuyApp.swift; sourceTree = "<group>"; };
+		0AA7A0032D8A638C00EB5684 /* SBAppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAppConstants.swift; sourceTree = "<group>"; };
+		0AA7A00E2D8A639700EB5684 /* R.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		0AA7A0102D8A648700EB5684 /* SBBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseView.swift; sourceTree = "<group>"; };
+		0AA7A0122D8A67FF00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
+		0AA7A0132D8A67FF00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		0AA7A0142D8A67FF00EB5684 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		4AE65FC59879BA1A4AAF6749 /* Pods-SnapBuy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.debug.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.debug.xcconfig"; sourceTree = "<group>"; };
+		DA6A84AB2D809E7700454EEF /* SnapBuy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapBuy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E21501A5DD01D651E1B7BE48 /* Pods-SnapBuy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.release.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.release.xcconfig"; sourceTree = "<group>"; };
+		FD3DBCF3BEB65DC603201FA1 /* Pods_SnapBuy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnapBuy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		DA6A84A82D809E7700454EEF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E441F00FAE29C61FBD3F2D0 /* Pods_SnapBuy.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0AA79FF62D8A638C00EB5684 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				0AA7A0152D8A67FF00EB5684 /* Inter */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		0AA79FFA2D8A638C00EB5684 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				0AA79FF62D8A638C00EB5684 /* Font */,
+				0AA79FF72D8A638C00EB5684 /* Assets.xcassets */,
+				0AA79FF92D8A638C00EB5684 /* Localizable.strings */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		0AA79FFB2D8A638C00EB5684 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		0AA79FFC2D8A638C00EB5684 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				0AA7A0102D8A648700EB5684 /* SBBaseView.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		0AA79FFE2D8A638C00EB5684 /* HomeView */ = {
+			isa = PBXGroup;
+			children = (
+				0AA79FFD2D8A638C00EB5684 /* ContentView.swift */,
+			);
+			path = HomeView;
+			sourceTree = "<group>";
+		};
+		0AA7A0002D8A638C00EB5684 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				0AA79FFF2D8A638C00EB5684 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		0AA7A0022D8A638C00EB5684 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				0AA7A0012D8A638C00EB5684 /* SnapBuyApp.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		0AA7A0042D8A638C00EB5684 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				0AA79FFC2D8A638C00EB5684 /* Base */,
+				0AA79FFE2D8A638C00EB5684 /* HomeView */,
+				0AA7A0002D8A638C00EB5684 /* Preview Content */,
+				0AA7A0022D8A638C00EB5684 /* Root */,
+				0AA7A0032D8A638C00EB5684 /* SBAppConstants.swift */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		0AA7A0052D8A638C00EB5684 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0AA7A00E2D8A639700EB5684 /* R.generated.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		0AA7A0062D8A638C00EB5684 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				0AA79FFB2D8A638C00EB5684 /* Helpers */,
+				0AA7A0042D8A638C00EB5684 /* Modules */,
+				0AA7A0052D8A638C00EB5684 /* Services */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		0AA7A0072D8A638C00EB5684 /* SnapBuy */ = {
+			isa = PBXGroup;
+			children = (
+				0AA79FFA2D8A638C00EB5684 /* Resource */,
+				0AA7A0062D8A638C00EB5684 /* Source */,
+			);
+			path = SnapBuy;
+			sourceTree = "<group>";
+		};
+		0AA7A0152D8A67FF00EB5684 /* Inter */ = {
+			isa = PBXGroup;
+			children = (
+				0AA7A0122D8A67FF00EB5684 /* Inter-Bold.ttf */,
+				0AA7A0132D8A67FF00EB5684 /* Inter-Regular.ttf */,
+				0AA7A0142D8A67FF00EB5684 /* Inter-SemiBold.ttf */,
+			);
+			path = Inter;
+			sourceTree = "<group>";
+		};
+		AA09716C0ACDC138A2697CC5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FD3DBCF3BEB65DC603201FA1 /* Pods_SnapBuy.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D38BCD415378B7D5BA990653 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4AE65FC59879BA1A4AAF6749 /* Pods-SnapBuy.debug.xcconfig */,
+				E21501A5DD01D651E1B7BE48 /* Pods-SnapBuy.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		DA6A84A22D809E7700454EEF = {
 			isa = PBXGroup;
 			children = (
-				DA6A84AD2D809E7700454EEF /* SnapBuy */,
+				0AA7A0072D8A638C00EB5684 /* SnapBuy */,
 				DA6A84AC2D809E7700454EEF /* Products */,
+				D38BCD415378B7D5BA990653 /* Pods */,
+				AA09716C0ACDC138A2697CC5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -52,20 +199,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA6A84B92D809E7900454EEF /* Build configuration list for PBXNativeTarget "SnapBuy" */;
 			buildPhases = (
+				EAC3B4DB4DDD3C1752692A87 /* [CP] Check Pods Manifest.lock */,
+				0AA79FCC2D8A5FFB00EB5684 /* R.swift */,
 				DA6A84A72D809E7700454EEF /* Sources */,
 				DA6A84A82D809E7700454EEF /* Frameworks */,
 				DA6A84A92D809E7700454EEF /* Resources */,
+				A96210EB1C314C776E869051 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				DA6A84AD2D809E7700454EEF /* SnapBuy */,
-			);
 			name = SnapBuy;
-			packageProductDependencies = (
-			);
 			productName = SnapBuy;
 			productReference = DA6A84AB2D809E7700454EEF /* SnapBuy.app */;
 			productType = "com.apple.product-type.application";
@@ -109,20 +254,105 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AA7A0162D8A67FF00EB5684 /* Inter-Bold.ttf in Resources */,
+				0AA7A0172D8A67FF00EB5684 /* Inter-Regular.ttf in Resources */,
+				0AA7A0182D8A67FF00EB5684 /* Inter-SemiBold.ttf in Resources */,
+				0AA7A00B2D8A638C00EB5684 /* Assets.xcassets in Resources */,
+				0AA7A00C2D8A638C00EB5684 /* Localizable.strings in Resources */,
+				0AA7A00D2D8A638C00EB5684 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0AA79FCC2D8A5FFB00EB5684 /* R.swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			name = R.swift;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate --generators image,string,font,file \"$SRCROOT/R.generated.swift\"\n";
+		};
+		A96210EB1C314C776E869051 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EAC3B4DB4DDD3C1752692A87 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SnapBuy-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DA6A84A72D809E7700454EEF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AA7A0112D8A648F00EB5684 /* SBBaseView.swift in Sources */,
+				0AA7A0082D8A638C00EB5684 /* ContentView.swift in Sources */,
+				0AA7A0092D8A638C00EB5684 /* SnapBuyApp.swift in Sources */,
+				0AA7A00A2D8A638C00EB5684 /* SBAppConstants.swift in Sources */,
+				0AA7A00F2D8A639700EB5684 /* R.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0AA79FF92D8A638C00EB5684 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0AA79FF82D8A638C00EB5684 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DA6A84B72D809E7900454EEF /* Debug */ = {
@@ -246,13 +476,16 @@
 		};
 		DA6A84BA2D809E7900454EEF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AE65FC59879BA1A4AAF6749 /* Pods-SnapBuy.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Source/Modules/Preview Content\"";
+				DEVELOPMENT_TEAM = 7SS5ZMN85B;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -264,7 +497,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jh.SnapBuy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uit.cnpm.snapbuy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -274,13 +507,16 @@
 		};
 		DA6A84BB2D809E7900454EEF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E21501A5DD01D651E1B7BE48 /* Pods-SnapBuy.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Source/Modules/Preview Content\"";
+				DEVELOPMENT_TEAM = 7SS5ZMN85B;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -292,7 +528,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jh.SnapBuy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uit.cnpm.snapbuy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
