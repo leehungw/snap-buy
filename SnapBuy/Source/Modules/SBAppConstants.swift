@@ -1,4 +1,5 @@
 import Foundation
+import RswiftResources
 
 let RString = R.string
 let RLocalizable = RString.localizable
