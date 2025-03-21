@@ -12,6 +12,7 @@ struct SnapBuyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.font, .custom("Outfit-Regular", size: 16))
             
         }
     }
