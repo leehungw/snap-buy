@@ -96,7 +96,7 @@ struct HomeView: View {
 struct HomeContent: View {
     var body: some View {
         VStack(spacing: 20) {
-            BannerCarouselView(banners: Banner.samples)
+            SBBannerCarouselView(banners: Banner.samples)
                 .padding(.vertical, 10)
 
             HStack {
@@ -111,8 +111,8 @@ struct HomeContent: View {
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
                 ForEach(Product.sampleList) { product in
-                    NavigationLink(destination: ProductDetailView(product: product)) {
-                        ProductCard(product: product)
+                    NavigationLink(destination: SBProductDetailView(product: product)) {
+                        SBProductCard(product: product)
                     }
                     .buttonStyle(PlainButtonStyle())
                     
@@ -128,7 +128,7 @@ struct CategoryContent: View {
     var body: some View {
         VStack(spacing: 20) {
             ForEach(Category.samples) { category in
-                CategoryItemView(category: category)
+                SBCategoryItemView(category: category)
             }
         }
         .padding(.horizontal,30)

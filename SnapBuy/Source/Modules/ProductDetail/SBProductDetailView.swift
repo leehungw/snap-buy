@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProductDetailView: View {
+struct SBProductDetailView: View {
     let product: Product
     @Environment(\.dismiss) var dismiss
     @State private var quantity: Int = 1
@@ -160,5 +160,5 @@ struct ProductDetailView: View {
     
 }
 #Preview {
-    ProductDetailView(product: .sample)
+    SBProductDetailView(product: .sample)
 }

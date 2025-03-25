@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BasePopup<Content: View>: View {
+struct SBBasePopup<Content: View>: View {
     @Binding var isPresented: Bool
     let content: () -> Content
     

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct CategoryItemView: View {
+struct SBCategoryItemView: View {
     let category: Category
 
     var body: some View {
@@ -43,5 +43,5 @@ struct CategoryItemView: View {
 }
 
 #Preview {
-    CategoryItemView(category: .samples[3])
+    SBCategoryItemView(category: .samples[3])
 }
