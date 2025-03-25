@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BannerCarouselView: View {
+struct SBBannerCarouselView: View {
     let banners: [Banner]
     @State private var currentIndex = 0
     private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
@@ -8,7 +8,7 @@ struct BannerCarouselView: View {
     var body: some View {
         TabView(selection: $currentIndex) {
             ForEach(Array(banners.enumerated()), id: \.offset) { index, banner in
-                BannerView(banner: banner)
+                SBBannerView(banner: banner)
                     .tag(index)
                     .padding(.horizontal)
             }

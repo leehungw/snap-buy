@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BannerView: View {
+struct SBBannerView: View {
     let banner: Banner
     
     var body: some View {
@@ -39,5 +39,5 @@ struct BannerView: View {
     }
 }
 #Preview {
-    BannerView(banner: .sample3)
+    SBBannerView(banner: .sample3)
 }

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProductCard: View {
+struct SBProductCard: View {
     let product: Product
     
     var body: some View {
@@ -37,5 +37,5 @@ struct ProductCard: View {
 }
 
 #Preview {
-    ProductCard(product: .sample)
+    SBProductCard(product: .sample)
 }
