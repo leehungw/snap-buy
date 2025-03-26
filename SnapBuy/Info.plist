@@ -4,6 +4,7 @@
 ***REMOVED***
 	<key>UIAppFonts</key>
 	<array>
+		<string>Outfit-Medium.ttf</string>
 		<string>Outfit-Regular.ttf</string>
 		<string>Outfit-Bold.ttf</string>
 	</array>
