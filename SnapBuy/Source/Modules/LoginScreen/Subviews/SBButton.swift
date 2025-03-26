@@ -15,6 +15,9 @@ struct SBButton: View {
             HStack {
                 if let leadingIcon {
                     leadingIcon
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
                         .foregroundColor(style == .filled ? .black : .white)
                 }
                 Text(title)
@@ -28,7 +31,7 @@ struct SBButton: View {
         }
         .overlay(
             Capsule()
-                .stroke(style == .outlined ? Color.gray : Color.clear, lineWidth: 2)
+                .stroke(style == .outlined ? Color.gray.opacity(0.7) : Color.clear, lineWidth: 2)
         )
         .padding(.horizontal, 20)
     }
