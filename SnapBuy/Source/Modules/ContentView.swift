@@ -7,7 +7,7 @@ struct ContentView: View {
 
         var body: some View {
                 TabView(selection: $tabSelection) {
-                    HomeView()
+                    SBLoginView()
                         .tag(1)
                     
                     FavouriteView()
