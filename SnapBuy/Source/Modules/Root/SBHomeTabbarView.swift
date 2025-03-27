@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct RootView: View {
+struct SBHomeTabbarView: View {
     @State private var tabSelection = 1
     @Namespace private var namespace
 
@@ -36,5 +36,5 @@ struct RootView: View {
             
 
 #Preview {
-    RootView()
+    SBHomeTabbarView()
 }
