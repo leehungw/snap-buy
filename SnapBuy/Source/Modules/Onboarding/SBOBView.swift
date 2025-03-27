@@ -1,53 +1,59 @@
 import SwiftUI
 
 struct SBOBView: View {
+    @State private var currentPage = 0
+    private let pages = [
+        SBOBPageView.Page(image: RImage.img_ob1.image, title: "Welcome to Our App", subtitle: "Discover new features and functionalities."),
+        SBOBPageView.Page(image: RImage.img_ob2.image, title: "Stay Organized", subtitle: "Keep track of your tasks and projects efficiently."),
+        SBOBPageView.Page(image: RImage.img_ob3.image, title: "Achieve Your Goals", subtitle: "Set targets and accomplish them with ease.")
+    ]
+    
+    init() {
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.blue
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor.gray
+    }
+    
+    @State var path = NavigationPath()
+    
     var body: some View {
-        VStack {
-            Image("D6436144-D513-4D3A-9661-626AA7C84C8B")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 350)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-
-            Spacer().frame(height: 20)
-
-            Text("Various Collections Of The Latest Products")
-                .font(.title3)
-                .bold()
-                .multilineTextAlignment(.center)
-
-            Text("Urna amet, suspendisse ullamcorper ac elit diam facilisis cursus vestibulum.")
-                .foregroundColor(.gray)
-                .font(.subheadline)
-                .multilineTextAlignment(.center)
+        NavigationStack(path: $path) {
+            VStack {
+                TabView(selection: $currentPage) {
+                    ForEach(0..<pages.count, id: \.self) { index in
+                        SBOBPageView(page: pages[index])
+                            .tag(index)
+                    }
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                .onReceive(Timer.publish(every: 2, on: .main, in: .common).autoconnect()) { _ in
+                    withAnimation {
+                        currentPage = (currentPage + 1) % pages.count
+                    }
+                }
+                
+                Spacer().frame(height: 100)
+                
+                SBButton(title: RLocalizable.createAccount(), style: .filled) {
+                    SBUserDefaultService.instance.didShowOnboarding = true
+                    path.append(1)
+                }
                 .padding(.horizontal, 20)
-
-            Spacer().frame(height: 10)
-
-            // Page Indicator
-            HStack(spacing: 5) {
-                Circle().fill(Color.blue).frame(width: 8, height: 8)
-                Circle().fill(Color.gray.opacity(0.5)).frame(width: 8, height: 8)
-                Circle().fill(Color.gray.opacity(0.5)).frame(width: 8, height: 8)
+                
+                Button(action: {
+                    SBUserDefaultService.instance.didShowOnboarding = true
+                }) {
+                    Text(RLocalizable.alreadyHaveAnAccount())
+                        .foregroundColor(.main)
+                        .font(.subheadline)
+                        .bold()
+                }
+                .padding(.top, 10)
+                .navigationDestination(for: Int.self) { _ in
+                    SBLoginView()
+                }
             }
-            .padding(.vertical, 10)
-
-            // Buttons
-            SBButton(title: "Create Account", style: .filled) {
-                // Handle create account action
-            }
-            .padding(.horizontal, 20)
-
-            Button(action: {
-                // Handle already have an account action
-            }) {
-                Text("Already Have an Account")
-                    .foregroundColor(.blue)
-                    .font(.subheadline)
-                    .bold()
-            }
-            .padding(.top, 10)
+            .padding()
         }
-        .padding()
     }
 }
+
