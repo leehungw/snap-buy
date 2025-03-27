@@ -39,7 +39,7 @@ struct SBLoginView: View {
             SBButton(title: RLocalizable.signIn(), style: .filled) {
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                    let keyWindow = windowScene.windows.first {
-                    keyWindow.rootViewController = UIHostingController(rootView: ContentView())
+                    keyWindow.rootViewController = UIHostingController(rootView: RootView())
                     keyWindow.makeKeyAndVisible()
                 }
             }
