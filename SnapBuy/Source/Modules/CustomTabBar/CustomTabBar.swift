@@ -75,5 +75,5 @@ struct CustomTabBar: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }
