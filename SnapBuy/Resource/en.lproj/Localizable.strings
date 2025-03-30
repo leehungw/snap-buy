@@ -1,13 +1,23 @@
 "Snap buy" = "Snap buy";
 "Login Account" = "Login Account";
 "Please login with registered account" = "Please login with registered account";
-"Enter your email or phone number" = "Enter your email or phone number";
-"Create your password" = "Create your password";
+"Enter your email" = "Enter your email";
+"Enter your password" = "Enter your password";
 "Forgot Password?" = "Forgot Password?";
 "Sign In" = "Sign In";
 "Or using other method" = "Or using other method";
 "Sign In with Google" = "Sign In with Google";
 "Sign In with Facebook" = "Sign In with Facebook";
 "Create Account" = "Create Account";
+"Start shopping with registered account" = "Start shopping with registered account";
 "Already Have an Account" = "Already Have an Account";
+"Username" = "Username";
+"Create your username" = "Create your username";
+"Email" = "Email";
+"Password" = "Password";
+"Create your password" = "Create your password";
+"Your account will be created as soon as you filled all the information needed" = "Your account will be created as soon as you filled all the information needed!";
+"Info Missing" = "Info Missing";
+"OK" = "OK";
+
 
