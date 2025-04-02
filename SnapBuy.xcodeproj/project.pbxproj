@@ -34,6 +34,8 @@
 		0A47C4E82D94FD620091E2D4 /* SBUserDefaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */; };
 		0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4EA2D9505540091E2D4 /* SBOBPageView.swift */; };
 		0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */; };
+		0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */; };
+		0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */; };
 		0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */; };
 		0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */; };
 		0AA7A10E2D91CD9D00EB5684 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */; };
@@ -90,6 +92,8 @@
 		0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserDefaultService.swift; sourceTree = "<group>"; };
 		0A47C4EA2D9505540091E2D4 /* SBOBPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBPageView.swift; sourceTree = "<group>"; };
 		0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSignUpView.swift; sourceTree = "<group>"; };
+		0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVerificationView.swift; sourceTree = "<group>"; };
+		0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEmailVerificationTextView.swift; sourceTree = "<group>"; };
 		0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -253,9 +257,19 @@
 		0A47C51D2D99349D0091E2D4 /* Sign up  */ = {
 			isa = PBXGroup;
 			children = (
+				0A47C5532D9CD0B90091E2D4 /* Subviews */,
+				0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */,
 				0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */,
 			);
 			path = "Sign up ";
+			sourceTree = "<group>";
+		};
+		0A47C5532D9CD0B90091E2D4 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */,
+			);
+			path = Subviews;
 			sourceTree = "<group>";
 		};
 		0AA7A0DE2D91CD9D00EB5684 /* Inter */ = {
@@ -622,6 +636,7 @@
 				0A47C4D92D94F8F60091E2D4 /* BezierCurvePath.swift in Sources */,
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
 				0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */,
+				0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */,
 				0AA7A1262D91CD9D00EB5684 /* FavouriteView.swift in Sources */,
 				0A47C4C12D94F6FA0091E2D4 /* NotiView.swift in Sources */,
 				0A47C4CD2D94F8D90091E2D4 /* Product+Sample.swift in Sources */,
@@ -631,6 +646,7 @@
 				0A47C4CF2D94F8D90091E2D4 /* Banner+Sample.swift in Sources */,
 				0A47C4D02D94F8D90091E2D4 /* Category+Sample.swift in Sources */,
 				0A47C4C42D94F72E0091E2D4 /* SBProductDetailView.swift in Sources */,
+				0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */,
 				0A47C4E02D94F90F0091E2D4 /* TabModel.swift in Sources */,
 				0A47C4E12D94F90F0091E2D4 /* CategoryModel.swift in Sources */,
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
