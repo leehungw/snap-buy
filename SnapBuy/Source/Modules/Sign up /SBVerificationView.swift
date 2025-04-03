@@ -4,7 +4,7 @@ struct SBVerificationView: View {
     enum FocusField: Hashable {
         case code1, code2, code3, code4, code5
     }
-
+    
     @FocusState private var focusField: FocusField?
     
     @State private var code1: String = ""
@@ -12,6 +12,8 @@ struct SBVerificationView: View {
     @State private var code3: String = ""
     @State private var code4: String = ""
     @State private var code5: String = ""
+    
+    @State private var isSheetPresented: Bool = false
     
     var body: some View {
         NavigationView {
@@ -67,7 +69,7 @@ struct SBVerificationView: View {
                 .padding(.bottom, 30)
                 
                 SBButton(title: RLocalizable.submit(), style: .filled, action: {
-                    //TODO: submit
+                    isSheetPresented = true
                 })
                 
                 Button(action: {
@@ -82,6 +84,14 @@ struct SBVerificationView: View {
         }
         .navigationTitle("")
         .toolbar(.hidden)
+        .sheet(isPresented: $isSheetPresented) {
+            VStack {
+                SBRegisterSuccessView()
+            }
+            .presentationDetents([.fraction(0.5)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
     }
     
     private func createAttributedText() -> Text {
@@ -96,4 +106,36 @@ struct SBVerificationView: View {
 
 #Preview {
     SBVerificationView()
+}
+
+struct SBRegisterSuccessView: View {
+    var body: some View {
+        NavigationView {
+            VStack {
+                RImage.img_success_check.image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .padding(.top, 30)
+                
+                Text(RLocalizable.registerSuccess())
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .padding(.top, 16)
+                
+                Text(RLocalizable.congratulationYourAccountAlreadyCreatedPleaseLoginToGetAmazingExperience())
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 8)
+                    .padding(.bottom, 80)
+                
+                SBButton(title: RLocalizable.goToHomepage(), style: .filled) {
+                    
+                }
+            }
+        }
+        .navigationTitle("")
+        .toolbar(.hidden)
+    }
 }

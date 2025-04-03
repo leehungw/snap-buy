@@ -10,7 +10,9 @@ struct SBTextField: View {
     var body: some View {
         HStack {
             image
+                .renderingMode(.template)
                 .resizable()
+                .foregroundColor(.main)
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
                 .padding(.leading, 10)

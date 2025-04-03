@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */; };
 		0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */; };
 		0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */; };
 		0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4B02D94F6290091E2D4 /* CartView.swift */; };
@@ -65,6 +66,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBForgotPasswordSheetView.swift; sourceTree = "<group>"; };
 		0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBView.swift; sourceTree = "<group>"; };
 		0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseCard.swift; sourceTree = "<group>"; };
 		0A47C4B02D94F6290091E2D4 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 		0AA7A1322D92399C00EB5684 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */,
 				0AA7A1372D923FAA00EB5684 /* SBButton.swift */,
 				0AA7A1332D9239A200EB5684 /* SBTextInput.swift */,
 			);
@@ -652,6 +655,7 @@
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
 				0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */,
+				0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */,
 				0AA7A1312D91CF7100EB5684 /* SBLoginView.swift in Sources */,
 				0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */,
 				0AA7A1342D9239A700EB5684 /* SBTextInput.swift in Sources */,

@@ -24,4 +24,11 @@
 "Submit" = "Submit";
 "Didn’t receive the code? " = "Didn't receive the code? ";
 "Resend" = "Resend";
-
+"Register Success" = "Register Success";
+"Congratulation! Your account already created.\nPlease login to get amazing experience!" = "Congratulation! Your account already created.\nPlease login to get amazing experience!";
+"Go to Homepage" = "Go to Homepage";
+"Send code" = "Send code";
+"Create new password" = "Create new password";
+"Enter your new password" = "Enter your new password";
+"Change password" = "Change password";
+"Confirm password" = "Confirm password";

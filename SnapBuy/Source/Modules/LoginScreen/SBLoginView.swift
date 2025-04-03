@@ -3,6 +3,7 @@ import SwiftUI
 struct SBLoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var isForgotPasswordPresented: Bool = false
 
     var body: some View {
         NavigationView {
@@ -49,6 +50,9 @@ struct SBLoginView: View {
                         .font(.footnote).bold()
                         .padding(.trailing, 20)
                         .padding(.bottom, 40)
+                        .onTapGesture {
+                            forgotPassword()
+                        }
                 }
                 
                 
@@ -77,5 +81,19 @@ struct SBLoginView: View {
         }
         .navigationTitle("")
         .toolbar(.hidden)
+        .sheet(isPresented: $isForgotPasswordPresented) {
+            SBForgotPasswordSheetView()
+                .presentationDetents([.fraction(0.5)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(50)
+        }
     }
+    
+    private func forgotPassword() {
+        isForgotPasswordPresented = true
+    }
+}
+
+#Preview {
+    SBLoginView()
 }
