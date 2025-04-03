@@ -38,6 +38,9 @@ struct SBOBView: View {
                     path.append(1)
                 }
                 .padding(.horizontal, 20)
+                .navigationDestination(for: Int.self) { _ in
+                    SBSignUpView()
+                }
                 
                 Button(action: {
                     SBUserDefaultService.instance.didShowOnboarding = true
