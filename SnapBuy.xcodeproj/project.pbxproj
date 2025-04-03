@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */; };
 		0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */; };
 		0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */; };
 		0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4B02D94F6290091E2D4 /* CartView.swift */; };
@@ -33,6 +34,9 @@
 		0A47C4E62D94FBA40091E2D4 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4E52D94FBA10091E2D4 /* RootView.swift */; };
 		0A47C4E82D94FD620091E2D4 /* SBUserDefaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */; };
 		0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4EA2D9505540091E2D4 /* SBOBPageView.swift */; };
+		0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */; };
+		0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */; };
+		0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */; };
 		0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */; };
 		0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */; };
 		0AA7A10E2D91CD9D00EB5684 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */; };
@@ -62,6 +66,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBForgotPasswordSheetView.swift; sourceTree = "<group>"; };
 		0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBView.swift; sourceTree = "<group>"; };
 		0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseCard.swift; sourceTree = "<group>"; };
 		0A47C4B02D94F6290091E2D4 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
@@ -88,6 +93,9 @@
 		0A47C4E52D94FBA10091E2D4 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserDefaultService.swift; sourceTree = "<group>"; };
 		0A47C4EA2D9505540091E2D4 /* SBOBPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBPageView.swift; sourceTree = "<group>"; };
+		0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSignUpView.swift; sourceTree = "<group>"; };
+		0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVerificationView.swift; sourceTree = "<group>"; };
+		0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEmailVerificationTextView.swift; sourceTree = "<group>"; };
 		0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -248,6 +256,24 @@
 			path = Subviews;
 			sourceTree = "<group>";
 		};
+		0A47C51D2D99349D0091E2D4 /* Sign up  */ = {
+			isa = PBXGroup;
+			children = (
+				0A47C5532D9CD0B90091E2D4 /* Subviews */,
+				0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */,
+				0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */,
+			);
+			path = "Sign up ";
+			sourceTree = "<group>";
+		};
+		0A47C5532D9CD0B90091E2D4 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
 		0AA7A0DE2D91CD9D00EB5684 /* Inter */ = {
 			isa = PBXGroup;
 			children = (
@@ -327,6 +353,7 @@
 		0AA7A1072D91CD9D00EB5684 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				0A47C51D2D99349D0091E2D4 /* Sign up  */,
 				0A47C4E42D94FB990091E2D4 /* RootView */,
 				0A47C4C62D94F7480091E2D4 /* User */,
 				0A47C4B32D94F6A10091E2D4 /* Root */,
@@ -385,6 +412,7 @@
 		0AA7A1322D92399C00EB5684 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */,
 				0AA7A1372D923FAA00EB5684 /* SBButton.swift */,
 				0AA7A1332D9239A200EB5684 /* SBTextInput.swift */,
 			);
@@ -610,6 +638,8 @@
 				0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */,
 				0A47C4D92D94F8F60091E2D4 /* BezierCurvePath.swift in Sources */,
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
+				0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */,
+				0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */,
 				0AA7A1262D91CD9D00EB5684 /* FavouriteView.swift in Sources */,
 				0A47C4C12D94F6FA0091E2D4 /* NotiView.swift in Sources */,
 				0A47C4CD2D94F8D90091E2D4 /* Product+Sample.swift in Sources */,
@@ -619,11 +649,13 @@
 				0A47C4CF2D94F8D90091E2D4 /* Banner+Sample.swift in Sources */,
 				0A47C4D02D94F8D90091E2D4 /* Category+Sample.swift in Sources */,
 				0A47C4C42D94F72E0091E2D4 /* SBProductDetailView.swift in Sources */,
+				0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */,
 				0A47C4E02D94F90F0091E2D4 /* TabModel.swift in Sources */,
 				0A47C4E12D94F90F0091E2D4 /* CategoryModel.swift in Sources */,
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
 				0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */,
+				0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */,
 				0AA7A1312D91CF7100EB5684 /* SBLoginView.swift in Sources */,
 				0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */,
 				0AA7A1342D9239A700EB5684 /* SBTextInput.swift in Sources */,
