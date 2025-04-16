@@ -62,26 +62,17 @@ struct SBLoginView: View {
 //                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
 //                        keyWindow.makeKeyAndVisible()
 //                    }
-                    // Define the login payload as a dictionary
-                    let loginPayload: [String: Any] = [
-                        "email": "ndam8175@gmail.com",
-                        "password": "123123"
-                    ]
-
-                    // Convert the payload to JSON data
-                    guard let jsonData = try? JSONSerialization.data(withJSONObject: loginPayload, options: []) else {
-                        print("Error: Unable to serialize login payload.")
-                        return
-                    }
-
-                    // Use the original service to perform the request, decoding the response to RawResponse
-                    SBAPIService.shared.performRequest(endpoint: "api/users/login",
-                                                       method: "POST",
-                                                       body: jsonData,
-                                                       headers: nil) { (result: Result<RawResponse, Error>) in
+                    let loginRequest = UserLoginRequest(email: "ndam8175@gmail.com", password: "123123")
+                    UserRepository.shared.login(request: loginRequest) { result in
                         switch result {
                         case .success(let response):
-                            print("Raw JSON:\n\(response.raw)")
+                            if response.result == 1, let userData = response.data {
+                                print("Login successful! User ID: \(userData.id), Name: \(userData.name)")
+                            } else if let errorInfo = response.error {
+                                print("Login failed: \(errorInfo.message)")
+                            } else {
+                                print("Unexpected response structure.")
+                            }
                         case .failure(let error):
                             print("Request failed with error: \(error.localizedDescription)")
                         }
@@ -120,54 +111,4 @@ struct SBLoginView: View {
 
 #Preview {
     SBLoginView()
-}
-
-/// A type that can decode any JSON value.
-struct AnyDecodable: Decodable {
-    let value: Any
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let intValue = try? container.decode(Int.self) {
-            self.value = intValue
-        } else if let doubleValue = try? container.decode(Double.self) {
-            self.value = doubleValue
-        } else if let stringValue = try? container.decode(String.self) {
-            self.value = stringValue
-        } else if let boolValue = try? container.decode(Bool.self) {
-            self.value = boolValue
-        } else if let array = try? container.decode([AnyDecodable].self) {
-            self.value = array.map { $0.value }
-        } else if let dictionary = try? container.decode([String: AnyDecodable].self) {
-            self.value = dictionary.mapValues { $0.value }
-        } else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Unable to decode JSON value"
-            )
-        }
-    }
-}
-
-/// A wrapper type that decodes the entire JSON response and converts it to a raw JSON string.
-struct RawResponse: Decodable {
-    let raw: String
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        // Decode the JSON as a dictionary of [String: AnyDecodable]
-        let decodedDict = try container.decode([String: AnyDecodable].self)
-        // Map it to a [String: Any] object
-        let jsonObject = decodedDict.mapValues { $0.value }
-        // Serialize the object back to JSON data
-        let data = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
-        // Convert the data to a String
-        guard let jsonString = String(data: data, encoding: .utf8) else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "Unable to convert data to string"
-            )
-        }
-        raw = jsonString
-    }
 }
