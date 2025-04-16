@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */; };
+		0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */; };
 		0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */; };
 		0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */; };
 		0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4B02D94F6290091E2D4 /* CartView.swift */; };
@@ -67,6 +68,7 @@
 
 /* Begin PBXFileReference section */
 		0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBForgotPasswordSheetView.swift; sourceTree = "<group>"; };
+		0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAPIService.swift; sourceTree = "<group>"; };
 		0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBView.swift; sourceTree = "<group>"; };
 		0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseCard.swift; sourceTree = "<group>"; };
 		0A47C4B02D94F6290091E2D4 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
@@ -229,7 +231,7 @@
 			path = CustomTabBar;
 			sourceTree = "<group>";
 		};
-		0A47C4DF2D94F90F0091E2D4 /* Models */ = {
+		0A47C4DF2D94F90F0091E2D4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				0A47C4DB2D94F90F0091E2D4 /* BannerModel.swift */,
@@ -237,7 +239,7 @@
 				0A47C4DD2D94F90F0091E2D4 /* ProductModel.swift */,
 				0A47C4DE2D94F90F0091E2D4 /* TabModel.swift */,
 			);
-			path = Models;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		0A47C4E42D94FB990091E2D4 /* RootView */ = {
@@ -374,8 +376,9 @@
 		0AA7A1082D91CD9D00EB5684 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */,
 				0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */,
-				0A47C4DF2D94F90F0091E2D4 /* Models */,
+				0A47C4DF2D94F90F0091E2D4 /* ViewModels */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -654,6 +657,7 @@
 				0A47C4E12D94F90F0091E2D4 /* CategoryModel.swift in Sources */,
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
+				0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */,
 				0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */,
 				0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */,
 				0AA7A1312D91CF7100EB5684 /* SBLoginView.swift in Sources */,
