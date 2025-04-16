@@ -15,6 +15,7 @@ struct SBAppConstant {
     
     static let sidePadding: CGFloat = 16.0
     static let nullString = "null"
+    static let apiBaseURL = "https://3bd54531-949e-4e3c-86f4-11a9b69edcd0.mock.pstmn.io"
     
     struct App {
         static let appName = "Snap Buy"
