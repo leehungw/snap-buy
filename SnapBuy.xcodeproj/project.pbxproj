@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */; };
+		0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */; };
 		0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */; };
 		0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */; };
 		0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4B02D94F6290091E2D4 /* CartView.swift */; };
@@ -37,6 +38,7 @@
 		0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */; };
 		0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */; };
 		0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */; };
+		0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */; };
 		0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */; };
 		0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */; };
 		0AA7A10E2D91CD9D00EB5684 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */; };
@@ -67,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBForgotPasswordSheetView.swift; sourceTree = "<group>"; };
+		0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAPIService.swift; sourceTree = "<group>"; };
 		0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBView.swift; sourceTree = "<group>"; };
 		0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseCard.swift; sourceTree = "<group>"; };
 		0A47C4B02D94F6290091E2D4 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
@@ -96,6 +99,7 @@
 		0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSignUpView.swift; sourceTree = "<group>"; };
 		0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVerificationView.swift; sourceTree = "<group>"; };
 		0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEmailVerificationTextView.swift; sourceTree = "<group>"; };
+		0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserRepo.swift; sourceTree = "<group>"; };
 		0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -229,7 +233,7 @@
 			path = CustomTabBar;
 			sourceTree = "<group>";
 		};
-		0A47C4DF2D94F90F0091E2D4 /* Models */ = {
+		0A47C4DF2D94F90F0091E2D4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				0A47C4DB2D94F90F0091E2D4 /* BannerModel.swift */,
@@ -237,7 +241,7 @@
 				0A47C4DD2D94F90F0091E2D4 /* ProductModel.swift */,
 				0A47C4DE2D94F90F0091E2D4 /* TabModel.swift */,
 			);
-			path = Models;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		0A47C4E42D94FB990091E2D4 /* RootView */ = {
@@ -272,6 +276,14 @@
 				0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */,
 			);
 			path = Subviews;
+			sourceTree = "<group>";
+		};
+		0A61F9A02DAF47E6003A9DAD /* APIRepo */ = {
+			isa = PBXGroup;
+			children = (
+				0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */,
+			);
+			path = APIRepo;
 			sourceTree = "<group>";
 		};
 		0AA7A0DE2D91CD9D00EB5684 /* Inter */ = {
@@ -374,8 +386,10 @@
 		0AA7A1082D91CD9D00EB5684 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0A61F9A02DAF47E6003A9DAD /* APIRepo */,
+				0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */,
 				0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */,
-				0A47C4DF2D94F90F0091E2D4 /* Models */,
+				0A47C4DF2D94F90F0091E2D4 /* ViewModels */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -564,9 +578,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -654,8 +672,10 @@
 				0A47C4E12D94F90F0091E2D4 /* CategoryModel.swift in Sources */,
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
+				0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */,
 				0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */,
 				0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */,
+				0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */,
 				0AA7A1312D91CF7100EB5684 /* SBLoginView.swift in Sources */,
 				0A47C4B22D94F6290091E2D4 /* CartView.swift in Sources */,
 				0AA7A1342D9239A700EB5684 /* SBTextInput.swift in Sources */,
