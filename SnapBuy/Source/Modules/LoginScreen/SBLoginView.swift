@@ -57,10 +57,25 @@ struct SBLoginView: View {
                 
                 
                 SBButton(title: RLocalizable.signIn(), style: .filled) {
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let keyWindow = windowScene.windows.first {
-                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
-                        keyWindow.makeKeyAndVisible()
+//                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+//                       let keyWindow = windowScene.windows.first {
+//                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+//                        keyWindow.makeKeyAndVisible()
+//                    }
+                    let loginRequest = UserLoginRequest(email: "ndam8175@gmail.com", password: "123123")
+                    UserRepository.shared.login(request: loginRequest) { result in
+                        switch result {
+                        case .success(let response):
+                            if response.result == 1, let userData = response.data {
+                                print("Login successful! User ID: \(userData.id), Name: \(userData.name)")
+                            } else if let errorInfo = response.error {
+                                print("Login failed: \(errorInfo.message)")
+                            } else {
+                                print("Unexpected response structure.")
+                            }
+                        case .failure(let error):
+                            print("Request failed with error: \(error.localizedDescription)")
+                        }
                     }
                 }
                 
