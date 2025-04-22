@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HomeView: View {
+struct SBHomeView: View {
     @State private var selectedTab: Tab = .home
     
     enum Tab {
@@ -18,9 +18,9 @@ struct HomeView: View {
                     
                     VStack(alignment: .leading) {
                         Text("Hi, Jonathan")
-                            .font(.custom("Outfit-Bold", size: 16))
+                            .font(R.font.outfitBold.font(size: 16))
                         Text("Let's go shopping")
-                            .font(.custom("Outfit-Regular", size: 13))
+                            .font(R.font.outfitRegular.font(size: 13))
                             .foregroundColor(.gray)
                     }
                     Spacer()
@@ -41,7 +41,7 @@ struct HomeView: View {
                 HStack {
                     VStack {
                         Text("Home")
-                            .font(.custom("Outfit-Medium", size: 16))
+                            .font(R.font.outfitMedium.font(size: 16))
                             .foregroundColor(selectedTab == .home ? .black : .gray)
                         
                         Divider()
@@ -57,7 +57,7 @@ struct HomeView: View {
                     Spacer()
                     VStack {
                         Text("Category")
-                            .font(.custom("Outfit-Medium", size: 16))
+                            .font(R.font.outfitMedium.font(size: 16))
                             .foregroundColor(selectedTab == .category ? .black : .gray)
                         
                         Divider()
@@ -75,10 +75,10 @@ struct HomeView: View {
                 ScrollView {
                     ZStack {
                         if selectedTab == .home {
-                            HomeContent()
+                            SBHomeContent()
                                 .transition(.move(edge: .leading).combined(with: .opacity))
                         } else {
-                            CategoryContent()
+                            SBCategoryContent()
                                 .transition(.move(edge: .trailing).combined(with: .opacity))
                         }
                     }
@@ -91,9 +91,9 @@ struct HomeView: View {
     }
 }
 #Preview {
-    HomeView()
+    SBHomeView()
 }
-struct HomeContent: View {
+struct SBHomeContent: View {
     var body: some View {
         VStack(spacing: 20) {
             SBBannerCarouselView(banners: Banner.samples)
@@ -101,11 +101,11 @@ struct HomeContent: View {
 
             HStack {
                 Text("New Arrivals")
-                    .font(.custom("Outfit-Bold", size: 20))
+                    .font(R.font.outfitBold.font(size: 20))
                 Spacer()
                 Text("See All")
                     .foregroundColor(.main)
-                    .font(.custom("Outfit-Semibold", size: 15))
+                    .font(R.font.outfitSemiBold.font(size: 15))
             }
             .padding(.horizontal)
 
@@ -124,7 +124,7 @@ struct HomeContent: View {
     
 }
 
-struct CategoryContent: View {
+struct SBCategoryContent: View {
     var body: some View {
         VStack(spacing: 20) {
             ForEach(Category.samples) { category in
