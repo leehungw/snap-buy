@@ -7,16 +7,16 @@ struct SBHomeTabbarView: View {
 
         var body: some View {
                 TabView(selection: $tabSelection) {
-                    HomeView()
+                    SBHomeView()
                         .tag(1)
                     
                     FavouriteView()
                         .tag(2)
                     
-                    CartView()
+                    SBCartView()
                         .tag(3)
                     
-                    NotiView()
+                    SBCombinedSearchView()
                         .tag(4)
                     
                     UserView()
