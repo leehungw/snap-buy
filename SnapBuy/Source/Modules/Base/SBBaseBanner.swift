@@ -20,13 +20,14 @@ struct SBBannerView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Spacer()
                     Text(banner.title)
-                        .font(.headline)
+                        .font(R.font.outfitBold.font(size:20))
                         .foregroundColor(.white)
                     Text(banner.subtitle)
                         .foregroundColor(.white)
+                        .font(R.font.outfitSemiBold.font(size:16))
                     Text("By \(banner.storeName)")
                         .font(.caption)
-                        .foregroundColor(.white.opacity(0.8))
+                        .foregroundColor(.white)
                 }
                 Spacer()
             }

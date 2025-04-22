@@ -6,9 +6,11 @@ struct RootView: App {
     var body: some Scene {
         WindowGroup {
             if SBUserDefaultService.instance.didShowOnboarding {
-                SBVerificationView()
+               // SBVerificationView()
+                SBHomeTabbarView()
             } else {
-                SBOBView()
+               // SBOBView()
+                SBHomeTabbarView()
             }
         }
     }

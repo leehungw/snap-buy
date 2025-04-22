@@ -25,7 +25,7 @@ struct SBProductDetailView: View {
                     }
                     Spacer()
                     Text("Detail Product")
-                        .font(.headline)
+                        .font(R.font.outfitRegular.font(size:16))
                     Spacer()
                     Image(systemName: "bag")
                         .font(.title2)
@@ -52,7 +52,7 @@ struct SBProductDetailView: View {
                     HStack {
                         Image(systemName: "bag.fill")
                         Text("Add to Cart")
-                            .fontWeight(.semibold)
+                            .font(R.font.outfitMedium.font(size: 16))
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
@@ -76,7 +76,7 @@ struct SBProductDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text(product.name)
-                    .font(.custom("Outfit-Bold", size: 25))
+                    .font(R.font.outfitBold.font(size:25))
                 Spacer()
                 HStack(spacing: 8) {
                     Button(action: { if quantity > 1 { quantity -= 1 } }) {
@@ -110,7 +110,7 @@ struct SBProductDetailView: View {
             .padding(.top, -15)
 
             Text("Color")
-                .font(.custom("Outfit-Bold", size: 14))
+                .font(R.font.outfitBold.font(size:14))
                 .padding(.top,10)
 
             HStack(spacing: 16) {
@@ -130,10 +130,10 @@ struct SBProductDetailView: View {
             
 
             Text("Description")
-                .font(.custom("Outfit-Bold", size: 14))
+                .font(R.font.outfitBold.font(size:14))
                 .padding(.top,10)
             Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry...")
-                .font(.custom("Outfit-Regular", size: 13))
+                .font(R.font.outfitRegular.font(size:13))
                 .foregroundColor(.gray)
                 .lineLimit(3)
             Spacer()
@@ -146,6 +146,7 @@ struct SBProductDetailView: View {
                     HStack {
                         Image(systemName: "bag.fill")
                         Text("Add to Cart")
+                            .font(R.font.outfitMedium.font(size: 16))
                     }
                     .padding()
                     .background(Color.main)

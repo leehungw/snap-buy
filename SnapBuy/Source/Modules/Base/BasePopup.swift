@@ -24,7 +24,7 @@ struct SBBasePopup<Content: View>: View {
                         .padding(.top,15)
                         .padding(.horizontal, 10)
                         .multilineTextAlignment(.center)
-                        .font(.custom("Outfit-Regular", size: 20))
+                        .font(R.font.outfitRegular.font(size: 20))
                     
                     Button(action: {
                         isPresented = false
@@ -36,7 +36,7 @@ struct SBBasePopup<Content: View>: View {
                             .background(.main)
                             .cornerRadius(100)
                             .padding(.bottom,20)
-                            .font(.custom("Outfit-Regular", size: 16))
+                            .font(R.font.outfitRegular.font(size: 16))
                     }
                     Button(action: {
                         isPresented = false
@@ -44,7 +44,7 @@ struct SBBasePopup<Content: View>: View {
                         Text("Cancel")
                             .foregroundColor(.red)
                             .padding(.bottom, 30)
-                            .font(.custom("Outfit-Regular", size: 16))
+                            .font(R.font.outfitRegular.font(size: 16))
                     }
                 }
                 .frame(width: 300)
