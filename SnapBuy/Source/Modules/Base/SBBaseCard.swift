@@ -25,13 +25,13 @@ struct SBProductCard: View {
             
             Text(product.name)
                 .padding(.top, 15)
-                .font(.custom("OutFit-Bold", size: 18))
+                .font(R.font.outfitBold.font(size: 18))
                 .fontWeight(.semibold)
             Text(product.brand)
-                .font(.custom("OutFit-Medium", size: 14))
+                .font(R.font.outfitMedium.font(size: 14))
                 .foregroundColor(.gray)
             Text(String(format: "$%.2f", product.price))
-                .font(.custom("Outfit-Bold", size: 18))
+                .font(R.font.outfitBold.font(size: 18))
         }
     }
 }
