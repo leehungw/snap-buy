@@ -10,7 +10,7 @@ struct SBHomeTabbarView: View {
                     SBHomeView()
                         .tag(1)
                     
-                    FavouriteView()
+                    SBCombinedSearchView()
                         .tag(2)
                     
                     SBCartView()
@@ -19,7 +19,7 @@ struct SBHomeTabbarView: View {
                     SBCombinedSearchView()
                         .tag(4)
                     
-                    UserView()
+                    SBUserView()
                         .tag(5)
                 }
                 .overlay(alignment: .bottom) {
