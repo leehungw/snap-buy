@@ -45,7 +45,7 @@
 "Popular Products" = "Popular Products";
 "See All" = "See All";
 "Search" = "Search";
-"Last Search" = "Last Search";
+"Search Something" = "Search something...";
 "Clear All" = "Clear All";
 "Popular Search" = "Popular Search";
 "Filter By" = "Filter By";
@@ -75,3 +75,7 @@
 "Order Successfully" = "Order Successfully";
 "Successful Order " = "Your order will be packed by the clerk, will arrive at your hour in 3 to 4 days";
 "Order Tracking" = "Order Tracking";
+"My Order" = "My Order";
+"Message" = "Message";
+"Messages" = "Messages";
+"Activities" = "Activities";
