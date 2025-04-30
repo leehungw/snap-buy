@@ -1,11 +1,12 @@
 import SwiftUI
+enum Tab {
+    case home, category
+}
 
 struct SBHomeView: View {
     @State private var selectedTab: Tab = .home
     
-    enum Tab {
-        case home, category
-    }
+    
     
     var body: some View {
         SBBaseView {  
@@ -39,35 +40,11 @@ struct SBHomeView: View {
                 .padding(.horizontal)
                 
                 HStack {
-                    VStack {
-                        Text("Home")
-                            .font(R.font.outfitMedium.font(size: 16))
-                            .foregroundColor(selectedTab == .home ? .black : .gray)
-                        
-                        Divider()
-                            .frame(height: 2)
-                            .background(Color.main)
-                            .padding(.horizontal, 15)
-                            .opacity(selectedTab == .home ? 1 : 0)
-                            .animation(.easeInOut(duration: 0.2), value: selectedTab)
-                    }
-                    .onTapGesture {
+                    TabButton(title: "Home", tab: .home, selectedTab: selectedTab) {
                         selectedTab = .home
                     }
                     Spacer()
-                    VStack {
-                        Text("Category")
-                            .font(R.font.outfitMedium.font(size: 16))
-                            .foregroundColor(selectedTab == .category ? .black : .gray)
-                        
-                        Divider()
-                            .frame(height: 2)
-                            .background(Color.main)
-                            .padding(.horizontal, 15)
-                            .opacity(selectedTab == .category ? 1 : 0)
-                            .animation(.easeInOut(duration: 0.2), value: selectedTab)
-                    }
-                    .onTapGesture {
+                    TabButton(title: "Category", tab: .category, selectedTab: selectedTab) {
                         selectedTab = .category
                     }
                 }
@@ -132,5 +109,23 @@ struct SBCategoryContent: View {
             }
         }
         .padding(.horizontal,30)
+    }
+}
+
+func TabButton<T: Equatable>(title: String, tab: T, selectedTab: T, action: @escaping () -> Void) -> some View {
+    VStack {
+        Text(title)
+            .font(R.font.outfitMedium.font(size: 16))
+            .foregroundColor(selectedTab == tab ? .black : .gray)
+        
+        Divider()
+            .frame(height: 2)
+            .background(Color.main)
+            .padding(.horizontal, 15)
+            .opacity(selectedTab == tab ? 1 : 0)
+            .animation(.easeInOut(duration: 0.2), value: selectedTab)
+    }
+    .onTapGesture {
+        action()
     }
 }
