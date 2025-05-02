@@ -4,20 +4,20 @@ struct SBLoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isForgotPasswordPresented: Bool = false
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
                 VStack(alignment: .leading) {
-                        Text(RLocalizable.loginAccount())
-                            .font(.title)
-                            .bold()
-                            .padding(.top, 40)
-                            .padding(.bottom, 10)
-                        
-                        Text(RLocalizable.pleaseLoginWithRegisteredAccount())
-                            .foregroundColor(.gray)
-                            .font(.subheadline)
+                    Text(RLocalizable.loginAccount())
+                        .font(.title)
+                        .bold()
+                        .padding(.top, 40)
+                        .padding(.bottom, 10)
+                    
+                    Text(RLocalizable.pleaseLoginWithRegisteredAccount())
+                        .foregroundColor(.gray)
+                        .font(.subheadline)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 20)
@@ -57,24 +57,27 @@ struct SBLoginView: View {
                 
                 
                 SBButton(title: RLocalizable.signIn(), style: .filled) {
-//                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//                       let keyWindow = windowScene.windows.first {
-//                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
-//                        keyWindow.makeKeyAndVisible()
-//                    }
                     let loginRequest = UserLoginRequest(email: "ndam8175@gmail.com", password: "123123")
                     UserRepository.shared.login(request: loginRequest) { result in
                         switch result {
                         case .success(let response):
-                            if response.result == 1, let userData = response.data {
-                                print("Login successful! User ID: \(userData.id), Name: \(userData.name)")
-                            } else if let errorInfo = response.error {
-                                print("Login failed: \(errorInfo.message)")
-                            } else {
-                                print("Unexpected response structure.")
+                            DispatchQueue.main.async {
+                                if response.result == 1, let userData = response.data {
+                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                       let keyWindow = windowScene.windows.first {
+                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                        keyWindow.makeKeyAndVisible()
+                                    }
+                                } else if let errorInfo = response.error {
+                                    showAlert(message: errorInfo.message)
+                                } else {
+                                    showAlert(message: "Unexpected response structure.")
+                                }
                             }
                         case .failure(let error):
-                            print("Request failed with error: \(error.localizedDescription)")
+                            DispatchQueue.main.async {
+                                showAlert(message: error.localizedDescription)
+                            }
                         }
                     }
                 }
@@ -92,21 +95,33 @@ struct SBLoginView: View {
                         // Facebook Sign In Action
                     }
                 }
+                
             }
-        }
-        .navigationTitle("")
-        .toolbar(.hidden)
-        .sheet(isPresented: $isForgotPasswordPresented) {
-            SBForgotPasswordSheetView()
-                .presentationDetents([.fraction(0.5)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            .navigationTitle("")
+            .toolbar(.hidden)
+            .sheet(isPresented: $isForgotPasswordPresented) {
+                SBForgotPasswordSheetView()
+                    .presentationDetents([.fraction(0.5)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(50)
+            }
         }
     }
     
     private func forgotPassword() {
         isForgotPasswordPresented = true
     }
+    
+    private func showAlert(message: String) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first?.rootViewController else {
+            return
+        }
+        let alert = UIAlertController(title: "Login Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        rootVC.present(alert, animated: true)
+    }
+    
 }
 
 #Preview {

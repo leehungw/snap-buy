@@ -28,6 +28,8 @@ final class UserRepository {
     static let shared = UserRepository()
     private init() {}
     
+    var currentUser: UserData?
+    
     func login(request: UserLoginRequest, completion: @escaping (Result<UserLoginResponse, Error>) -> Void) {
         guard let jsonData = try? JSONEncoder().encode(request) else {
             let encodingError = NSError(domain: "UserRepository", code: -1002, userInfo: [NSLocalizedDescriptionKey: "Unable to encode login request"])
@@ -39,7 +41,15 @@ final class UserRepository {
                                            method: "POST",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
-            completion(result)
+            switch result {
+            case .success(let response):
+                if let userData = response.data {
+                    UserRepository.shared.currentUser = userData
+                }
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
 }
