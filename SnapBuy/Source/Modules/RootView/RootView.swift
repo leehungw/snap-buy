@@ -8,8 +8,7 @@ struct RootView: App {
             if SBUserDefaultService.instance.didShowOnboarding {
                 SBLoginView()
             } else {
-               // SBOBView()
-                SBHomeTabbarView()
+                SBOBView()
             }
         }
     }
