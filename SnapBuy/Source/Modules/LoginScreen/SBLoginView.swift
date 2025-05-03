@@ -1,10 +1,13 @@
 import SwiftUI
+import GoogleSignInSwift
+import GoogleSignIn
+import UIKit
 
 struct SBLoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isForgotPasswordPresented: Bool = false
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -89,10 +92,46 @@ struct SBLoginView: View {
                 
                 VStack(spacing: 10) {
                     SBButton(title: RLocalizable.signInWithGoogle(), leadingIcon: RImage.img_google_icon.image, style: .outlined) {
-                        // Google Sign In Action
-                    }
-                    SBButton(title: RLocalizable.signInWithFacebook(), leadingIcon: RImage.img_facebook_icon.image, style: .outlined) {
-                        // Facebook Sign In Action
+                        guard let windowScene = UIApplication.shared.connectedScenes
+                                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                              let root = windowScene.windows.first?.rootViewController else {
+                            return
+                        }
+                        GIDSignIn.sharedInstance.signIn(
+                            withPresenting: root) { signInResult, error in
+                                guard let signInResult else { return }
+                                signInResult.user.refreshTokensIfNeeded { user, error in
+                                    guard error == nil else { return }
+                                    guard let user = user else { return }
+                                    
+                                    let idTokenString = user.idToken?.tokenString ?? ""
+                                    let email = user.profile?.email ?? ""
+
+                                    let googleRequest = GoogleLoginRequest(googleId: idTokenString, email: email)
+                                    UserRepository.shared.loginWithGoogle(request: googleRequest) { result in
+                                        switch result {
+                                        case .success(let response):
+                                            DispatchQueue.main.async {
+                                                if response.result == 1, let userData = response.data {
+                                                    if let windowScene = UIApplication.shared.connectedScenes
+                                                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                                                       let keyWindow = windowScene.windows.first {
+                                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                                        keyWindow.makeKeyAndVisible()
+                                                    }
+                                                } else if let errorInfo = response.error {
+                                                    showAlert(message: errorInfo.message)
+                                                }
+                                            }
+                                        case .failure(let error):
+                                            DispatchQueue.main.async {
+                                                showAlert(message: error.localizedDescription)
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                            }
                     }
                 }
                 
