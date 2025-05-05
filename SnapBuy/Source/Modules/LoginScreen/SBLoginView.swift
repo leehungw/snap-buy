@@ -4,10 +4,17 @@ import GoogleSignIn
 import UIKit
 
 struct SBLoginView: View {
+    @Environment(\.presentationMode) private var presentationMode
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isForgotPasswordPresented: Bool = false
+    @State var path = NavigationPath()
+    @State var shouldShowBackButton: Bool = true
 
+    init(shouldShowBackButton: Bool = true) {
+        self.shouldShowBackButton = shouldShowBackButton
+    }
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -43,7 +50,7 @@ struct SBLoginView: View {
                             .bold()
                             .padding(.horizontal, 20)
                     }
-                    SBTextField(image: RImage.img_password.image, placeholder: RLocalizable.createYourPassword(), text: $password, isSecure: true)
+                    SBTextField(image: RImage.img_password.image, placeholder: RLocalizable.enterYourPassword(), text: $password, isSecure: true)
                 }
                 
                 HStack {
@@ -133,11 +140,19 @@ struct SBLoginView: View {
                                 }
                             }
                     }
+                    
+                    if shouldShowBackButton {
+                        NavigationLink(destination: SBSignUpView()) {
+                            Text("Don't have account? Sign Up")
+                                .foregroundColor(.main)
+                                .font(.subheadline)
+                                .bold()
+                                .contentShape(Rectangle())
+                                .padding(.top, 10)
+                        }
+                    }
                 }
-                
             }
-            .navigationTitle("")
-            .toolbar(.hidden)
             .sheet(isPresented: $isForgotPasswordPresented) {
                 SBForgotPasswordSheetView()
                     .presentationDetents([.fraction(0.5)])
@@ -145,6 +160,19 @@ struct SBLoginView: View {
                     .presentationCornerRadius(50)
             }
         }
+        .navigationTitle("")
+        .toolbar {
+            if shouldShowBackButton {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                    }
+                }
+            }
+        }
+        .navigationBarBackButtonHidden(true)
     }
     
     private func forgotPassword() {
@@ -160,7 +188,6 @@ struct SBLoginView: View {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         rootVC.present(alert, animated: true)
     }
-    
 }
 
 #Preview {
