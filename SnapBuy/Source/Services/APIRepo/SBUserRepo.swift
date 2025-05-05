@@ -10,6 +10,12 @@ struct GoogleLoginRequest: Codable {
     let email: String
 }
 
+struct SignUpRequest: Codable {
+    let userName: String
+    let email: String
+    let password: String
+}
+
 struct UserData: Codable {
     let id: String
     let name: String
@@ -81,5 +87,27 @@ final class UserRepository {
         }
     }
     
+    func signUp(request: SignUpRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
+        guard let jsonData = try? JSONEncoder().encode(request) else {
+            let encodingError = NSError(domain: "UserRepository", code: -1004, userInfo: [NSLocalizedDescriptionKey: "Unable to encode sign up request"])
+            completion(.failure(encodingError))
+            return
+        }
+
+        SBAPIService.shared.performRequest(endpoint: "api/users/signUp",
+                                           method: "POST",
+                                           body: jsonData,
+                                           headers: nil) { (result: Result<UserLoginResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let userData = response.data {
+                    UserRepository.shared.currentUser = userData
+                }
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
     
 }

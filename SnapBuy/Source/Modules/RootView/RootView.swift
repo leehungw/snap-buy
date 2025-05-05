@@ -7,7 +7,7 @@ struct RootView: App {
     var body: some Scene {
         WindowGroup {
             if SBUserDefaultService.instance.didShowOnboarding {
-                SBLoginView()
+                SBLoginView(shouldShowBackButton: false)
                     .onOpenURL { url in
                         GIDSignIn.sharedInstance.handle(url)
                     }

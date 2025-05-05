@@ -1,11 +1,15 @@
 import SwiftUI
+import UIKit
+import GoogleSignIn
 
 struct SBSignUpView: View {
+    @Environment(\.presentationMode) private var presentationMode
     @State private var username: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var isLoading: Bool = false
 
     var body: some View {
         NavigationView {
@@ -58,10 +62,24 @@ struct SBSignUpView: View {
                         alertMessage = RLocalizable.yourAccountWillBeCreatedAsSoonAsYouFilledAllTheInformationNeeded()
                         showAlert = true
                     } else {
-                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                           let keyWindow = windowScene.windows.first {
-                            keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
-                            keyWindow.makeKeyAndVisible()
+                        isLoading = true
+                        let request = SignUpRequest(userName: username, email: email, password: password)
+                        UserRepository.shared.signUp(request: request) { result in
+                            DispatchQueue.main.async {
+                                isLoading = false
+                                switch result {
+                                case .success(let response):
+                                    if response.result == 1 {
+                                        //
+                                    } else {
+                                        alertMessage = response.error?.message ?? "Sign up failed"
+                                        showAlert = true
+                                    }
+                                case .failure(let error):
+                                    alertMessage = error.localizedDescription
+                                    showAlert = true
+                                }
+                            }
                         }
                     }
                 }
@@ -80,15 +98,67 @@ struct SBSignUpView: View {
                 
                 VStack(spacing: 10) {
                     SBButton(title: RLocalizable.signInWithGoogle(), leadingIcon: RImage.img_google_icon.image, style: .outlined) {
-                        // Google Sign In Action
-                    }
-                    SBButton(title: RLocalizable.signInWithFacebook(), leadingIcon: RImage.img_facebook_icon.image, style: .outlined) {
-                        // Facebook Sign In Action
+                        guard let windowScene = UIApplication.shared.connectedScenes
+                                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                              let root = windowScene.windows.first?.rootViewController else {
+                            return
+                        }
+                        GIDSignIn.sharedInstance.signIn(
+                            withPresenting: root) { signInResult, error in
+                                guard let signInResult else { return }
+                                signInResult.user.refreshTokensIfNeeded { user, error in
+                                    guard error == nil else { return }
+                                    guard let user = user else { return }
+                                    
+                                    let idTokenString = user.idToken?.tokenString ?? ""
+                                    let email = user.profile?.email ?? ""
+
+                                    let googleRequest = GoogleLoginRequest(googleId: idTokenString, email: email)
+                                    UserRepository.shared.loginWithGoogle(request: googleRequest) { result in
+                                        switch result {
+                                        case .success(let response):
+                                            DispatchQueue.main.async {
+                                                if response.result == 1, let userData = response.data {
+                                                    if let windowScene = UIApplication.shared.connectedScenes
+                                                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                                                       let keyWindow = windowScene.windows.first {
+                                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                                        keyWindow.makeKeyAndVisible()
+                                                    }
+                                                } else if let errorInfo = response.error {
+                                                    showAlert(message: errorInfo.message)
+                                                }
+                                            }
+                                        case .failure(let error):
+                                            DispatchQueue.main.async {
+                                                showAlert(message: error.localizedDescription)
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                            }
                     }
                 }
             }
         }
         .navigationTitle("")
-        .toolbar(.hidden)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                }
+            }
+        }
+        .overlay {
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .scaleEffect(1.5)
+            }
+        }
     }
 }
