@@ -38,25 +38,27 @@ struct SBOBView: View {
                     path.append(1)
                 }
                 .padding(.horizontal, 20)
-                .navigationDestination(for: Int.self) { _ in
-                    SBSignUpView()
-                }
                 
                 Button(action: {
                     SBUserDefaultService.instance.didShowOnboarding = true
+                    path.append(2)
                 }) {
                     Text(RLocalizable.alreadyHaveAnAccount())
                         .foregroundColor(.main)
                         .font(.subheadline)
                         .bold()
                 }
+                .contentShape(Rectangle())
                 .padding(.top, 10)
-                .navigationDestination(for: Int.self) { _ in
-                    SBLoginView()
-                }
             }
             .padding()
+            .navigationDestination(for: Int.self) { value in
+                if value == 1 {
+                    SBSignUpView()
+                } else if value == 2 {
+                    SBLoginView(shouldShowBackButton: true)
+                }
+            }
         }
     }
 }
-

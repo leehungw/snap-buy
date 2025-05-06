@@ -39,7 +39,7 @@ struct SBForgotPasswordSheetView: View {
         .padding(.top, 20)
         .padding(.bottom, 40)
         .sheet(isPresented: $isEnterNewPasswordPresented) {
-            SBEnterNewPasswordSheetView()
+            SBForgotPasswordSuccess()
                 .presentationDetents([.fraction(0.6)])
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(50)
@@ -47,7 +47,7 @@ struct SBForgotPasswordSheetView: View {
     }
 }
 
-struct SBEnterNewPasswordSheetView: View {
+struct SBForgotPasswordSuccess: View {
     @State private var password: String = ""
     @State private var confirmPassword: String = ""
     
@@ -100,5 +100,5 @@ struct SBEnterNewPasswordSheetView: View {
 }
 
 #Preview {
-    SBEnterNewPasswordSheetView()
+    SBForgotPasswordSuccess()
 }

@@ -68,6 +68,7 @@
 		0AB9B0672DBFC56700E54E28 /* AddressModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B05F2DBFC56700E54E28 /* AddressModel.swift */; };
 		0AB9B0682DBFC56700E54E28 /* PopularModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0632DBFC56700E54E28 /* PopularModel.swift */; };
 		0AB9B0692DBFC56700E54E28 /* PaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0622DBFC56700E54E28 /* PaymentModel.swift */; };
+		0ABB7D202DC4B29600AD897B /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ABB7D1F2DC4B29600AD897B /* credentials.plist */; };
 		1136D81B7CB8C1798433F2A6 /* Pods_SnapBuy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68E662488D45EFC313A2A406 /* Pods_SnapBuy.framework */; };
 		DA50456F2DC0A7AC00DCE3EA /* SBMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA50456E2DC0A7A600DCE3EA /* SBMessageView.swift */; };
 		DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5045702DC0AD9400DCE3EA /* MessageModel.swift */; };
@@ -147,6 +148,7 @@
 		0AB9B0612DBFC56700E54E28 /* ColorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		0AB9B0622DBFC56700E54E28 /* PaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModel.swift; sourceTree = "<group>"; };
 		0AB9B0632DBFC56700E54E28 /* PopularModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularModel.swift; sourceTree = "<group>"; };
+		0ABB7D1F2DC4B29600AD897B /* credentials.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
 		68E662488D45EFC313A2A406 /* Pods_SnapBuy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnapBuy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0B829D058138A7823F66B5 /* Pods-SnapBuy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.debug.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.debug.xcconfig"; sourceTree = "<group>"; };
 		8BDE79FAB67DEB8843E5A04A /* Pods-SnapBuy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.release.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.release.xcconfig"; sourceTree = "<group>"; };
@@ -268,8 +270,8 @@
 		0A47C4DF2D94F90F0091E2D4 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-        DA850D912DBB373300E952AA /* OrderModel.swift */,
-        DA5045702DC0AD9400DCE3EA /* MessageModel.swift */,
+				DA850D912DBB373300E952AA /* OrderModel.swift */,
+				DA5045702DC0AD9400DCE3EA /* MessageModel.swift */,
 				0A47C4DB2D94F90F0091E2D4 /* BannerModel.swift */,
 				0A47C4DC2D94F90F0091E2D4 /* CategoryModel.swift */,
 				0A47C4DD2D94F90F0091E2D4 /* ProductModel.swift */,
@@ -444,9 +446,10 @@
 		0AA7A10B2D91CD9D00EB5684 /* SnapBuy */ = {
 			isa = PBXGroup;
 			children = (
+				0AA7A10A2D91CD9D00EB5684 /* Info.plist */,
+				0ABB7D1F2DC4B29600AD897B /* credentials.plist */,
 				0AA7A0ED2D91CD9D00EB5684 /* Resource */,
 				0AA7A1092D91CD9D00EB5684 /* Source */,
-				0AA7A10A2D91CD9D00EB5684 /* Info.plist */,
 			);
 			path = SnapBuy;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 				0AA7A1102D91CD9D00EB5684 /* Outfit-Bold.ttf in Resources */,
 				0AA7A1112D91CD9D00EB5684 /* Outfit-ExtraBold.ttf in Resources */,
 				0AA7A1122D91CD9D00EB5684 /* Outfit-ExtraLight.ttf in Resources */,
+				0ABB7D202DC4B29600AD897B /* credentials.plist in Resources */,
 				0AA7A1132D91CD9D00EB5684 /* Outfit-Light.ttf in Resources */,
 				0AA7A1142D91CD9D00EB5684 /* Outfit-Medium.ttf in Resources */,
 				0AA7A1152D91CD9D00EB5684 /* Outfit-Regular.ttf in Resources */,
@@ -760,11 +764,9 @@
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
 				0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */,
 				0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */,
-        0AA7A1262D91CD9D00EB5684 /* FavouriteView.swift in Sources */,
-        DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
+				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
 				DA850D922DBB373900E952AA /* OrderModel.swift in Sources */,
 				DA5045732DC0F24F00DCE3EA /* SBChatView.swift in Sources */,
-				DAC5FC732DB5327400608CF0 /* CartItemModel.swift in Sources */,
 				0A47C4C12D94F6FA0091E2D4 /* NotiView.swift in Sources */,
 				0A47C4CD2D94F8D90091E2D4 /* Product+Sample.swift in Sources */,
 				0A47C4CE2D94F8D90091E2D4 /* ProductDetail+Sample.swift in Sources */,
@@ -949,7 +951,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jh.SnapBuy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ui.se.snapbuy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -980,7 +982,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jh.SnapBuy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ui.se.snapbuy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
