@@ -1,6 +1,11 @@
 import SwiftUI
+import Foundation
+import SwiftSMTP
 
 struct SBVerificationView: View {
+    let username: String
+    let email: String
+    let password: String
     enum FocusField: Hashable {
         case code1, code2, code3, code4, code5
     }
@@ -12,6 +17,10 @@ struct SBVerificationView: View {
     @State private var code3: String = ""
     @State private var code4: String = ""
     @State private var code5: String = ""
+    @State var generatedCode: String
+    @State private var isLoading: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var showAlert: Bool = false
     
     @State private var isSheetPresented: Bool = false
     
@@ -32,7 +41,7 @@ struct SBVerificationView: View {
                     .fontWeight(.semibold)
                     .padding(.top, 24)
                 
-                Text(RLocalizable.weHaveSentTheCodeVerificationTo("hungtat@gmail.com"))
+                Text(RLocalizable.weHaveSentTheCodeVerificationTo(email))
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
@@ -56,7 +65,7 @@ struct SBVerificationView: View {
                     .focused($focusField, equals: .code3)
                     
                     SBEmailVerificationTextView(text: $code4) {
-                        focusField = nil
+                        focusField = .code5
                     }
                     .focused($focusField, equals: .code4)
                     
@@ -69,11 +78,42 @@ struct SBVerificationView: View {
                 .padding(.bottom, 30)
                 
                 SBButton(title: RLocalizable.submit(), style: .filled, action: {
-                    isSheetPresented = true
+                    let entered = code1 + code2 + code3 + code4 + code5
+                    guard entered == generatedCode else {
+                        alertMessage = "Verification code is incorrect"
+                        showAlert = true
+                        return
+                    }
+                    isLoading = true
+                    let request = SignUpRequest(userName: username, email: email, password: password)
+                    UserRepository.shared.signUp(request: request) { result in
+                        DispatchQueue.main.async {
+                            isLoading = false
+                            switch result {
+                            case .success(let response):
+                                if response.result == 1 {
+                                    isSheetPresented = true
+                                } else {
+                                    alertMessage = response.error?.message ?? "Sign up failed"
+                                    showAlert = true
+                                }
+                            case .failure(let error):
+                                alertMessage = error.localizedDescription
+                                showAlert = true
+                            }
+                        }
+                    }
                 })
                 
                 Button(action: {
-                    // Handle resend action
+                    Task {
+                        generatedCode = (0..<5).map { _ in String(Int.random(in: 0...9)) }.joined()
+                        await withCheckedContinuation { continuation in
+                            EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
+                                continuation.resume()
+                            }
+                        }
+                    }
                 }) {
                     createAttributedText()
                 }
@@ -92,6 +132,20 @@ struct SBVerificationView: View {
             .presentationDragIndicator(.visible)
             .presentationCornerRadius(50)
         }
+        .overlay {
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .scaleEffect(1.5)
+            }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text(RLocalizable.infoMissing()),
+                message: Text(alertMessage),
+                dismissButton: .default(Text(RLocalizable.oK()))
+            )
+        }
     }
     
     private func createAttributedText() -> Text {
@@ -102,10 +156,6 @@ struct SBVerificationView: View {
         attributedString.append(resendString)
         return Text(.init(attributedString))
     }
-}
-
-#Preview {
-    SBVerificationView()
 }
 
 struct SBRegisterSuccessView: View {
@@ -137,5 +187,43 @@ struct SBRegisterSuccessView: View {
         }
         .navigationTitle("")
         .toolbar(.hidden)
+    }
+}
+
+final class EmailService {
+    static let shared = EmailService()
+    private let smtp: SMTP
+    private let fromUser: Mail.User
+
+    private init() {
+        // Configure your SMTP server credentials
+        smtp = SMTP(
+            hostname: "smtp.gmail.com",
+            email: "hungttalop61@gmail.com",
+            password: "qbiz bkgx vrpq wjwv",
+            port: 587,
+            tlsMode: .requireSTARTTLS,
+            authMethods: [.plain]
+        )
+        fromUser = Mail.User(name: "Snap Buy", email: "hungttalop61@gmail.com")
+    }
+
+    func sendVerificationCode(to email: String, code: String, completion: @escaping () -> Void) {
+        let toUser = Mail.User(email: email)
+        let mail = Mail(
+            from: fromUser,
+            to: [toUser],
+            subject: "Your Verification Code",
+            text: "Your verification code for SnapBuy is \(code)"
+        )
+        smtp.send(mail) { error in
+            if let error = error {
+                print("SMTP send error:", error)
+                completion()
+            } else {
+                print("Verification email sent to \(email)")
+                completion()
+            }
+        }
     }
 }

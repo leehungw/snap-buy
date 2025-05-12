@@ -9,10 +9,11 @@ struct SBSignUpView: View {
     @State private var password: String = ""
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
-    @State private var isLoading: Bool = false
+    @State private var navigateToVerification = false
+    @State private var generatedCode: String = ""
 
     var body: some View {
-        NavigationView {
+        let navigationView = NavigationView {
             VStack(spacing: 20) {
                 VStack(alignment: .leading) {
                     Text(RLocalizable.createAccount())
@@ -62,25 +63,15 @@ struct SBSignUpView: View {
                         alertMessage = RLocalizable.yourAccountWillBeCreatedAsSoonAsYouFilledAllTheInformationNeeded()
                         showAlert = true
                     } else {
-                        isLoading = true
-                        let request = SignUpRequest(userName: username, email: email, password: password)
-                        UserRepository.shared.signUp(request: request) { result in
-                            DispatchQueue.main.async {
-                                isLoading = false
-                                switch result {
-                                case .success(let response):
-                                    if response.result == 1 {
-                                        //
-                                    } else {
-                                        alertMessage = response.error?.message ?? "Sign up failed"
-                                        showAlert = true
-                                    }
-                                case .failure(let error):
-                                    alertMessage = error.localizedDescription
-                                    showAlert = true
+                        generatedCode = (0..<5).map { _ in String(Int.random(in: 0...9)) }.joined()
+                        Task {
+                            await withCheckedContinuation { continuation in
+                                EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
+                                    continuation.resume()
                                 }
                             }
                         }
+                        navigateToVerification = true
                     }
                 }
                 .alert(isPresented: $showAlert) {
@@ -89,6 +80,10 @@ struct SBSignUpView: View {
                         message: Text(alertMessage),
                         dismissButton: .default(Text(RLocalizable.oK()))
                     )
+                }
+                
+                NavigationLink(destination: SBVerificationView(username: username, email: email, password: password, generatedCode: generatedCode), isActive: $navigateToVerification) {
+                    EmptyView()
                 }
                 
                 Text(RLocalizable.orUsingOtherMethod())
@@ -142,23 +137,26 @@ struct SBSignUpView: View {
                 }
             }
         }
-        .navigationTitle("")
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
+        return navigationView.navigationTitle("")
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                    }
                 }
             }
+    }
+    
+    private func showAlert(message: String) {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first?.rootViewController else {
+            return
         }
-        .overlay {
-            if isLoading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .scaleEffect(1.5)
-            }
-        }
+        let alert = UIAlertController(title: "Login Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        rootVC.present(alert, animated: true)
     }
 }
