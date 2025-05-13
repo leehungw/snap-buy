@@ -38,6 +38,7 @@
 "Store" = "Store";
 "Upbox Bag" = "Upbox Bag";
 "StoreStatsFormat" = "%@ Products  •  %@ Followers";
+"Hi, %@" = "Hi, %@";
 "Follow" = "Follow";
 "Mainpage" = "Mainpage";
 "All Products" = "All Products";

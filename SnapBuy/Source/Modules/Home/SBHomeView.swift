@@ -6,19 +6,17 @@ enum Tab {
 struct SBHomeView: View {
     @State private var selectedTab: Tab = .home
     
-    
-    
     var body: some View {
         SBBaseView {  
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
-                    Image("img_a")
+                    RImage.img_default_user_profile.image
                         .resizable()
                         .frame(width: 60, height: 60)
                         .clipShape(Circle())
                     
                     VStack(alignment: .leading) {
-                        Text("Hi, Jonathan")
+                        Text(RLocalizable.hi(UserRepository.shared.currentUser?.name ?? ""))
                             .font(R.font.outfitBold.font(size: 16))
                         Text("Let's go shopping")
                             .font(R.font.outfitRegular.font(size: 13))

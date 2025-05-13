@@ -10,6 +10,10 @@
 		0A1C505C2D9E82C5005B2130 /* SBForgotPasswordSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */; };
 		0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */; };
 		0A47B1352DD23C0D00FBD707 /* SwiftSMTP in Frameworks */ = {isa = PBXBuildFile; productRef = 0A47B1342DD23C0D00FBD707 /* SwiftSMTP */; };
+		0A47B13B2DD321B800FBD707 /* SBEmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B13A2DD321B400FBD707 /* SBEmailService.swift */; };
+		0A47B1412DD3272D00FBD707 /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1402DD3272900FBD707 /* UserModels.swift */; };
+		0A47B1432DD3274900FBD707 /* CategoryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1422DD3274400FBD707 /* CategoryModels.swift */; };
+		0A47B1452DD3297B00FBD707 /* SBCategoryRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */; };
 		0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */; };
 		0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */; };
 		0A47C4B22D94F6290091E2D4 /* SBCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4B02D94F6290091E2D4 /* SBCartView.swift */; };
@@ -89,6 +93,10 @@
 /* Begin PBXFileReference section */
 		0A1C505B2D9E82BE005B2130 /* SBForgotPasswordSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBForgotPasswordSheetView.swift; sourceTree = "<group>"; };
 		0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAPIService.swift; sourceTree = "<group>"; };
+		0A47B13A2DD321B400FBD707 /* SBEmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEmailService.swift; sourceTree = "<group>"; };
+		0A47B1402DD3272900FBD707 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
+		0A47B1422DD3274400FBD707 /* CategoryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModels.swift; sourceTree = "<group>"; };
+		0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBCategoryRepo.swift; sourceTree = "<group>"; };
 		0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBView.swift; sourceTree = "<group>"; };
 		0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseCard.swift; sourceTree = "<group>"; };
 		0A47C4B02D94F6290091E2D4 /* SBCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBCartView.swift; sourceTree = "<group>"; };
@@ -324,6 +332,7 @@
 		0A61F9A02DAF47E6003A9DAD /* APIRepo */ = {
 			isa = PBXGroup;
 			children = (
+				0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */,
 				0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */,
 			);
 			path = APIRepo;
@@ -403,22 +412,22 @@
 		0AA7A1072D91CD9D00EB5684 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
+				0AA7A0F22D91CD9D00EB5684 /* Base */,
+				0A47C4B12D94F6290091E2D4 /* Cart */,
+				0A47C4D82D94F8F60091E2D4 /* CustomTabBar */,
+				0A47C4BA2D94F6D10091E2D4 /* Home */,
+				0AA7A12F2D91CF5C00EB5684 /* LoginScreen */,
 				DA50456D2DC0A79C00DCE3EA /* Message */,
-				DAC5FC6D2DB4E83F00608CF0 /* Store */,
+				0A47C4C02D94F6FA0091E2D4 /* Noti */,
+				0A47C4AB2D94EE5C0091E2D4 /* Onboarding */,
+				0A47C4C32D94F72E0091E2D4 /* ProductDetail */,
+				0A47C4B32D94F6A10091E2D4 /* Root */,
+				0A47C4E42D94FB990091E2D4 /* RootView */,
 				DAFCEAD72DA5187F00DC640B /* Search */,
 				0A47C51D2D99349D0091E2D4 /* Sign up  */,
-				0A47C4E42D94FB990091E2D4 /* RootView */,
+				DAC5FC6D2DB4E83F00608CF0 /* Store */,
 				0A47C4C62D94F7480091E2D4 /* User */,
-				0A47C4B32D94F6A10091E2D4 /* Root */,
-				0A47C4AB2D94EE5C0091E2D4 /* Onboarding */,
-				0AA7A12F2D91CF5C00EB5684 /* LoginScreen */,
-				0AA7A0F22D91CD9D00EB5684 /* Base */,
-				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
-				0A47C4B12D94F6290091E2D4 /* Cart */,
-				0A47C4BA2D94F6D10091E2D4 /* Home */,
-				0A47C4C02D94F6FA0091E2D4 /* Noti */,
-				0A47C4C32D94F72E0091E2D4 /* ProductDetail */,
-				0A47C4D82D94F8F60091E2D4 /* CustomTabBar */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -426,6 +435,7 @@
 		0AA7A1082D91CD9D00EB5684 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0A47B13A2DD321B400FBD707 /* SBEmailService.swift */,
 				0AB9B0642DBFC56700E54E28 /* Models */,
 				0A61F9A02DAF47E6003A9DAD /* APIRepo */,
 				0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */,
@@ -478,6 +488,8 @@
 		0AB9B0642DBFC56700E54E28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0A47B1422DD3274400FBD707 /* CategoryModels.swift */,
+				0A47B1402DD3272900FBD707 /* UserModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -761,6 +773,7 @@
 				DAC5FC6A2DB2359700608CF0 /* SBRangeSlider.swift in Sources */,
 				DAC5FC632DB229D700608CF0 /* SBSearchMainView.swift in Sources */,
 				0A47C4C72D94F7480091E2D4 /* SBUserView.swift in Sources */,
+				0A47B1452DD3297B00FBD707 /* SBCategoryRepo.swift in Sources */,
 				0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */,
 				0AA7A12E2D91CF3600EB5684 /* R.generated.swift in Sources */,
 				0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */,
@@ -785,7 +798,9 @@
 				DAC5FC6F2DB4E85000608CF0 /* SBStoreView.swift in Sources */,
 				0A47C4E02D94F90F0091E2D4 /* TabModel.swift in Sources */,
 				0A47C4E12D94F90F0091E2D4 /* CategoryModel.swift in Sources */,
+				0A47B1412DD3272D00FBD707 /* UserModels.swift in Sources */,
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
+				0A47B13B2DD321B800FBD707 /* SBEmailService.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
 				DAC5FC672DB2340900608CF0 /* SBFilterSheetView.swift in Sources */,
 				0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */,
@@ -795,6 +810,7 @@
 				0AA7A1312D91CF7100EB5684 /* SBLoginView.swift in Sources */,
 				DAC5FC792DB5E33A00608CF0 /* SBPaymentView.swift in Sources */,
 				0A47C4B22D94F6290091E2D4 /* SBCartView.swift in Sources */,
+				0A47B1432DD3274900FBD707 /* CategoryModels.swift in Sources */,
 				0AA7A1342D9239A700EB5684 /* SBTextInput.swift in Sources */,
 				0AA7A12B2D91CD9D00EB5684 /* SBAppConstants.swift in Sources */,
 			);
