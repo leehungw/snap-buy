@@ -24,6 +24,9 @@ struct SBVerificationView: View {
     
     @State private var isSheetPresented: Bool = false
     
+    @State private var remainingSeconds: Int = 0
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -106,18 +109,24 @@ struct SBVerificationView: View {
                 })
                 
                 Button(action: {
-                    Task {
-                        generatedCode = (0..<5).map { _ in String(Int.random(in: 0...9)) }.joined()
-                        await withCheckedContinuation { continuation in
-                            EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
-                                continuation.resume()
-                            }
+                    guard remainingSeconds == 0 else { return }
+                    generatedCode = (0..<5).map { _ in String(Int.random(in: 0...9)) }.joined()
+                    DispatchQueue.global(qos: .background).async {
+                        EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
+                            // optional completion
                         }
                     }
+                    remainingSeconds = 60
                 }) {
-                    createAttributedText()
+                    if remainingSeconds > 0 {
+                        Text("Resend (\(remainingSeconds))")
+                            .font(.system(size: 16))
+                            .foregroundColor(.gray)
+                    } else {
+                        createAttributedText()
+                    }
                 }
-                .padding(.top, 16)
+                .disabled(remainingSeconds > 0)
                 
                 Spacer()
             }
@@ -145,6 +154,11 @@ struct SBVerificationView: View {
                 message: Text(alertMessage),
                 dismissButton: .default(Text(RLocalizable.oK()))
             )
+        }
+        .onReceive(timer) { _ in
+            if remainingSeconds > 0 {
+                remainingSeconds -= 1
+            }
         }
     }
     
@@ -181,7 +195,12 @@ struct SBRegisterSuccessView: View {
                     .padding(.bottom, 80)
                 
                 SBButton(title: RLocalizable.goToHomepage(), style: .filled) {
-                    
+                    if let windowScene = UIApplication.shared.connectedScenes
+                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                       let keyWindow = windowScene.windows.first {
+                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                        keyWindow.makeKeyAndVisible()
+                    }
                 }
             }
         }
@@ -194,7 +213,7 @@ final class EmailService {
     static let shared = EmailService()
     private let smtp: SMTP
     private let fromUser: Mail.User
-
+    
     private init() {
         // Configure your SMTP server credentials
         smtp = SMTP(
@@ -207,7 +226,7 @@ final class EmailService {
         )
         fromUser = Mail.User(name: "Snap Buy", email: "hungttalop61@gmail.com")
     }
-
+    
     func sendVerificationCode(to email: String, code: String, completion: @escaping () -> Void) {
         let toUser = Mail.User(email: email)
         let mail = Mail(
@@ -224,6 +243,27 @@ final class EmailService {
                 print("Verification email sent to \(email)")
                 completion()
             }
+        }
+    }
+    
+    func sendTemporaryPassword(to email: String, completion: @escaping (String) -> Void) {
+        let characters = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        let tempPassword = String((0..<8).compactMap { _ in characters.randomElement() })
+        
+        let toUser = Mail.User(email: email)
+        let mail = Mail(
+            from: fromUser,
+            to: [toUser],
+            subject: "Your Temporary Password",
+            text: "Your temporary password is: \(tempPassword)\nPlease use this to log in and change your password immediately."
+        )
+        smtp.send(mail) { error in
+            if let error = error {
+                print("SMTP send error:", error)
+            } else {
+                print("Temporary password sent to \(email)")
+            }
+            completion(tempPassword)
         }
     }
 }

@@ -64,11 +64,9 @@ struct SBSignUpView: View {
                         showAlert = true
                     } else {
                         generatedCode = (0..<5).map { _ in String(Int.random(in: 0...9)) }.joined()
-                        Task {
-                            await withCheckedContinuation { continuation in
-                                EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
-                                    continuation.resume()
-                                }
+                        DispatchQueue.global(qos: .background).async {
+                            EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
+                                // optional completion
                             }
                         }
                         navigateToVerification = true
