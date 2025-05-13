@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SBForgotPasswordSheetView: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var email: String = ""
     @State private var isEnterNewPasswordPresented: Bool = false
     
@@ -34,11 +35,18 @@ struct SBForgotPasswordSheetView: View {
             
             SBButton(title: RLocalizable.sendCode(), style: .filled) {
                 isEnterNewPasswordPresented = true
+                DispatchQueue.global(qos: .background).async {
+                    EmailService.shared.sendTemporaryPassword(to: email) { password in
+                        UserRepository.shared.updatePassword()
+                    }
+                }
             }
         }
         .padding(.top, 20)
         .padding(.bottom, 40)
-        .sheet(isPresented: $isEnterNewPasswordPresented) {
+        .sheet(isPresented: $isEnterNewPasswordPresented, onDismiss: {
+            dismiss()
+        }) {
             SBForgotPasswordSuccess()
                 .presentationDetents([.fraction(0.6)])
                 .presentationDragIndicator(.visible)
@@ -48,54 +56,28 @@ struct SBForgotPasswordSheetView: View {
 }
 
 struct SBForgotPasswordSuccess: View {
-    @State private var password: String = ""
-    @State private var confirmPassword: String = ""
+    @Environment(\.dismiss) private var dismissSuccess
     
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(alignment: .leading) {
-                Text(RLocalizable.createNewPassword())
-                    .font(.title)
-                    .bold()
-                    .padding(.top, 40)
-                    .padding(.bottom, 10)
-                
-                Text(RLocalizable.enterYourNewPassword())
-                    .foregroundColor(.gray)
-                    .font(.subheadline)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 20)
-            .padding(.bottom, 40)
+        VStack(spacing: 24) {
+            RImage.img_email_verification.image
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+                .padding(.top, 32)
             
-            VStack(alignment: .leading, spacing:  5) {
-                HStack {
-                    Text(RLocalizable.password())
-                        .font(.title3)
-                        .bold()
-                        .padding(.horizontal, 20)
-                }
-                SBTextField(image: RImage.img_password.image, placeholder: RLocalizable.enterYourPassword(), text: $password)
-            }
-            .padding(.bottom, 5)
+            Text("A temporary password has been sent to your email.")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
             
-            VStack(alignment: .leading, spacing:  5) {
-                HStack {
-                    Text(RLocalizable.confirmPassword())
-                        .font(.title3)
-                        .bold()
-                        .padding(.horizontal, 20)
-                }
-                SBTextField(image: RImage.img_password.image, placeholder: RLocalizable.confirmPassword(), text: $confirmPassword)
+            SBButton(title: "Got It", style: .filled) {
+                dismissSuccess()
             }
-            .padding(.bottom, 20)
-            
-            SBButton(title: RLocalizable.changePassword(), style: .filled) {
-                 
-            }
+            .padding(.bottom, 32)
         }
-        .padding(.top, 20)
-        .padding(.bottom, 40)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 16)
     }
 }
 
