@@ -32,7 +32,3 @@ struct SBEmailVerificationTextView: View {
 
     }
 }
-
-#Preview {
-    SBVerificationView()
-}
