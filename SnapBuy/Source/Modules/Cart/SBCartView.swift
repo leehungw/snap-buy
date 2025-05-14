@@ -50,6 +50,7 @@ struct SBCartView: View {
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(50)
         }
+        .navigationBarBackButtonHidden(true)
     }
     // MARK: - Header
     var headerView: some View {
