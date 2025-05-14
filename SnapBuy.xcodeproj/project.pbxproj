@@ -83,6 +83,8 @@
 		DA958F2B2DD202C700A98432 /* SBEditNotiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F2A2DD202BD00A98432 /* SBEditNotiView.swift */; };
 		DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F2C2DD32E8300A98432 /* SBSettingBaseView.swift */; };
 		DA958F2F2DD3989200A98432 /* NotificationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F2E2DD3988C00A98432 /* NotificationsModel.swift */; };
+		DA958F322DD44E0E00A98432 /* SBUpgradeAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F312DD44E0200A98432 /* SBUpgradeAccountView.swift */; };
+		DA958F352DD4610C00A98432 /* SBWriteReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F342DD4610500A98432 /* SBWriteReviewView.swift */; };
 		DAC5FC632DB229D700608CF0 /* SBSearchMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC5FC622DB229D000608CF0 /* SBSearchMainView.swift */; };
 		DAC5FC652DB22ACA00608CF0 /* SBCombinedSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC5FC642DB22AC500608CF0 /* SBCombinedSearchView.swift */; };
 		DAC5FC672DB2340900608CF0 /* SBFilterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC5FC662DB2340300608CF0 /* SBFilterSheetView.swift */; };
@@ -174,6 +176,8 @@
 		DA958F2A2DD202BD00A98432 /* SBEditNotiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEditNotiView.swift; sourceTree = "<group>"; };
 		DA958F2C2DD32E8300A98432 /* SBSettingBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSettingBaseView.swift; sourceTree = "<group>"; };
 		DA958F2E2DD3988C00A98432 /* NotificationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsModel.swift; sourceTree = "<group>"; };
+		DA958F312DD44E0200A98432 /* SBUpgradeAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUpgradeAccountView.swift; sourceTree = "<group>"; };
+		DA958F342DD4610500A98432 /* SBWriteReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBWriteReviewView.swift; sourceTree = "<group>"; };
 		DAC5FC622DB229D000608CF0 /* SBSearchMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSearchMainView.swift; sourceTree = "<group>"; };
 		DAC5FC642DB22AC500608CF0 /* SBCombinedSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBCombinedSearchView.swift; sourceTree = "<group>"; };
 		DAC5FC662DB2340300608CF0 /* SBFilterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBFilterSheetView.swift; sourceTree = "<group>"; };
@@ -421,22 +425,13 @@
 		0AA7A1072D91CD9D00EB5684 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				DA958F1E2DD1FFB800A98432 /* Setting */,
-				DA50456D2DC0A79C00DCE3EA /* Message */,
-				DAC5FC6D2DB4E83F00608CF0 /* Store */,
-				DAFCEAD72DA5187F00DC640B /* Search */,
-				0A47C51D2D99349D0091E2D4 /* Sign up  */,
+				DA958F392DD4745C00A98432 /* Seller */,
 				0A47C4E42D94FB990091E2D4 /* RootView */,
-				0A47C4C62D94F7480091E2D4 /* User */,
 				0A47C4B32D94F6A10091E2D4 /* Root */,
 				0A47C4AB2D94EE5C0091E2D4 /* Onboarding */,
-				0AA7A12F2D91CF5C00EB5684 /* LoginScreen */,
 				0AA7A0F22D91CD9D00EB5684 /* Base */,
 				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
-				0A47C4B12D94F6290091E2D4 /* Cart */,
-				0A47C4BA2D94F6D10091E2D4 /* Home */,
-				0A47C4C02D94F6FA0091E2D4 /* Noti */,
-				0A47C4C32D94F72E0091E2D4 /* ProductDetail */,
+				DA958F362DD473BE00A98432 /* Buyer */,
 				0A47C4D82D94F8F60091E2D4 /* CustomTabBar */,
 			);
 			path = Modules;
@@ -556,6 +551,49 @@
 				DA958F222DD2015400A98432 /* SBEditProfileView.swift */,
 			);
 			path = SettingSubView;
+			sourceTree = "<group>";
+		};
+		DA958F302DD44DF700A98432 /* UpgradeAccount */ = {
+			isa = PBXGroup;
+			children = (
+				DA958F312DD44E0200A98432 /* SBUpgradeAccountView.swift */,
+			);
+			path = UpgradeAccount;
+			sourceTree = "<group>";
+		};
+		DA958F332DD460FD00A98432 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				DA958F342DD4610500A98432 /* SBWriteReviewView.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		DA958F362DD473BE00A98432 /* Buyer */ = {
+			isa = PBXGroup;
+			children = (
+				0A47C4C62D94F7480091E2D4 /* User */,
+				0AA7A12F2D91CF5C00EB5684 /* LoginScreen */,
+				0A47C4C32D94F72E0091E2D4 /* ProductDetail */,
+				DA958F332DD460FD00A98432 /* Review */,
+				DA958F302DD44DF700A98432 /* UpgradeAccount */,
+				DA958F1E2DD1FFB800A98432 /* Setting */,
+				DA50456D2DC0A79C00DCE3EA /* Message */,
+				DAC5FC6D2DB4E83F00608CF0 /* Store */,
+				DAFCEAD72DA5187F00DC640B /* Search */,
+				0A47C51D2D99349D0091E2D4 /* Sign up  */,
+				0A47C4B12D94F6290091E2D4 /* Cart */,
+				0A47C4BA2D94F6D10091E2D4 /* Home */,
+				0A47C4C02D94F6FA0091E2D4 /* Noti */,
+			);
+			path = Buyer;
+			sourceTree = "<group>";
+		};
+		DA958F392DD4745C00A98432 /* Seller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Seller;
 			sourceTree = "<group>";
 		};
 		DAC5FC682DB2342900608CF0 /* SearchSubView */ = {
@@ -793,6 +831,7 @@
 				DAC5FC632DB229D700608CF0 /* SBSearchMainView.swift in Sources */,
 				0A47C4C72D94F7480091E2D4 /* SBUserView.swift in Sources */,
 				0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */,
+				DA958F322DD44E0E00A98432 /* SBUpgradeAccountView.swift in Sources */,
 				0AA7A12E2D91CF3600EB5684 /* R.generated.swift in Sources */,
 				0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */,
 				0A47C4D92D94F8F60091E2D4 /* BezierCurvePath.swift in Sources */,
@@ -803,6 +842,7 @@
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
 				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
 				DA850D922DBB373900E952AA /* OrderModel.swift in Sources */,
+				DA958F352DD4610C00A98432 /* SBWriteReviewView.swift in Sources */,
 				DA5045732DC0F24F00DCE3EA /* SBChatView.swift in Sources */,
 				0A47C4C12D94F6FA0091E2D4 /* NotiView.swift in Sources */,
 				0A47C4CD2D94F8D90091E2D4 /* Product+Sample.swift in Sources */,
