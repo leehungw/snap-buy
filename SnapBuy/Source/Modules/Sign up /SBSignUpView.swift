@@ -2,6 +2,7 @@ import SwiftUI
 import UIKit
 import GoogleSignIn
 
+
 struct SBSignUpView: View {
     @Environment(\.presentationMode) private var presentationMode
     @State private var username: String = ""
@@ -95,50 +96,10 @@ struct SBSignUpView: View {
                     .foregroundColor(.gray)
                     .font(.footnote)
                     .padding(.top, 10)
-                
-                VStack(spacing: 10) {
-                    SBButton(title: RLocalizable.signInWithGoogle(), leadingIcon: RImage.img_google_icon.image, style: .outlined) {
-                        guard let windowScene = UIApplication.shared.connectedScenes
-                                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-                              let root = windowScene.windows.first?.rootViewController else {
-                            return
-                        }
-                        GIDSignIn.sharedInstance.signIn(
-                            withPresenting: root) { signInResult, error in
-                                guard let signInResult else { return }
-                                signInResult.user.refreshTokensIfNeeded { user, error in
-                                    guard error == nil else { return }
-                                    guard let user = user else { return }
-                                    
-                                    let idTokenString = user.idToken?.tokenString ?? ""
-                                    let email = user.profile?.email ?? ""
-
-                                    let googleRequest = GoogleLoginRequest(googleId: idTokenString, email: email)
-                                    UserRepository.shared.loginWithGoogle(request: googleRequest) { result in
-                                        switch result {
-                                        case .success(let response):
-                                            DispatchQueue.main.async {
-                                                if response.result == 1, let userData = response.data {
-                                                    if let windowScene = UIApplication.shared.connectedScenes
-                                                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-                                                       let keyWindow = windowScene.windows.first {
-                                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
-                                                        keyWindow.makeKeyAndVisible()
-                                                    }
-                                                } else if let errorInfo = response.error {
-                                                    showAlert(message: errorInfo.message)
-                                                }
-                                            }
-                                        case .failure(let error):
-                                            DispatchQueue.main.async {
-                                                showAlert(message: error.localizedDescription)
-                                            }
-                                        }
-                                    }
-                                    
-                                }
-                            }
-                    }
+                SBSignUpWithGoogleButton {
+                    message in
+                    alertMessage = message
+                    showAlert = true
                 }
             }
         }
@@ -161,4 +122,56 @@ struct SBSignUpView: View {
             }
         }
     }
+}
+struct SBSignUpWithGoogleButton: View {
+    var showAlert: (String) -> Void
+
+    var body: some View {
+        SBButton(title: RLocalizable.signInWithGoogle(), leadingIcon: RImage.img_google_icon.image, style: .outlined) {
+            guard let windowScene = UIApplication.shared.connectedScenes
+                    .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                  let root = windowScene.windows.first?.rootViewController else {
+                return
+            }
+
+            GIDSignIn.sharedInstance.signIn(withPresenting: root) { signInResult, error in
+                guard let signInResult else { return }
+
+                signInResult.user.refreshTokensIfNeeded { user, error in
+                    guard error == nil else {
+                        showAlert("Google sign-in failed.")
+                        return
+                    }
+                    guard let user = user else { return }
+
+                    let idTokenString = user.idToken?.tokenString ?? ""
+                    let email = user.profile?.email ?? ""
+
+                    let googleRequest = GoogleLoginRequest(googleId: idTokenString, email: email)
+                    UserRepository.shared.loginWithGoogle(request: googleRequest) { result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let response):
+                                if response.result == 1 {
+                                    if let windowScene = UIApplication.shared.connectedScenes
+                                        .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                                       let keyWindow = windowScene.windows.first {
+                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                        keyWindow.makeKeyAndVisible()
+                                    }
+                                } else if let errorInfo = response.error {
+                                    showAlert(errorInfo.message)
+                                }
+                            case .failure(let error):
+                                showAlert(error.localizedDescription)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+#Preview {
+    SBSignUpView()
 }
