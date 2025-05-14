@@ -3,7 +3,7 @@ import SwiftUI
 struct SBEditProfileView: View {
     @State private var username: String = "Magdalena Succrose"
     @State private var email: String = "magdalena83@mail.com"
-    
+    @State private var isSeller: Bool = false
     var body: some View {
         SBSettingBaseView(title: "Edit Profile") {
             VStack(spacing: 24) {
@@ -13,6 +13,27 @@ struct SBEditProfileView: View {
                     .frame(width: 100, height: 100)
                     .clipShape(Circle())
                     .padding(.top, 20)
+                HStack {
+                    if isSeller {
+                        Text("Seller")
+                            .font(R.font.outfitBold.font(size: 16))
+                            .foregroundColor(.main)
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.main, lineWidth: 2)
+                            )
+                    } else {
+                        NavigationLink(destination: SBUpgradeAccountView()) {
+                            Text("Upgrade To Seller")
+                                .font(R.font.outfitRegular.font(size: 16))
+                                .foregroundColor(.white)
+                        }
+                        .padding(13)
+                        .background(Color.main)
+                        .cornerRadius(30)
+                    }
+                }
                 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Username")

@@ -9,7 +9,8 @@ struct SBUserView: View {
     
     @State private var selectedTab: OrderTab = .myOrder
         
-        var body: some View {
+    var body: some View {
+        SBBaseView {
             VStack(spacing: 16) {
                 HStack {
                     Spacer()
@@ -21,7 +22,7 @@ struct SBUserView: View {
                         .padding(.trailing)
                 }
                 .padding()
-
+                
                 // Tabs
                 HStack {
                     TabButton(title: "My Order", tab: .myOrder, selectedTab: selectedTab) {
@@ -54,6 +55,7 @@ struct SBUserView: View {
                 Spacer()
             }
         }
+    }
 }
 
 struct SBOrderCardView: View {
@@ -145,6 +147,7 @@ struct SBOrderCardView: View {
 
 
 struct SBPurchasedCardView: View {
+    @State private var navigateToReview = false
     let purchased: Purchased
     
     var body: some View {
@@ -166,7 +169,7 @@ struct SBPurchasedCardView: View {
                             .font(R.font.outfitSemiBold.font(size: 14))
                             .foregroundColor(.black)
                     }
-
+                    
                     HStack {
                         Text("Qty: ")
                             .font(R.font.outfitSemiBold.font(size: 14))
@@ -195,7 +198,7 @@ struct SBPurchasedCardView: View {
             
             HStack {
                 Button(action: {
-                   
+                    
                 }) {
                     Text("Detail")
                         .frame(maxWidth: .infinity)
@@ -208,16 +211,25 @@ struct SBPurchasedCardView: View {
                         )
                 }
                 Button(action: {
-                   
+                    if purchased.status == "Complete" {
+                        navigateToReview = true
+                    }
                 }) {
-                    Text("Tracking")
+                    Text("Review")
                         .frame(maxWidth: .infinity)
                         .font(R.font.outfitSemiBold.font(size: 16))
                         .padding()
-                        .background(Color.main)
+                        .background(purchased.status == "Complete" ? Color.main : Color.gray.opacity(0.5))
                         .foregroundColor(.white)
                         .cornerRadius(25)
                 }
+                .disabled(purchased.status != "Complete")
+                NavigationLink(
+                    destination: SBWriteReviewView(purchased: purchased),
+                    isActive: $navigateToReview,
+                    label: { EmptyView() }
+                )
+                .hidden()
             }
         }
         .frame(width: UIScreen.main.bounds.width*0.8, height: 160)
