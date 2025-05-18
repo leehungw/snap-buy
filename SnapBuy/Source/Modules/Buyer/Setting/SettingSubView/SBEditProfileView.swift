@@ -15,7 +15,7 @@ struct SBEditProfileView: View {
                     .padding(.top, 20)
                 HStack {
                     if isSeller {
-                        Text("Seller")
+                        Text("Go to Seller")
                             .font(R.font.outfitBold.font(size: 16))
                             .foregroundColor(.main)
                             .padding(10)
@@ -103,7 +103,9 @@ struct SBEditProfileView: View {
                 }
             }
             .padding(.horizontal, 20)
+            .navigationBarBackButtonHidden(true)
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 #Preview {

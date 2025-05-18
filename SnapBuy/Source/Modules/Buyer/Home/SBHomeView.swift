@@ -6,8 +6,6 @@ enum Tab {
 struct SBHomeView: View {
     @State private var selectedTab: Tab = .home
     
-    
-    
     var body: some View {
         SBBaseView {  
             VStack(alignment: .leading, spacing: 20) {
