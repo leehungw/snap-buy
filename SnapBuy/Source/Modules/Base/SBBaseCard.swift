@@ -6,7 +6,7 @@ struct SBProductCard: View {
     var body: some View {
         VStack(alignment: .center, spacing: 4) {
                 ZStack(alignment: .topTrailing) {
-                    Image(product.imageName)
+                    Image(product.imageNames[0])
                         .resizable()
                         .scaledToFit()
                         .clipped()
@@ -37,5 +37,5 @@ struct SBProductCard: View {
 }
 
 #Preview {
-    SBProductCard(product: .sample)
+    SBProductCard(product: Product.sampleList[0])
 }
