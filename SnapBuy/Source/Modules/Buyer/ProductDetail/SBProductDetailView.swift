@@ -18,7 +18,6 @@ struct SBProductDetailView: View {
 
     var body: some View {
         SBBaseView {
-           
             VStack(spacing: 0) {
                 HStack {
                     Button(action: {
@@ -78,6 +77,7 @@ struct SBProductDetailView: View {
             }
             .navigationBarBackButtonHidden(true)
         }
+        .navigationBarBackButtonHidden(true)
     }
 
     var productDetailSheet: some View {
@@ -258,5 +258,5 @@ struct SBProductDetailView: View {
     
 }
 #Preview {
-    SBProductDetailView(product: .sample)
+    SBProductDetailView(product: Product.sampleList[0])
 }
