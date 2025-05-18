@@ -23,7 +23,6 @@ struct SBUserView: View {
                 }
                 .padding()
                 
-                // Tabs
                 HStack {
                     TabButton(title: "My Order", tab: .myOrder, selectedTab: selectedTab) {
                         selectedTab = .myOrder
@@ -52,6 +51,7 @@ struct SBUserView: View {
                 }
                 .animation(.easeInOut(duration: 0.3), value: selectedTab)
                 
+                Spacer()
                 Spacer()
             }
         }
@@ -92,18 +92,15 @@ struct SBOrderCardView: View {
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 8) {
-                    Text(order.status)
+                    Text(order.status.rawValue)
                         .font(R.font.outfitSemiBold.font(size: 12))
-                        .foregroundColor(order.status == "On Progress" ? Color.teal
-                                         : order.status == "Complete" ? Color.green
-                                         : Color.orange)
+                        .foregroundColor(colorForStatus(order.status))
                         .padding(8)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(order.status == "On Progress" ? Color.teal
-                                        : order.status == "Complete" ? Color.green
-                                        : Color.orange, lineWidth: 1)
+                                .stroke(colorForStatus(order.status), lineWidth: 1)
                         )
+
                     Text(String(format: "$ %.2f", order.price))
                         .font(R.font.outfitSemiBold.font(size: 20))
                 }
@@ -183,12 +180,12 @@ struct SBPurchasedCardView: View {
                 VStack(alignment: .trailing, spacing: 8) {
                     Text(purchased.status)
                         .font(R.font.outfitSemiBold.font(size: 12))
-                        .foregroundColor(purchased.status == "Complete" ? Color.green
+                        .foregroundColor(purchased.status == "Complete" ? Color.blue
                                          : Color.red)
                         .padding(8)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(purchased.status == "Complete" ? Color.green
+                                .stroke(purchased.status == "Complete" ? Color.blue
                                         : Color.red, lineWidth: 1)
                         )
                     Text(String(format: "$ %.2f", purchased.price))
