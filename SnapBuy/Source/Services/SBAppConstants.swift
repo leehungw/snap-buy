@@ -15,7 +15,7 @@ struct SBAppConstant {
     
     static let sidePadding: CGFloat = 16.0
     static let nullString = "null"
-    static let apiBaseURL = "http://localhost:8081"
+    static let apiBaseURL = "http://localhost"
     
     struct App {
         static let appName = "Snap Buy"

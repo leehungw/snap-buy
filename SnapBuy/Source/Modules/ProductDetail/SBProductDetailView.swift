@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SBProductDetailView: View {
-    let product: Product
+    let product: SBProduct
     @Environment(\.dismiss) var dismiss
     @State private var quantity: Int = 1
     @State private var selectedColor: Color = .brown

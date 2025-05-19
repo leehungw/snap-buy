@@ -1,33 +1,30 @@
 import SwiftUI
+import Kingfisher
 
 struct SBCategoryItemView: View {
-    let category: Category
-
+    let category: SBCategory
+    
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            Image(category.imageName)
+            KFImage(URL(string: category.imageUrl))
                 .resizable()
                 .scaledToFill()
-                .scaleEffect(
-                    1.5
-                )
-
                 .frame(height: 120)
                 .offset(
                     x: 70,
-                    y: category.title == "Shoes" ? -100 :
-                    category.title == "Accessories" ? 160 : 80
+                    y: category.name == "Shoes" ? -100 :
+                        category.name == "Accessories" ? 160 : 80
                 )
                 .clipped()
-
+                .scaleEffect(1.5)
             
             
             VStack(alignment: .leading, spacing: 4) {
                 Spacer()
-                Text(category.title)
+                Text(category.name)
                     .font(R.font.outfitBold.font(size:17))
                     .foregroundColor(.black)
-                Text("\(category.productCount) Product")
+                Text("\(category.numberOfProduct) Product")
                     .font(R.font.outfitRegular.font(size:13))
                     .foregroundColor(.gray)
                 Spacer()
@@ -40,8 +37,4 @@ struct SBCategoryItemView: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
-}
-
-#Preview {
-    SBCategoryItemView(category: .samples[3])
 }

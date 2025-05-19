@@ -1,4 +1,6 @@
 import SwiftUI
+import Foundation
+
 enum Tab {
     case home, category
 }
@@ -7,7 +9,7 @@ struct SBHomeView: View {
     @State private var selectedTab: Tab = .home
     
     var body: some View {
-        SBBaseView {  
+        SBBaseView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
                     RImage.img_default_user_profile.image
@@ -47,18 +49,17 @@ struct SBHomeView: View {
                     }
                 }
                 .padding(.horizontal, 50)
-                ScrollView {
-                    ZStack {
-                        if selectedTab == .home {
-                            SBHomeContent()
-                                .transition(.move(edge: .leading).combined(with: .opacity))
-                        } else {
-                            SBCategoryContent()
-                                .transition(.move(edge: .trailing).combined(with: .opacity))
-                        }
+                ZStack {
+                    if selectedTab == .home {
+                        SBHomeContent()
+                            .transition(.move(edge: .leading).combined(with: .opacity))
+                    } else {
+                        SBCategoryContent()
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
                     }
-                    .id(selectedTab)
-                    .animation(.easeInOut(duration: 0.3), value: selectedTab)}
+                }
+                .id(selectedTab)
+                .animation(.easeInOut(duration: 0.3), value: selectedTab)
                 
             }
             .padding(.top)
@@ -68,45 +69,50 @@ struct SBHomeView: View {
 #Preview {
     SBHomeView()
 }
+
 struct SBHomeContent: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            SBBannerCarouselView(banners: Banner.samples)
-                .padding(.vertical, 10)
-
-            HStack {
-                Text("New Arrivals")
-                    .font(R.font.outfitBold.font(size: 20))
-                Spacer()
-                Text("See All")
-                    .foregroundColor(.main)
-                    .font(R.font.outfitSemiBold.font(size: 15))
-            }
-            .padding(.horizontal)
-
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                ForEach(Product.sampleList) { product in
-                    NavigationLink(destination: SBProductDetailView(product: product)) {
-                        SBProductCard(product: product)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    
-                }
-            }
-            .padding(.horizontal)
-        }
-    }
+    let sections: [(title: String, products: [SBProduct])] = [
+        ("New Arrivals", SBProduct.sampleList),
+        ("Best Sellers", SBProduct.sampleList),
+        ("Trending Now", SBProduct.sampleList),
+        ("Recommended", SBProduct.sampleList)
+    ]
     
-}
-
-struct SBCategoryContent: View {
     var body: some View {
-        VStack(spacing: 20) {
-            ForEach(Category.samples) { category in
-                SBCategoryItemView(category: category)
+        List {
+            Section {
+                SBBannerCarouselView(banners: Banner.samples)
+                    .listRowInsets(EdgeInsets())
+            }
+            .listRowSeparator(.hidden)
+
+            ForEach(sections, id: \.title) { section in
+                Section(header:
+                    HStack {
+                        Text(section.title)
+                            .font(R.font.outfitBold.font(size: 20))
+                        Spacer()
+                        Text("See All")
+                            .foregroundColor(.main)
+                            .font(R.font.outfitSemiBold.font(size: 15))
+                    }
+                ) {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
+                        ForEach(section.products) { product in
+                            SBProductCard(product: product)
+                                .frame(maxWidth: .infinity)
+                                .contentShape(Rectangle())
+                        }
+                    }
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             }
         }
-        .padding(.horizontal,30)
+        .listStyle(PlainListStyle())
+        .safeAreaInset(edge: .bottom) {
+            Color.clear.frame(height: 30)
+        }
     }
 }
 

@@ -2,19 +2,25 @@
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
-    <key>GIDClientID</key>
-    <string>141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b.apps.googleusercontent.com</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-  ***REMOVED***
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b</string>
-        </array>
-  ***REMOVED***
-    </array>
-    <key>GIDServerClientID</key>
-    <string>141558364034-ag0e3516ejcog5h3286uuk1f2gahplm3.apps.googleusercontent.com</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string></string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app needs access to your local network to communicate with your server.</string>
+	<key>GIDClientID</key>
+	<string>141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		***REMOVED***
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b</string>
+			</array>
+		***REMOVED***
+	</array>
+	<key>GIDServerClientID</key>
+	<string>141558364034-ag0e3516ejcog5h3286uuk1f2gahplm3.apps.googleusercontent.com</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Outfit-SemiBold.ttf</string>

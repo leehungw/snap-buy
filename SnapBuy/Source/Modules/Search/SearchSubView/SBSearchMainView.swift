@@ -60,7 +60,7 @@ struct SBSearchProductView: View {
 
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                        ForEach(Product.sampleList) { product in
+                        ForEach(SBProduct.sampleList) { product in
                             NavigationLink(destination: SBProductDetailView(product: product)) {
                                 SBProductCard(product: product)
                             }
