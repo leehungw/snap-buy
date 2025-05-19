@@ -14,6 +14,7 @@
 		0A47B1412DD3272D00FBD707 /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1402DD3272900FBD707 /* UserModels.swift */; };
 		0A47B1432DD3274900FBD707 /* CategoryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1422DD3274400FBD707 /* CategoryModels.swift */; };
 		0A47B1452DD3297B00FBD707 /* SBCategoryRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */; };
+		0A47B1492DD3437500FBD707 /* SBCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1482DD3437000FBD707 /* SBCategoryView.swift */; };
 		0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */; };
 		0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */; };
 		0A47C4B22D94F6290091E2D4 /* SBCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4B02D94F6290091E2D4 /* SBCartView.swift */; };
@@ -43,6 +44,8 @@
 		0A47C51F2D9934AD0091E2D4 /* SBSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */; };
 		0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */; };
 		0A47C5552D9CD0CB0091E2D4 /* SBEmailVerificationTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */; };
+		0A4E667E2DDAD6990082C57D /* SPProductRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */; };
+		0A4E66802DDAD7B20082C57D /* ProductModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */; };
 		0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */; };
 		0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */; };
 		0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */; };
@@ -97,6 +100,7 @@
 		0A47B1402DD3272900FBD707 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
 		0A47B1422DD3274400FBD707 /* CategoryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModels.swift; sourceTree = "<group>"; };
 		0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBCategoryRepo.swift; sourceTree = "<group>"; };
+		0A47B1482DD3437000FBD707 /* SBCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBCategoryView.swift; sourceTree = "<group>"; };
 		0A47C4AC2D94EEC00091E2D4 /* SBOBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBView.swift; sourceTree = "<group>"; };
 		0A47C4AE2D94F4550091E2D4 /* SBBaseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBBaseCard.swift; sourceTree = "<group>"; };
 		0A47C4B02D94F6290091E2D4 /* SBCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBCartView.swift; sourceTree = "<group>"; };
@@ -126,6 +130,8 @@
 		0A47C51E2D9934A80091E2D4 /* SBSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSignUpView.swift; sourceTree = "<group>"; };
 		0A47C5202D99B1A60091E2D4 /* SBVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVerificationView.swift; sourceTree = "<group>"; };
 		0A47C5542D9CD0C00091E2D4 /* SBEmailVerificationTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEmailVerificationTextView.swift; sourceTree = "<group>"; };
+		0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPProductRepo.swift; sourceTree = "<group>"; };
+		0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModels.swift; sourceTree = "<group>"; };
 		0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserRepo.swift; sourceTree = "<group>"; };
 		0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
@@ -190,6 +196,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A47B1472DD3433800FBD707 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				0A47B1482DD3437000FBD707 /* SBCategoryView.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
 		0A47C4AB2D94EE5C0091E2D4 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +233,7 @@
 		0A47C4BA2D94F6D10091E2D4 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				0A47B1472DD3433800FBD707 /* Subviews */,
 				0A47C4B62D94F6D10091E2D4 /* SBHomeView.swift */,
 			);
 			path = Home;
@@ -332,6 +347,7 @@
 		0A61F9A02DAF47E6003A9DAD /* APIRepo */ = {
 			isa = PBXGroup;
 			children = (
+				0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */,
 				0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */,
 				0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */,
 			);
@@ -412,7 +428,6 @@
 		0AA7A1072D91CD9D00EB5684 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
 				0AA7A0F22D91CD9D00EB5684 /* Base */,
 				0A47C4B12D94F6290091E2D4 /* Cart */,
 				0A47C4D82D94F8F60091E2D4 /* CustomTabBar */,
@@ -435,6 +450,7 @@
 		0AA7A1082D91CD9D00EB5684 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
 				0A47B13A2DD321B400FBD707 /* SBEmailService.swift */,
 				0AB9B0642DBFC56700E54E28 /* Models */,
 				0A61F9A02DAF47E6003A9DAD /* APIRepo */,
@@ -488,6 +504,7 @@
 		0AB9B0642DBFC56700E54E28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */,
 				0A47B1422DD3274400FBD707 /* CategoryModels.swift */,
 				0A47B1402DD3272900FBD707 /* UserModels.swift */,
 			);
@@ -626,6 +643,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				0A47B1332DD23C0D00FBD707 /* XCRemoteSwiftPackageReference "Swift-SMTP" */,
+				0A47B14A2DD43F4B00FBD707 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA6A84AC2D809E7700454EEF /* Products */;
@@ -767,6 +785,7 @@
 				0AA7A1362D923C0600EB5684 /* RSwiftExtension.swift in Sources */,
 				0A47C4BB2D94F6D10091E2D4 /* SBHomeView.swift in Sources */,
 				DAC5FC652DB22ACA00608CF0 /* SBCombinedSearchView.swift in Sources */,
+				0A4E66802DDAD7B20082C57D /* ProductModels.swift in Sources */,
 				0A47C4BC2D94F6D10091E2D4 /* SBBaseBanner.swift in Sources */,
 				0A47C4BD2D94F6D10091E2D4 /* SBBaseCategory.swift in Sources */,
 				0A47C4BE2D94F6D10091E2D4 /* SBBannerCarousel.swift in Sources */,
@@ -793,6 +812,7 @@
 				DAFCEAD92DA518B500DC640B /* SBSearchContentView.swift in Sources */,
 				0A47C4CF2D94F8D90091E2D4 /* Banner+Sample.swift in Sources */,
 				0A47C4D02D94F8D90091E2D4 /* Category+Sample.swift in Sources */,
+				0A47B1492DD3437500FBD707 /* SBCategoryView.swift in Sources */,
 				0A47C4C42D94F72E0091E2D4 /* SBProductDetailView.swift in Sources */,
 				0A47C5212D99B1AA0091E2D4 /* SBVerificationView.swift in Sources */,
 				DAC5FC6F2DB4E85000608CF0 /* SBStoreView.swift in Sources */,
@@ -802,6 +822,7 @@
 				0A47C4E22D94F90F0091E2D4 /* BannerModel.swift in Sources */,
 				0A47B13B2DD321B800FBD707 /* SBEmailService.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
+				0A4E667E2DDAD6990082C57D /* SPProductRepo.swift in Sources */,
 				DAC5FC672DB2340900608CF0 /* SBFilterSheetView.swift in Sources */,
 				0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */,
 				0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */,
@@ -1041,6 +1062,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
+			};
+		};
+		0A47B14A2DD43F4B00FBD707 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.3.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
