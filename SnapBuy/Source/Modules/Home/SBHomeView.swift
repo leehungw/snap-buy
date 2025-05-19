@@ -1,6 +1,12 @@
 import SwiftUI
 import Foundation
 
+private struct CategorySection: Identifiable {
+    let id: Int
+    let title: String
+    let products: [SBProduct]
+}
+
 enum Tab {
     case home, category
 }
@@ -71,12 +77,7 @@ struct SBHomeView: View {
 }
 
 struct SBHomeContent: View {
-    let sections: [(title: String, products: [SBProduct])] = [
-        ("New Arrivals", SBProduct.sampleList),
-        ("Best Sellers", SBProduct.sampleList),
-        ("Trending Now", SBProduct.sampleList),
-        ("Recommended", SBProduct.sampleList)
-    ]
+    @State private var sections: [CategorySection] = []
     
     var body: some View {
         List {
@@ -86,7 +87,7 @@ struct SBHomeContent: View {
             }
             .listRowSeparator(.hidden)
 
-            ForEach(sections, id: \.title) { section in
+            ForEach(sections) { section in
                 Section(header:
                     HStack {
                         Text(section.title)
@@ -112,6 +113,27 @@ struct SBHomeContent: View {
         .listStyle(PlainListStyle())
         .safeAreaInset(edge: .bottom) {
             Color.clear.frame(height: 30)
+        }
+        .onAppear {
+            CategoryRepository.shared.fetchCategories { result in
+                if case .success(let cats) = result {
+                    for cat in cats {
+                        ProductRepository.shared.fetchProducts(categoryId: cat.id) { prodResult in
+                            if case .success(let prods) = prodResult {
+                                let top4 = prods.prefix(4)
+                                let section = CategorySection(
+                                    id: cat.id,
+                                    title: cat.name,
+                                    products: Array(top4)
+                                )
+                                DispatchQueue.main.async {
+                                    sections.append(section)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

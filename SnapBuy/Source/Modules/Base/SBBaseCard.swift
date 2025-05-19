@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct SBProductCard: View {
     let product: SBProduct
@@ -15,7 +16,7 @@ struct SBProductCard: View {
 
             VStack(alignment: .center, spacing: 4) {
                 ZStack(alignment: .topTrailing) {
-                    Image(product.imageName)
+                    KFImage(URL(string: product.productImages.first!.url))
                         .resizable()
                         .scaledToFit()
                         .clipped()
@@ -31,16 +32,16 @@ struct SBProductCard: View {
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 3)
-
                 Text(product.name)
                     .padding(.top, 15)
                     .font(R.font.outfitBold.font(size: 18))
                     .fontWeight(.semibold)
-                Text(product.brand)
+                Text(product.listTag.first ?? "")
                     .font(R.font.outfitMedium.font(size: 14))
                     .foregroundColor(.gray)
-                Text(String(format: "$%.2f", product.price))
+                Text(String(format: "$%.2f", product.basePrice))
                     .font(R.font.outfitBold.font(size: 18))
+                Spacer()
             }
             .onTapGesture {
                 isActive = true
@@ -49,6 +50,3 @@ struct SBProductCard: View {
     }
 }
 
-#Preview {
-    SBProductCard(product: .sample)
-}

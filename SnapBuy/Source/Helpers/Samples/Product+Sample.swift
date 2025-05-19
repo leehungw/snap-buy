@@ -2,37 +2,17 @@ import Foundation
 
 extension SBProduct {
     static var sample: SBProduct {
-        SBProduct(
-            name: "The Mirac Jiz",
-            brand: "Lisa Robber",
-            price: 195.00,
-            imageName: "img_1"
-        )
+        SBProduct.init(id: 1, sellerId: "1", name: "1", description: "1", basePrice: 1.0, status: 1, categoryId: 1, quantity: 1, createdAt: "", updatedAt: "", productImages: [], productVariants: [], listTag: [])
     }
 
     static var sample2: SBProduct {
-        SBProduct(
-            name: "Meriza Kiles",
-            brand: "Gazuna Resika",
-            price: 143.45,
-            imageName: "img_2"
-        )
+        SBProduct.init(id: 1, sellerId: "1", name: "1", description: "1", basePrice: 1.0, status: 1, categoryId: 1, quantity: 1, createdAt: "", updatedAt: "", productImages: [], productVariants: [], listTag: [])
     }
     static var sample3: SBProduct {
-        SBProduct(
-            name: "Meriza Kiles",
-            brand: "Gazuna Resika",
-            price: 143.45,
-            imageName: "img_3"
-        )
+        SBProduct.init(id: 1, sellerId: "1", name: "1", description: "1", basePrice: 1.0, status: 1, categoryId: 1, quantity: 1, createdAt: "", updatedAt: "", productImages: [], productVariants: [], listTag: [])
     }
     static var sample4: SBProduct {
-        SBProduct(
-            name: "The Mirac Jiz",
-            brand: "Lisa Robber",
-            price: 195.00,
-            imageName: "img_1"
-        )
+        SBProduct.init(id: 1, sellerId: "1", name: "1", description: "1", basePrice: 1.0, status: 1, categoryId: 1, quantity: 1, createdAt: "", updatedAt: "", productImages: [], productVariants: [], listTag: [])
     }
 
     static var sampleList: [SBProduct] {
