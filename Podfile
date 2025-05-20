@@ -8,6 +8,7 @@ target 'SnapBuy' do
   pod 'GoogleSignIn'
   pod 'GoogleSignInSwiftSupport'
   pod 'Kingfisher'
+  pod 'AppAuth'
   
   post_install do |installer|
     installer.pods_project.targets.each do |target|
