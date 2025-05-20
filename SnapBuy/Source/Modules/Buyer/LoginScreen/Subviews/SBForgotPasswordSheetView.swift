@@ -36,7 +36,7 @@ struct SBForgotPasswordSheetView: View {
             SBButton(title: RLocalizable.sendCode(), style: .filled) {
                 isEnterNewPasswordPresented = true
                 DispatchQueue.global(qos: .background).async {
-                    EmailService.shared.sendTemporaryPassword(to: email) { password in
+                    SBEmailService.shared.sendTemporaryPassword(to: email) { password in
                         UserRepository.shared.updatePassword()
                     }
                 }

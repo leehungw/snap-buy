@@ -7,6 +7,7 @@ target 'SnapBuy' do
   pod 'RxCocoa'
   pod 'GoogleSignIn'
   pod 'GoogleSignInSwiftSupport'
+  pod 'Kingfisher'
   pod 'AppAuth'
   
   post_install do |installer|
