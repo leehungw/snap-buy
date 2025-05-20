@@ -66,7 +66,7 @@ struct SBSignUpView: View {
                     } else {
                         generatedCode = (0..<5).map { _ in String(Int.random(in: 0...9)) }.joined()
                         DispatchQueue.global(qos: .background).async {
-                            EmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
+                            SBEmailService.shared.sendVerificationCode(to: email, code: generatedCode) {
                                 // optional completion
                             }
                         }
