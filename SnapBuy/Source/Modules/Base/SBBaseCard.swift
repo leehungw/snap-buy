@@ -16,7 +16,7 @@ struct SBProductCard: View {
 
             VStack(alignment: .center, spacing: 4) {
                 ZStack(alignment: .topTrailing) {
-                    KFImage(URL(string: product.productImages.first!.url))
+                    KFImage(URL(string: product.productImages.first?.url ?? ""))
                         .resizable()
                         .scaledToFit()
                         .clipped()
