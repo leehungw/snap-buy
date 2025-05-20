@@ -39,11 +39,11 @@ struct SBProductDetailView: View {
                         KFImage(URL(string: productImages[index]))
                             .resizable()
                             .scaledToFill()
-                            .frame(width: UIScreen.main.bounds.width)
                             .clipped()
                             .tag(index)
                     }
                 }
+                .frame(width: UIScreen.main.bounds.width, height: 250)
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                 
                 
