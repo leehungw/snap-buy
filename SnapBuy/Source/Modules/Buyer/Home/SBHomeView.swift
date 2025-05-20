@@ -3,6 +3,7 @@ import Foundation
 
 private struct CategorySection: Identifiable {
     let id: Int
+    let category: SBCategory
     let title: String
     let products: [SBProduct]
 }
@@ -78,6 +79,7 @@ struct SBHomeView: View {
 
 struct SBHomeContent: View {
     @State private var sections: [CategorySection] = []
+    @State private var isActive: Bool = false
     
     var body: some View {
         List {
@@ -93,9 +95,17 @@ struct SBHomeContent: View {
                         Text(section.title)
                             .font(R.font.outfitBold.font(size: 20))
                         Spacer()
-                        Text("See All")
+                    NavigationLink(
+                        destination: SBProductByCategoryView(category: section.category),
+                        isActive: $isActive,
+                        label: { EmptyView() }
+                    )
+                    Text("See All")
                             .foregroundColor(.main)
                             .font(R.font.outfitSemiBold.font(size: 15))
+                            .onTapGesture {
+                                isActive = true
+                            }
                     }
                 ) {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
@@ -123,6 +133,7 @@ struct SBHomeContent: View {
                                 let top4 = prods.prefix(4)
                                 let section = CategorySection(
                                     id: cat.id,
+                                    category: cat,
                                     title: cat.name,
                                     products: Array(top4)
                                 )
