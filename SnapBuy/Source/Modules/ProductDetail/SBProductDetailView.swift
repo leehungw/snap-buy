@@ -7,6 +7,10 @@ struct SBProductDetailView: View {
     @State private var quantity: Int = 1
     @State private var selectedColor: Color = .brown
     @State private var currentIndex: Int = 0
+    @State private var selectedDetent: PresentationDetent = .fraction(0.5)
+    @State private var isExpanded: Bool = false
+    @State private var showAllReviews = false
+    
     
     
     var productImages: [String] {
@@ -102,15 +106,6 @@ struct SBProductDetailView: View {
                         }
                     }
                     
-                    
-                    Text("Description")
-                        .font(R.font.outfitBold.font(size:14))
-                        .padding(.top,10)
-                    Text(product.description)
-                        .font(R.font.outfitRegular.font(size:13))
-                        .foregroundColor(.gray)
-                        .fixedSize(horizontal: false, vertical: true)
-                    
                     // Product Variants
                     Text("Variants")
                         .font(R.font.outfitBold.font(size:14))
@@ -161,6 +156,96 @@ struct SBProductDetailView: View {
                         }
                     }
                     .padding(.horizontal,20)
+                    VStack(alignment: .leading) {
+                        Text("Description")
+                            .font(R.font.outfitBold.font(size:14))
+                            .padding(.top,10)
+                        Text(product.description)
+                            .font(R.font.outfitRegular.font(size:13))
+                            .foregroundColor(.gray)
+                            .lineLimit(isExpanded ? nil : 3)
+                        Button(action: {
+                            isExpanded.toggle()
+                        }) {
+                            Text(isExpanded ? "Read less" : "Read more")
+                                .font(R.font.outfitMedium.font(size:13))
+                                .foregroundColor(.main)
+                        }
+                        .padding(.bottom,10)
+                        NavigationLink(destination: SBStoreView()) {
+                            HStack {
+                                Image(systemName: "cube.box")
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .cornerRadius(24)
+                                    .padding(.trailing, 10)
+                                
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text(R.string.localizable.upboxBag())
+                                            .font(R.font.outfitBold.font(size: 16))
+                                        Image(systemName: "checkmark.seal.fill")
+                                            .foregroundColor(Color.main)
+                                            .font(.caption)
+                                    }
+                                    
+                                    Text(R.string.localizable.storeStatsFormat("104", "1.3k"))
+                                        .font(R.font.outfitRegular.font(size: 12))
+                                        .foregroundColor(.gray)
+                                }
+                                Spacer()
+                                
+                                Button(action: {}) {
+                                    Text(R.string.localizable.follow())
+                                        .font(R.font.outfitSemiBold.font(size: 14))
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color.main)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(20)
+                                }
+                            }
+                        }
+                        Text(R.string.localizable.rating)
+                            .font(R.font.outfitBold.font(size:14))
+                            .padding(.top,10)
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(showAllReviews ? reviews : Array(reviews.prefix(3)), id: \.id) { review in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text(review.reviewer)
+                                            .font(R.font.outfitBold.font(size:13))
+                                        Spacer()
+                                        Text(review.date, style: .date)
+                                            .font(R.font.outfitRegular.font(size:12))
+                                            .foregroundColor(.gray)
+                                    }
+                                    HStack(spacing: 2) {
+                                        ForEach(0..<5, id: \.self) { index in
+                                            Image(systemName: index < review.rating ? "star.fill" : "star")
+                                                .foregroundColor(.yellow)
+                                                .font(.caption)
+                                        }
+                                    }
+                                    Text(review.comment)
+                                        .font(R.font.outfitRegular.font(size:13))
+                                        .foregroundColor(.gray)
+                                }
+                                .padding(.vertical, 5)
+                            }
+                            
+                            if reviews.count > 3 {
+                                Button(action: {
+                                    showAllReviews.toggle()
+                                }) {
+                                    Text(showAllReviews ? "Show Less" : "See All Reviews")
+                                        .font(R.font.outfitMedium.font(size: 14))
+                                        .foregroundColor(.main)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
                 }
                 .padding(.horizontal, 16)
             }

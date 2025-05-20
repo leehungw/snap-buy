@@ -1,4 +1,3 @@
-import Foundation
 
 extension SBProduct {
     static var sample: SBProduct {

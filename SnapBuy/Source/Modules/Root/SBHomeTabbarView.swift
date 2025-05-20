@@ -10,7 +10,7 @@ struct SBHomeTabbarView: View {
                     SBHomeView()
                         .tag(1)
                     
-                    SBCombinedSearchView()
+                    SBNotificationView()
                         .tag(2)
                     
                     SBCartView()
