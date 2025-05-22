@@ -16,7 +16,7 @@ struct SBUpgradeAccountView: View {
                 Spacer()
             }
             .padding(.horizontal)
-            AutoImageCarouselView()
+            AutoImageCarouselView(images: ["up_1", "up_2", "up_3"])
             
             Text("Upgrade Account")
                 .font(R.font.outfitBold.font(size: 24))
@@ -60,7 +60,7 @@ struct SBUpgradeAccountView: View {
 }
 
 struct AutoImageCarouselView: View {
-    let images = ["up_1", "up_2", "up_3"]
+    let images: [String]
     @State private var currentIndex = 0
 
     var body: some View {
