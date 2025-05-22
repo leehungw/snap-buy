@@ -110,6 +110,16 @@
 		DA958F3C2DD47B5400A98432 /* SBDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3B2DD47B4A00A98432 /* SBDashboard.swift */; };
 		DA958F3E2DD47C0200A98432 /* SBAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */; };
 		DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F402DD484A400A98432 /* SBProductManagementView.swift */; };
+		DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */; };
+		DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */; };
+		DAF3BC4B2DDDB4AF0099DBE7 /* SBAdminUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */; };
+		DAF3BC4E2DDDBAD60099DBE7 /* SBAdminProductManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4D2DDDBACB0099DBE7 /* SBAdminProductManagement.swift */; };
+		DAF3BC502DDDBBC30099DBE7 /* AdminHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4F2DDDBBBD0099DBE7 /* AdminHeader.swift */; };
+		DAF3BC522DDDBC850099DBE7 /* SBAdminProductDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC512DDDBC750099DBE7 /* SBAdminProductDetail.swift */; };
+		DAF3BC552DDEFFDF0099DBE7 /* SBAdminShopManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC542DDEFFBE0099DBE7 /* SBAdminShopManagement.swift */; };
+		DAF3BC5A2DDF04160099DBE7 /* SBAdminOrderManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC592DDF040B0099DBE7 /* SBAdminOrderManagement.swift */; };
+		DAF3BC5C2DDF069A0099DBE7 /* SBAdminOrderDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC5B2DDF06910099DBE7 /* SBAdminOrderDetail.swift */; };
+		DAF3BC5F2DDF09A10099DBE7 /* SBAdminSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC5E2DDF099B0099DBE7 /* SBAdminSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -219,6 +229,16 @@
 		DA958F3B2DD47B4A00A98432 /* SBDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBDashboard.swift; sourceTree = "<group>"; };
 		DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAddProduct.swift; sourceTree = "<group>"; };
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
+		DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminDashboard.swift; sourceTree = "<group>"; };
+		DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserManagement.swift; sourceTree = "<group>"; };
+		DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserDetail.swift; sourceTree = "<group>"; };
+		DAF3BC4D2DDDBACB0099DBE7 /* SBAdminProductManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminProductManagement.swift; sourceTree = "<group>"; };
+		DAF3BC4F2DDDBBBD0099DBE7 /* AdminHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminHeader.swift; sourceTree = "<group>"; };
+		DAF3BC512DDDBC750099DBE7 /* SBAdminProductDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminProductDetail.swift; sourceTree = "<group>"; };
+		DAF3BC542DDEFFBE0099DBE7 /* SBAdminShopManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminShopManagement.swift; sourceTree = "<group>"; };
+		DAF3BC592DDF040B0099DBE7 /* SBAdminOrderManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminOrderManagement.swift; sourceTree = "<group>"; };
+		DAF3BC5B2DDF06910099DBE7 /* SBAdminOrderDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminOrderDetail.swift; sourceTree = "<group>"; };
+		DAF3BC5E2DDF099B0099DBE7 /* SBAdminSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -534,6 +554,7 @@
 		0AA7A1072D91CD9D00EB5684 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				DAF3BC432DDD73C40099DBE7 /* Admin */,
 				0A47C4C32D94F72E0091E2D4 /* ProductDetail */,
 				DA958F392DD4745C00A98432 /* Seller */,
 				0A47C4E42D94FB990091E2D4 /* RootView */,
@@ -738,6 +759,71 @@
 			path = ProductManagement;
 			sourceTree = "<group>";
 		};
+		DAF3BC432DDD73C40099DBE7 /* Admin */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC5D2DDF09930099DBE7 /* Settings */,
+				DAF3BC582DDF04020099DBE7 /* Order Management */,
+				DAF3BC532DDEFFAF0099DBE7 /* Shop Management */,
+				DAF3BC4F2DDDBBBD0099DBE7 /* AdminHeader.swift */,
+				DAF3BC4C2DDDBAC10099DBE7 /* Product Management */,
+				DAF3BC472DDDB3230099DBE7 /* User Management */,
+				DAF3BC462DDD7E3F0099DBE7 /* Dashboard */,
+			);
+			path = Admin;
+			sourceTree = "<group>";
+		};
+		DAF3BC462DDD7E3F0099DBE7 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		DAF3BC472DDDB3230099DBE7 /* User Management */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */,
+				DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */,
+			);
+			path = "User Management";
+			sourceTree = "<group>";
+		};
+		DAF3BC4C2DDDBAC10099DBE7 /* Product Management */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC512DDDBC750099DBE7 /* SBAdminProductDetail.swift */,
+				DAF3BC4D2DDDBACB0099DBE7 /* SBAdminProductManagement.swift */,
+			);
+			path = "Product Management";
+			sourceTree = "<group>";
+		};
+		DAF3BC532DDEFFAF0099DBE7 /* Shop Management */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC542DDEFFBE0099DBE7 /* SBAdminShopManagement.swift */,
+			);
+			path = "Shop Management";
+			sourceTree = "<group>";
+		};
+		DAF3BC582DDF04020099DBE7 /* Order Management */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC5B2DDF06910099DBE7 /* SBAdminOrderDetail.swift */,
+				DAF3BC592DDF040B0099DBE7 /* SBAdminOrderManagement.swift */,
+			);
+			path = "Order Management";
+			sourceTree = "<group>";
+		};
+		DAF3BC5D2DDF09930099DBE7 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3BC5E2DDF099B0099DBE7 /* SBAdminSettings.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -853,13 +939,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -912,6 +994,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAF3BC5A2DDF04160099DBE7 /* SBAdminOrderManagement.swift in Sources */,
+				DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */,
 				0AB9B0652DBFC56700E54E28 /* CartItemModel.swift in Sources */,
 				0AB9B0662DBFC56700E54E28 /* ColorModel.swift in Sources */,
 				0AB9B0672DBFC56700E54E28 /* AddressModel.swift in Sources */,
@@ -919,6 +1003,7 @@
 				DA958F2B2DD202C700A98432 /* SBEditNotiView.swift in Sources */,
 				0AB9B0682DBFC56700E54E28 /* PopularModel.swift in Sources */,
 				0A26C6DE2DDCCE010088EFAE /* SBVerificationView.swift in Sources */,
+				DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */,
 				0A26C6DF2DDCCE010088EFAE /* SBEmailVerificationTextView.swift in Sources */,
 				0A26C6E02DDCCE010088EFAE /* SBSignUpView.swift in Sources */,
 				DA958F1B2DD1F8EE00A98432 /* ReviewModel.swift in Sources */,
@@ -932,12 +1017,15 @@
 				DA958F282DD201AB00A98432 /* SBSecurityView.swift in Sources */,
 				0AA7A11E2D91CD9D00EB5684 /* SheetBase.swift in Sources */,
 				0A47C4AF2D94F4550091E2D4 /* SBBaseCard.swift in Sources */,
+				DAF3BC522DDDBC850099DBE7 /* SBAdminProductDetail.swift in Sources */,
+				DAF3BC4B2DDDB4AF0099DBE7 /* SBAdminUserDetail.swift in Sources */,
 				0AA7A1362D923C0600EB5684 /* RSwiftExtension.swift in Sources */,
 				0A4E66802DDAD7B20082C57D /* ProductModels.swift in Sources */,
 				0A47C4BC2D94F6D10091E2D4 /* SBBaseBanner.swift in Sources */,
 				0A47C4BD2D94F6D10091E2D4 /* SBBaseCategory.swift in Sources */,
 				0A47C4BE2D94F6D10091E2D4 /* SBBannerCarousel.swift in Sources */,
 				0A47B1452DD3297B00FBD707 /* SBCategoryRepo.swift in Sources */,
+				DAF3BC5F2DDF09A10099DBE7 /* SBAdminSettings.swift in Sources */,
 				0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */,
 				DA958F322DD44E0E00A98432 /* SBUpgradeAccountView.swift in Sources */,
 				0AA7A12E2D91CF3600EB5684 /* R.generated.swift in Sources */,
@@ -960,6 +1048,7 @@
 				0A26C7162DDCCE590088EFAE /* NotiView.swift in Sources */,
 				0A26C7172DDCCE590088EFAE /* SBHomeView.swift in Sources */,
 				0A26C7182DDCCE590088EFAE /* SBWrapLayout.swift in Sources */,
+				DAF3BC552DDEFFDF0099DBE7 /* SBAdminShopManagement.swift in Sources */,
 				0A26C7192DDCCE590088EFAE /* SBAddressView.swift in Sources */,
 				0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */,
 				0A47C4D92D94F8F60091E2D4 /* BezierCurvePath.swift in Sources */,
@@ -968,6 +1057,7 @@
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
 				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
 				DA850D922DBB373900E952AA /* OrderModel.swift in Sources */,
+				DAF3BC4E2DDDBAD60099DBE7 /* SBAdminProductManagement.swift in Sources */,
 				DA958F352DD4610C00A98432 /* SBWriteReviewView.swift in Sources */,
 				DA8B42542DD9CF4E00A543DD /* SBStatisticView.swift in Sources */,
 				0A47C4CD2D94F8D90091E2D4 /* Product+Sample.swift in Sources */,
@@ -976,6 +1066,7 @@
 				0A47C4D52D94F8E60091E2D4 /* Types.swift in Sources */,
 				0A47C4CF2D94F8D90091E2D4 /* Banner+Sample.swift in Sources */,
 				0A47C4D02D94F8D90091E2D4 /* Category+Sample.swift in Sources */,
+				DAF3BC502DDDBBC30099DBE7 /* AdminHeader.swift in Sources */,
 				0A47C4C42D94F72E0091E2D4 /* SBProductDetailView.swift in Sources */,
 				DA8B42592DD9D99000A543DD /* SBSellerProfile.swift in Sources */,
 				DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */,
@@ -997,6 +1088,7 @@
 				DA958F262DD2019100A98432 /* SBChangePasswordView.swift in Sources */,
 				DA958F2F2DD3989200A98432 /* NotificationsModel.swift in Sources */,
 				DA8B424C2DD991BB00A543DD /* SBEditProduct.swift in Sources */,
+				DAF3BC5C2DDF069A0099DBE7 /* SBAdminOrderDetail.swift in Sources */,
 				0AA7A12B2D91CD9D00EB5684 /* SBAppConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
