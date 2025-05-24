@@ -39,3 +39,7 @@ struct SBProductResponse: Codable {
     let data: [SBProduct]?
     let error: APIErrorResponse?
 }
+
+struct RecommendationResponse: Codable {
+    let recommendedProducts: [SBProduct]
+}
