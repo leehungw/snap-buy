@@ -251,6 +251,15 @@ struct SBProductDetailView: View {
             }
             .padding(.bottom, 60)
         }
+        .onAppear {
+            // Update user's last viewed product
+            UserRepository.shared.updateLastProduct(productId: product.id) { result in
+                // You can handle success or failure if needed
+                if case .failure(let error) = result {
+                    print("Failed to update lastProductId:", error)
+                }
+            }
+        }
         .navigationBarBackButtonHidden(true)
     }
     
