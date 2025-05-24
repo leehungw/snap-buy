@@ -80,6 +80,7 @@ struct SBHomeView: View {
 struct SBHomeContent: View {
     @State private var sections: [CategorySection] = []
     @State private var isActive: Bool = false
+    @State private var recommendedProducts: [SBProduct] = []
     
     var body: some View {
         List {
@@ -88,6 +89,28 @@ struct SBHomeContent: View {
                     .listRowInsets(EdgeInsets())
             }
             .listRowSeparator(.hidden)
+
+            // Recommended for You
+            if !recommendedProducts.isEmpty {
+                Section(header:
+                    Text("Recommended for You")
+                        .font(R.font.outfitBold.font(size: 20))
+                        .padding(.vertical, 8)
+                ) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(recommendedProducts) { product in
+                                SBProductCard(product: product)
+                                    .frame(width: 200)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .frame(height: 250)
+                    .padding(.top, 16)
+                }
+                .listRowSeparator(.hidden)
+            }
 
             ForEach(sections) { section in
                 Section(header:
@@ -142,6 +165,15 @@ struct SBHomeContent: View {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            // Fetch recommended products
+            ProductRepository.shared.fetchRecommendedProducts { result in
+                if case .success(let recs) = result {
+                    DispatchQueue.main.async {
+                        recommendedProducts = recs
+
                     }
                 }
             }
