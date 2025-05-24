@@ -61,7 +61,11 @@ struct SBAPIRequestBuilder {
                              baseURL: URL,
                              body: Data? = nil,
                              headers: [String: String]? = nil) -> URLRequest {
-        let url = baseURL.appendingPathComponent(endpoint)
+
+        var url = baseURL.appendingPathComponent(endpoint)
+        if endpoint.hasPrefix(":") {
+            url = URL(string: "\(baseURL.absoluteString)\(endpoint)") ?? baseURL
+        }
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.httpBody = body
