@@ -1,6 +1,10 @@
 import SwiftUI
 import Foundation
 
+extension Notification.Name {
+    static let selectTab = Notification.Name("SelectTabNotification")
+}
+
 private struct CategorySection: Identifiable {
     let id: Int
     let category: SBCategory
@@ -34,7 +38,11 @@ struct SBHomeView: View {
                     Spacer()
                     
                     HStack(spacing: 16) {
-                        Image(systemName: "magnifyingglass")
+                        Button {
+                            NotificationCenter.default.post(name: .selectTab, object: nil, userInfo: ["tab": 4])
+                        } label: {
+                            Image(systemName: "magnifyingglass").foregroundColor(.gray)
+                        }
                         ZStack(alignment: .topTrailing) {
                             Image(systemName: "bell")
                             Circle()
