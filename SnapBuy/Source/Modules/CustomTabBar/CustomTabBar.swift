@@ -1,6 +1,5 @@
-
-
 import SwiftUI
+import Combine
 
 struct CustomTabBar: View {
     
@@ -70,6 +69,11 @@ struct CustomTabBar: View {
         .frame(maxHeight: midSize)
         .onAppear {
             midPoint = tabWidth * (-CGFloat(1-3))
+        }
+        .onChange(of: tabSelection) { newValue in
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
+                midPoint = tabWidth * (-CGFloat(newValue - 3))
+            }
         }
     }
 }
