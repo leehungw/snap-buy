@@ -3,10 +3,10 @@ import SwiftUI
 struct SBSearchContent: View {
     @Binding var searchText: String
     @Binding var lastSearches: [String]
+    var onSearchSelected: (String) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-
             // Last Search header
             HStack(alignment: .bottom) {
                 Text(R.string.localizable.lastSearch())
@@ -14,6 +14,7 @@ struct SBSearchContent: View {
                 Spacer()
                 Button(R.string.localizable.clearAll()) {
                     lastSearches.removeAll()
+                    UserDefaults.standard.set([String].self, value: [], key: "last_searches")
                 }
                 .font(R.font.outfitRegular.font(size: 13))
                 .foregroundColor(Color.main)
@@ -21,29 +22,40 @@ struct SBSearchContent: View {
             .padding(.horizontal)
 
             // Wrap layout for last searches
-            WrapLayout(data: lastSearches) { item in
-                HStack {
-                    Text(item)
-                        .foregroundColor(.gray)
-                        .font(R.font.outfitRegular.font(size: 12))
-                    Image(systemName: "xmark")
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                        .onTapGesture {
-                            lastSearches.removeAll { $0 == item }
-                        }
+            if !lastSearches.isEmpty {
+                WrapLayout(data: lastSearches) { item in
+                    HStack {
+                        Text(item)
+                            .foregroundColor(.gray)
+                            .font(R.font.outfitRegular.font(size: 12))
+                            .onTapGesture {
+                                onSearchSelected(item)
+                            }
+                        Image(systemName: "xmark")
+                            .font(.caption2)
+                            .foregroundColor(.gray)
+                            .onTapGesture {
+                                lastSearches.removeAll { $0 == item }
+                                UserDefaults.standard.set([String].self, value: lastSearches, key: "last_searches")
+                            }
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Color.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray, lineWidth: 1)
+                    )
+                    .cornerRadius(12)
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray, lineWidth: 1)
-                )
-                .cornerRadius(12)
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+            } else {
+                Text("No recent searches")
+                    .foregroundColor(.gray)
+                    .font(R.font.outfitRegular.font(size: 14))
+                    .padding(.horizontal)
             }
-            .padding(.horizontal)
-            .padding(.bottom, 10)
 
             // Popular search header
             Text(R.string.localizable.popularSearch())

@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct SBCombinedSearchView: View {
-    @Environment(\.dismiss) var dismiss
-    @State private var searchText: String = ""
-    @State private var lastSearches: [String] = ["Electronics", "Pants", "Three Second", "Long shirt"]
+    @StateObject private var viewModel = SearchViewModel()
+    @State private var lastSearches: [String] = UserDefaults.standard.get([String].self, key: "last_searches") ?? []
     @State private var isSheetPresented = false
+    @State private var shouldShowSearchView = false
 
     var isSearching: Bool {
-        !searchText.trimmingCharacters(in: .whitespaces).isEmpty
+        !viewModel.searchText.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
     var body: some View {
@@ -16,19 +16,24 @@ struct SBCombinedSearchView: View {
                 VStack {
                     // Search Header
                     HStack {
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .font(.title2)
-                                .foregroundColor(.black)
-                        }
-
                         HStack {
                             Image(systemName: "magnifyingglass")
                                 .foregroundColor(.black)
                             
-                            TextField(R.string.localizable.search(), text: $searchText)
+                            TextField(R.string.localizable.search(), text: $viewModel.searchText, onCommit: {
+                                let trimmed = viewModel.searchText.trimmingCharacters(in: .whitespaces)
+                                guard !trimmed.isEmpty else { return }
+                                // prepend, avoid duplicates, cap at 10
+                                var updated = lastSearches.filter { $0 != trimmed }
+                                updated.insert(trimmed, at: 0)
+                                if updated.count > 10 { updated = Array(updated.prefix(10)) }
+                                lastSearches = updated
+                                // persist
+                                UserDefaults.standard.set([String].self, value: updated, key: "last_searches")
+                                // perform search and navigate
+                                viewModel.performSearch()
+                                shouldShowSearchView = true
+                            })
                                 .foregroundColor(.black)
                                 .autocorrectionDisabled()
                                 .textInputAutocapitalization(.never)
@@ -56,23 +61,38 @@ struct SBCombinedSearchView: View {
                     .padding(.horizontal)
 
                     // Main content
-                    if isSearching {
+                    if shouldShowSearchView {
+                        SBSearchProductView(viewModel: viewModel)
+                    } else if isSearching {
                         SBSearchContent(
-                            searchText: $searchText,
-                            lastSearches: $lastSearches
+                            searchText: $viewModel.searchText,
+                            lastSearches: $lastSearches,
+                            onSearchSelected: { search in
+                                viewModel.searchText = search
+                                viewModel.performSearch()
+                                shouldShowSearchView = true
+                            }
                         )
                     } else {
-                        SBSearchProductView()
+                        SBSearchProductView(viewModel: viewModel)
                     }
                 }
                 .font(R.font.outfitRegular.font(size: 16))
                 .sheet(isPresented: $isSheetPresented) {
-                    SBFilterSheetView()
-                        .presentationDetents([.fraction(0.6)])
+                    SBFilterSheetView(viewModel: viewModel, shouldNavigateToSearch: $shouldShowSearchView)
+                        .presentationDetents([.fraction(0.4)])
                         .presentationDragIndicator(.visible)
                         .presentationCornerRadius(50)
                 }
+                .onChange(of: viewModel.searchText) { newValue in
+                    if newValue.isEmpty {
+                        shouldShowSearchView = false
+                    }
+                }
             }
+        }
+        .onAppear {
+            viewModel.loadFilters()
         }
     }
 }
@@ -80,3 +100,4 @@ struct SBCombinedSearchView: View {
 #Preview {
     SBCombinedSearchView()
 }
+

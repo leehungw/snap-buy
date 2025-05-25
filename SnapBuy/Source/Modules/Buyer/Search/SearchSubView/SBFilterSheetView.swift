@@ -1,13 +1,10 @@
 import SwiftUI
 
 struct SBFilterSheetView: View {
-    @State private var minPrice: Double = 0
-    @State private var maxPrice: Double = 60
-    @State private var selectedColor: SelectableColor = SelectableColor(color: .black, name: "Black")
-    @State private var selectedLocation: String = "San Diego"
-
-    let locations: [String] = ["San Diego", "New York", "Amsterdam"]
-
+    @ObservedObject var viewModel: SearchViewModel
+    @Environment(\.dismiss) var dismiss
+    @Binding var shouldNavigateToSearch: Bool
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Spacer()
@@ -23,98 +20,114 @@ struct SBFilterSheetView: View {
                     Text(R.string.localizable.price())
                         .font(R.font.outfitBold.font(size: 20))
                     Spacer()
-                    Text("$\(Int(minPrice)) – $\(Int(maxPrice))")
+                    Text("$\(Int(viewModel.minPrice)) – $\(Int(viewModel.maxPrice))")
                         .foregroundColor(.gray)
                         .font(R.font.outfitRegular.font(size: 14))
                 }
 
                 SBRangeSlider(
-                    lowerValue: $minPrice,
-                    upperValue: $maxPrice,
+                    lowerValue: $viewModel.minPrice,
+                    upperValue: $viewModel.maxPrice,
                     minValue: 0,
                     maxValue: 80
                 )
                 .padding(.horizontal, 20)
             }
 
-            // COLOR
+            // CATEGORY
             VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    Text(R.string.localizable.color())
-                        .font(R.font.outfitBold.font(size: 16))
-                    Spacer()
-                    Text(selectedColor.name)
-                        .foregroundColor(.gray)
-                        .font(R.font.outfitRegular.font(size: 14))
-                }
-                .padding(.top, -20)
-
-                HStack {
-                    ForEach(sampleColors, id: \.self) { item in
-                        ZStack {
-                            Circle()
-                                .fill(item.color)
-                                .frame(width: 32, height: 32)
-                                .opacity(selectedColor == item ? 1.0 : 0.5)
-
-                            if selectedColor == item {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                            }
-                        }
-                        .overlay(
-                            Circle().stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                        )
-                        .onTapGesture {
-                            selectedColor = item
-                        }
-                        .padding(.trailing, 30)
-                    }
-                }
-            }
-
-            // LOCATION
-            VStack(alignment: .leading, spacing: 20) {
-                Text(R.string.localizable.location())
+                Text("Category")
                     .font(R.font.outfitBold.font(size: 16))
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        ForEach(locations, id: \.self) { location in
-                            Text(location)
+                        // "All" category option
+                        Text("All")
+                            .font(R.font.outfitMedium.font(size: 14))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 15)
+                            .background(
+                                (viewModel.selectedCategoryId == -1)
+                                    ? Color.main
+                                    : Color.white
+                            )
+                            .foregroundColor(
+                                (viewModel.selectedCategoryId == -1)
+                                    ? .white
+                                    : .main
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.main, lineWidth: 1)
+                            )
+                            .cornerRadius(20)
+                            .onTapGesture {
+                                viewModel.selectedCategoryId = -1
+                            }
+                        
+                        ForEach(viewModel.categories, id: \.id) { category in
+                            Text(category.name)
                                 .font(R.font.outfitMedium.font(size: 14))
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 15)
-                                .background(selectedLocation == location ? Color.main : Color.white)
-                                .foregroundColor(selectedLocation == location ? .white : .main)
+                                .background(
+                                    (viewModel.selectedCategoryId == category.id)
+                                        ? Color.main
+                                        : Color.white
+                                )
+                                .foregroundColor(
+                                    (viewModel.selectedCategoryId == category.id)
+                                        ? .white
+                                        : .main
+                                )
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
                                         .stroke(Color.main, lineWidth: 1)
                                 )
                                 .cornerRadius(20)
                                 .onTapGesture {
-                                    selectedLocation = location
+                                    viewModel.selectedCategoryId = category.id
                                 }
                         }
                     }
+                    .padding(.vertical, 5)
                 }
             }
-
-            // BUTTON
-            Button(action: {
-                // Apply filter action
-            }) {
-                Text(R.string.localizable.applyFilter())
-                    .font(R.font.outfitBold.font(size: 17))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)
-                    .background(Color.main)
-                    .foregroundColor(.white)
-                    .cornerRadius(30)
+            
+            // Buttons
+            HStack(spacing: 15) {
+                // Reset button
+                Button(action: {
+                    viewModel.resetFilters()
+                }) {
+                    Text("Reset")
+                        .font(R.font.outfitSemiBold.font(size: 16))
+                        .foregroundColor(.main)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 25)
+                                .stroke(Color.main, lineWidth: 1)
+                        )
+                }
+                
+                // Apply button
+                Button(action: {
+                    viewModel.performSearch()
+                    shouldNavigateToSearch = true
+                    dismiss()
+                }) {
+                    Text("Apply Filters")
+                        .font(R.font.outfitSemiBold.font(size: 16))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(Color.main)
+                        .cornerRadius(25)
+                }
             }
-
-            Spacer()
+            .padding(.top, 20)
         }
         .font(R.font.outfitRegular.font(size: 16))
         .padding(.horizontal, 25)
