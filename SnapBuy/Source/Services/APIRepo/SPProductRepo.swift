@@ -111,4 +111,33 @@ final class ProductRepository {
             }
         }
     }
+    
+    /// Fetch all products for a specific seller
+    func fetchProductsBySellerId(sellerId: String, completion: @escaping (Result<[SBProduct], Error>) -> Void) {
+        let endpoint = "product/api/products/seller/\(sellerId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<SBProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let products = response.data {
+                    completion(.success(products))
+                } else {
+                    let message = response.error?.message ?? "No products returned"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

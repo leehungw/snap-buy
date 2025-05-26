@@ -61,6 +61,9 @@
 		0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47C4EA2D9505540091E2D4 /* SBOBPageView.swift */; };
 		0A4E667E2DDAD6990082C57D /* SPProductRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */; };
 		0A4E66802DDAD7B20082C57D /* ProductModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */; };
+		0A5ECDAE2DE4C6C200E49072 /* UserModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDAD2DE4C6C200E49072 /* UserModeManager.swift */; };
+		0A5ECDB22DE4E1FB00E49072 /* ImgurService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDB12DE4E1FB00E49072 /* ImgurService.swift */; };
+		0A5ECDB42DE4E37100E49072 /* ProductFormComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDB32DE4E37100E49072 /* ProductFormComponents.swift */; };
 		0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */; };
 		0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */; };
 		0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */; };
@@ -180,6 +183,9 @@
 		0A47C4EA2D9505540091E2D4 /* SBOBPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOBPageView.swift; sourceTree = "<group>"; };
 		0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPProductRepo.swift; sourceTree = "<group>"; };
 		0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModels.swift; sourceTree = "<group>"; };
+		0A5ECDAD2DE4C6C200E49072 /* UserModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModeManager.swift; sourceTree = "<group>"; };
+		0A5ECDB12DE4E1FB00E49072 /* ImgurService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImgurService.swift; sourceTree = "<group>"; };
+		0A5ECDB32DE4E37100E49072 /* ProductFormComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFormComponents.swift; sourceTree = "<group>"; };
 		0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserRepo.swift; sourceTree = "<group>"; };
 		0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
@@ -588,6 +594,8 @@
 				0A1C505D2D9E8FF9005B2130 /* SBAPIService.swift */,
 				0A47C4E72D94FD590091E2D4 /* SBUserDefaultService.swift */,
 				0A47C4DF2D94F90F0091E2D4 /* ViewModels */,
+				0A5ECDAD2DE4C6C200E49072 /* UserModeManager.swift */,
+				0A5ECDB12DE4E1FB00E49072 /* ImgurService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -767,6 +775,7 @@
 				DA8B424B2DD991AF00A543DD /* SBEditProduct.swift */,
 				DA958F402DD484A400A98432 /* SBProductManagementView.swift */,
 				DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */,
+				0A5ECDB32DE4E37100E49072 /* ProductFormComponents.swift */,
 			);
 			path = ProductManagement;
 			sourceTree = "<group>";
@@ -1024,6 +1033,7 @@
 				0A26C6E02DDCCE010088EFAE /* SBSignUpView.swift in Sources */,
 				DA958F1B2DD1F8EE00A98432 /* ReviewModel.swift in Sources */,
 				0AB9B0692DBFC56700E54E28 /* PaymentModel.swift in Sources */,
+				0A5ECDB22DE4E1FB00E49072 /* ImgurService.swift in Sources */,
 				0A47C4E62D94FBA40091E2D4 /* RootView.swift in Sources */,
 				0AA7A11C2D91CD9D00EB5684 /* BasePopup.swift in Sources */,
 				0AA7A11D2D91CD9D00EB5684 /* SBBaseView.swift in Sources */,
@@ -1051,6 +1061,7 @@
 				0A26C7062DDCCE590088EFAE /* SBSearchContentView.swift in Sources */,
 				0A26C7072DDCCE590088EFAE /* SBCombinedSearchView.swift in Sources */,
 				0A26C7082DDCCE590088EFAE /* SBMessageView.swift in Sources */,
+				0A5ECDB42DE4E37100E49072 /* ProductFormComponents.swift in Sources */,
 				0A26C7092DDCCE590088EFAE /* SBForgotPasswordSheetView.swift in Sources */,
 				0A26C70A2DDCCE590088EFAE /* SBCartView.swift in Sources */,
 				0A26C70B2DDCCE590088EFAE /* SBSearchMainView.swift in Sources */,
@@ -1074,6 +1085,7 @@
 				DA8B42512DD9C5CE00A543DD /* OrderDetailView.swift in Sources */,
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
+				0A5ECDAE2DE4C6C200E49072 /* UserModeManager.swift in Sources */,
 				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
 				DA850D922DBB373900E952AA /* OrderModel.swift in Sources */,
 				DAF3BC4E2DDDBAD60099DBE7 /* SBAdminProductManagement.swift in Sources */,
