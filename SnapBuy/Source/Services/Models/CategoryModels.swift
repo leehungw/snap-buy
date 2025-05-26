@@ -1,6 +1,6 @@
 import Foundation
 
-struct SBCategory: Codable, Identifiable {
+struct SBCategory: Codable, Identifiable, Hashable {
     let id: Int
     let name: String
     let title: String

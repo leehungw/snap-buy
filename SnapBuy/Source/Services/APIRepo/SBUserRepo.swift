@@ -22,6 +22,10 @@ struct UserData: Codable {
     let imageURL: String
     let userName: String
     let email: String
+    let isAdmin: Bool
+    let isPremium: Bool
+    let isBanned: Bool
+    let lastProductId: Int
 }
 
 struct APIErrorResponse: Codable {
@@ -39,7 +43,7 @@ final class UserRepository {
     static let shared = UserRepository()
     private init() {}
     
-    var currentUser: UserData?
+    var currentUser: UserData? = .init(id: "", name: "", imageURL: "", userName: "", email: "", isAdmin: false, isPremium: true, isBanned: false, lastProductId: 0)
     
     func login(request: UserLoginRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
         guard let jsonData = try? JSONEncoder().encode(request) else {
@@ -112,6 +116,34 @@ final class UserRepository {
     
     func updatePassword() {
         
+    }
+    
+    /// Fetch user information by user ID
+    func fetchUserById(userId: String, completion: @escaping SBValueAction<Result<UserData, Error>>) {
+        let endpoint = "user/api/users/\(userId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<UserLoginResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let userData = response.data {
+                    completion(.success(userData))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: response.error?.message ?? "Failed to fetch user data"]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     /// Update the user's lastProductId on the server when they view a product
