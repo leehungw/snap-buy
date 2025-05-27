@@ -293,5 +293,99 @@ final class ProductRepository {
             }
         }
     }
+    
+    func updateProduct(request: CreateProductRequest, completion: @escaping (Result<SBProduct, Error>) -> Void) {
+        guard let jsonData = try? JSONEncoder().encode(request) else {
+            let encodingError = NSError(domain: "ProductRepository", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to encode product request"])
+            completion(.failure(encodingError))
+            return
+        }
+        
+        SBAPIService.shared.performRequest(
+            endpoint: "product/api/products/detail",
+            method: "PUT",
+            body: jsonData,
+            headers: nil
+        ) { (result: Result<CreateProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let product = response.data {
+                    completion(.success(product))
+                } else {
+                    let message = response.error?.message ?? "Failed to update product"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchAllProductsBySellerId(sellerId: String, completion: @escaping (Result<[SBProduct], Error>) -> Void) {
+        let endpoint = "product/api/products/seller/all/\(sellerId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<SBProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let products = response.data {
+                    completion(.success(products))
+                } else {
+                    let message = response.error?.message ?? "No products found"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func deleteProduct(productId: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+        let endpoint = "product/api/products/\(productId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "DELETE",
+            body: nil,
+            headers: nil
+        ) { (result: Result<DeleteProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if response.result == 1 {
+                    completion(.success(()))
+                } else {
+                    let message = response.error?.message ?? "Failed to delete product"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}
+
+struct DeleteProductResponse: Codable {
+    let result: Int
+    let data: Int?
+    let error: APIErrorResponse?
 }
 
