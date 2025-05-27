@@ -6,22 +6,23 @@ struct RootView: App {
     
     var body: some Scene {
         WindowGroup {
-            if SBUserDefaultService.instance.didShowOnboarding {
-                SBLoginView(shouldShowBackButton: false)
-                    .onOpenURL { url in
-                        GIDSignIn.sharedInstance.handle(url)
-                    }
-                    .onAppear {
-                        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-                            // Check if `user` exists; otherwise, do something with `error`
-                        }
-                    }
-            } else {
-                SBOBView()
-                    .onOpenURL { url in
-                        GIDSignIn.sharedInstance.handle(url)
-                    }
-            }
+//            if SBUserDefaultService.instance.didShowOnboarding {
+//                SBLoginView(shouldShowBackButton: false)
+//                    .onOpenURL { url in
+//                        GIDSignIn.sharedInstance.handle(url)
+//                    }
+//                    .onAppear {
+//                        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+//                            // Check if `user` exists; otherwise, do something with `error`
+//                        }
+//                    }
+//            } else {
+//                SBOBView()
+//                    .onOpenURL { url in
+//                        GIDSignIn.sharedInstance.handle(url)
+//                    }
+//            }
+            SBAdminDashboardView()
         }
     }
 }

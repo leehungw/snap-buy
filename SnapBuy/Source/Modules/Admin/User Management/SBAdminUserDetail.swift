@@ -1,11 +1,23 @@
 import SwiftUI
 
 struct SBAdminUserDetailView: View {
-    let user: UserAdmin
+    let user: UserData
+    let onUserUpdated: () -> Void
     @Environment(\.dismiss) var dismiss
-    // Giả lập dữ liệu thống kê
-    let buyerStats = (purchaseCount: 12, totalSpent: 35400, totalOrders: 10)
-    let sellerStats = (productCount: 24, totalRevenue: 12500, totalPurchases: 76)
+    @State private var userData: UserData?
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    @State private var isBlocked: Bool
+    @State private var showingBlockAlert = false
+    @State private var shouldDismiss = false
+    @State private var sellerStats: SellerStats?
+    let buyerStats = (purchaseCount: 12, totalSpent: 35400.0, totalOrders: 10)
+    
+    init(user: UserData, onUserUpdated: @escaping () -> Void) {
+        self.user = user
+        self.onUserUpdated = onUserUpdated
+        self._isBlocked = State(initialValue: user.isBanned)
+    }
 
     var body: some View {
         VStack(spacing: 15) {
@@ -18,10 +30,16 @@ struct SBAdminUserDetailView: View {
                     }
                     Spacer()
                 }
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .frame(width: 80, height: 80)
-                    .foregroundColor(.blue.opacity(0.8))
+                
+                AsyncImage(url: URL(string: user.imageURL)) { image in
+                    image.resizable()
+                } placeholder: {
+                    Image(systemName: "person.crop.circle.fill")
+                        .resizable()
+                        .foregroundColor(.blue.opacity(0.8))
+                }
+                .frame(width: 80, height: 80)
+                .clipShape(Circle())
                 
                 Text(user.name)
                     .font(R.font.outfitBold.font(size: 22))
@@ -30,37 +48,85 @@ struct SBAdminUserDetailView: View {
                     .font(R.font.outfitRegular.font(size: 16))
                     .foregroundColor(.gray)
             }
+            
             HStack(spacing: 12) {
-                detailRow(icon: "person.text.rectangle", title: "Role", value: user.role.capitalized, color: .purple)
-                detailRow(icon: "lock.shield", title: "Status", value: user.isBlocked ? "Blocked" : "Active", color: user.isBlocked ? .red : .green)
+                detailRow(icon: "person.text.rectangle", 
+                        title: "Role", 
+                        value: user.isAdmin ? "Admin" : (user.isPremium ? "Seller" : "Buyer"), 
+                        color: .purple)
+                detailRow(icon: "lock.shield", 
+                        title: "Status", 
+                        value: user.isBanned ? "Blocked" : "Active", 
+                        color: user.isBanned ? .red : .green)
             }
             
-            if user.role.lowercased() == "buyer" {
+            if !user.isAdmin && !user.isPremium {
                 statCard(title: "Purchase Count", value: "\(buyerStats.purchaseCount)", icon: "cart.fill", color: .blue)
                 statCard(title: "Total Spent", value: formatCurrency(buyerStats.totalSpent), icon: "creditcard.fill", color: .orange)
                 statCard(title: "Total Orders", value: "\(buyerStats.totalOrders)", icon: "doc.plaintext", color: .green)
-            } else if user.role.lowercased() == "seller" {
-                statCard(title: "Product Count", value: "\(sellerStats.productCount)", icon: "bag.fill", color: .purple)
-                statCard(title: "Total Revenue", value: formatCurrency(sellerStats.totalRevenue), icon: "dollarsign.circle.fill", color: .pink)
-                statCard(title: "Total Purchases", value: "\(sellerStats.totalPurchases)", icon: "cart.badge.plus", color: .blue)
+            } else if user.isPremium {
+                if let stats = sellerStats {
+                    statCard(title: "Product Count", value: "\(stats.productCount)", icon: "bag.fill", color: .purple)
+                    statCard(title: "Total Revenue", value: formatCurrency(stats.totalRevenue), icon: "dollarsign.circle.fill", color: .pink)
+                    statCard(title: "Total Purchases", value: "\(stats.totalPurchases)", icon: "cart.badge.plus", color: .blue)
+                } else {
+                    ProgressView()
+                        .frame(height: 100)
+                }
             }
             
             Spacer()
-            HStack {
-                Spacer()
-                Button(action: {}) {
-                    Text(user.isBlocked ? "Unblock this User" : "Block this User")
-                        .font(R.font.outfitMedium.font(size: 18))
-                        .foregroundColor(.white)
-                        .padding()
+            
+            if !user.isAdmin {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showingBlockAlert = true
+                    }) {
+                        Text(isBlocked ? "Unblock this User" : "Block this User")
+                            .font(R.font.outfitMedium.font(size: 18))
+                            .foregroundColor(.white)
+                            .padding()
+                    }
+                    Spacer()
                 }
-                Spacer()
+                .background(RoundedRectangle(cornerRadius: 30).fill(isBlocked ? .green : .red))
+                .alert(isBlocked ? "Unblock User" : "Block User", isPresented: $showingBlockAlert) {
+                    Button("Cancel", role: .cancel) { }
+                    Button(isBlocked ? "Unblock" : "Block", role: .destructive) {
+                        toggleBlock()
+                    }
+                } message: {
+                    Text(isBlocked ? "Are you sure you want to unblock this user?" : "Are you sure you want to block this user?")
+                }
             }
-            .background(RoundedRectangle(cornerRadius: 30).fill(user.isBlocked ? .green : .red))
         }
         .padding()
         .background(Color(.systemGroupedBackground))
         .navigationBarBackButtonHidden(true)
+        .onChange(of: shouldDismiss) { newValue in
+            if newValue {
+                dismiss()
+            }
+        }
+        .onAppear {
+            if user.isPremium {
+                fetchSellerStats()
+            }
+        }
+    }
+
+    private func fetchSellerStats() {
+        UserRepository.shared.fetchSellerStats(userId: user.id) { result in
+            switch result {
+            case .success(let response):
+                if response.result == 1 {
+                    self.sellerStats = response.data
+                }
+            case .failure(let error):
+                print("Error fetching seller stats: \(error.localizedDescription)")
+            }
+        }
     }
 
     @ViewBuilder
@@ -114,20 +180,56 @@ struct SBAdminUserDetailView: View {
             Spacer()
         }
         .padding()
-        
         .background(.white)
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 3)
     }
-
-    private func formatCurrency(_ amount: Int) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "en_US")
-        return formatter.string(from: NSNumber(value: amount)) ?? "\(amount)₫"
+    
+    private func toggleBlock() {
+        if isBlocked {
+            UserRepository.shared.unbanUser(userId: user.id) { result in
+                switch result {
+                case .success(let response):
+                    if response.result == 1 && response.data == 1 {
+                        onUserUpdated()
+                        shouldDismiss = true
+                    } else if let error = response.error {
+                        self.errorMessage = error.message
+                    }
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        } else {
+            UserRepository.shared.banUser(userId: user.id) { result in
+                switch result {
+                case .success(let response):
+                    if response.result == 1 && response.data == 1 {
+                        onUserUpdated()
+                        shouldDismiss = true
+                    } else if let error = response.error {
+                        self.errorMessage = error.message
+                    }
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    SBAdminUserDetailView(user:  UserAdmin(id: UUID(), name: "Lan Nguyen", email: "lan@example.com", role: "buyer", isBlocked: true))
+    SBAdminUserDetailView(
+        user: UserData(id: "1", 
+                      name: "Lan Nguyen", 
+                      imageURL: "", 
+                      userName: "lan", 
+                      email: "lan@example.com", 
+                      isAdmin: false, 
+                      isPremium: false, 
+                      isBanned: true, 
+                      lastProductId: 123),
+        onUserUpdated: {}
+    )
 }
+

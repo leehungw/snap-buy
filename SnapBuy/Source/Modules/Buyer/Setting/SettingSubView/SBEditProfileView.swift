@@ -1,9 +1,20 @@
 import SwiftUI
 
 struct SBEditProfileView: View {
-    @State private var username: String = "Magdalena Succrose"
-    @State private var email: String = "magdalena83@mail.com"
-    @State private var isSeller: Bool = false
+    @State private var username: String = ""
+    @State private var email: String = ""
+    @State private var isSeller: Bool = true
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var isLoading = false
+    
+    init() {
+        if let currentUser = UserRepository.shared.currentUser {
+            _username = State(initialValue: currentUser.userName)
+            _email = State(initialValue: currentUser.email)
+        }
+    }
+    
     var body: some View {
         SBSettingBaseView(title: "Edit Profile") {
             VStack(spacing: 24) {
@@ -50,7 +61,6 @@ struct SBEditProfileView: View {
                     .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
                 }
                 
-                // Email or Phone Number
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Email or Phone Number")
                         .font(R.font.outfitSemiBold.font(size: 16))
@@ -67,7 +77,6 @@ struct SBEditProfileView: View {
                     .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
                 }
                 
-                // Linked Account
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Account Liked With")
                         .font(R.font.outfitSemiBold.font(size: 16))
@@ -91,7 +100,7 @@ struct SBEditProfileView: View {
                 Spacer()
                 
                 Button(action: {
-                    
+                    updateProfile()
                 }) {
                     Text("Save Changes")
                         .foregroundColor(.white)
@@ -104,8 +113,41 @@ struct SBEditProfileView: View {
             }
             .padding(.horizontal, 20)
             .navigationBarBackButtonHidden(true)
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Profile Update"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            .overlay {
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(1.5)
+                }
+            }
         }
         .navigationBarBackButtonHidden(true)
+    }
+    
+    private func updateProfile() {
+        isLoading = true
+        let request = UpdateProfileRequest(userName: username, email: email)
+        UserRepository.shared.updateProfile(request: request) { result in
+            isLoading = false
+            switch result {
+            case .success(let response):
+                if response.result == 1 {
+                    alertMessage = "Profile updated successfully"
+                } else {
+                    alertMessage = response.error?.message ?? "Failed to update profile"
+                }
+            case .failure(let error):
+                alertMessage = error.localizedDescription
+            }
+            showAlert = true
+        }
     }
 }
 #Preview {

@@ -20,13 +20,13 @@ let sampleUsers = [
     User(name: "Jeen", imageName: "cat_access")
 ]
 
-struct ChatMessage: Identifiable, Equatable {
-    let id = UUID()
-    let text: String
-    let time: String
-    let isUser: Bool
-}
-
+//struct ChatMessage: Identifiable, Equatable {
+//    let id = UUID()
+//    let text: String
+//    let time: String
+//    let isUser: Bool
+//}
+//
 let sampleMessages = [
     Message(sender: User(name: "Jhone Endrue", imageName: "cat_access"),
             content: "Hello hw are you? I am going to market. Do you want shopping?",
@@ -44,10 +44,10 @@ let sampleMessages = [
             content: "I just arrived in front of the school. I’m waiting for you hurry up!",
             timeAgo: "1 hr", unreadCount: 0)
 ]
-let sampleChatMessages: [ChatMessage] = [
-    ChatMessage(text: "Hi, I have purchased this product", time: "10.10 AM", isUser: true),
-    ChatMessage(text: "Ahmir has paid $1,100...", time: "", isUser: true),
-    ChatMessage(text: "Send it soon ok!", time: "10.15 AM", isUser: true),
-    ChatMessage(text: "Hi Ahmir, Thanks for buying our product", time: "10.30 AM", isUser: false),
-    ChatMessage(text: "Your package will be packed soon", time: "10.31 AM", isUser: false),
-]
+//let sampleChatMessages: [ChatMessage] = [
+//    ChatMessage(text: "Hi, I have purchased this product", time: "10.10 AM", isUser: true),
+//    ChatMessage(text: "Ahmir has paid $1,100...", time: "", isUser: true),
+//    ChatMessage(text: "Send it soon ok!", time: "10.15 AM", isUser: true),
+//    ChatMessage(text: "Hi Ahmir, Thanks for buying our product", time: "10.30 AM", isUser: false),
+//    ChatMessage(text: "Your package will be packed soon", time: "10.31 AM", isUser: false),
+//]
