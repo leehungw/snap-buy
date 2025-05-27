@@ -5,23 +5,38 @@ struct SBHomeTabbarView: View {
     @State private var tabSelection = 1
     @Namespace private var namespace
     @State private var notificationCancellable: AnyCancellable?
+    @StateObject private var userModeManager = UserModeManager.shared
     
     var body: some View {
         TabView(selection: $tabSelection) {
-            SBHomeView()
-                .tag(1)
-            
-            SBNotificationView()
-                .tag(2)
-            
-            SBCartView()
-                .tag(3)
-            
-            SBCombinedSearchView()
-                .tag(4)
-            
-            SBUserView()
-                .tag(5)
+            if userModeManager.currentMode == .buyer {
+                SBHomeView()
+                    .tag(1)
+                
+                SBNotificationView()
+                    .tag(2)
+                
+                SBCartView()
+                    .tag(3)
+                
+                SBCombinedSearchView()
+                    .tag(4)
+                
+                SBUserView()
+                    .tag(5)
+            } else {
+                SBSellerDashboardView()
+                    .tag(1)
+                
+                SBProductManagementView()
+                    .tag(2)
+                
+                SBOrderManagementView()
+                    .tag(3)
+                
+                SalesStatisticsView(allWeeklyData: [], allMonthlyData: [], allYearlyData: [], totalOrders: 0, totalItemsSold: 0, totalRevenue: 0)
+                    .tag(4)
+            }
         }
         .onAppear {
             notificationCancellable = NotificationCenter.default.publisher(for: .selectTab)
@@ -40,11 +55,12 @@ struct SBHomeTabbarView: View {
             )
         }
         .ignoresSafeArea()
+        .onChange(of: userModeManager.currentMode) { _ in
+            // Reset tab selection when mode changes
+            tabSelection = 1
+        }
     }
-    
 }
-
-
 
 #Preview {
     SBHomeTabbarView()

@@ -1,20 +1,23 @@
 import SwiftUI
+import Kingfisher
 
 struct SBProductManagementView: View {
-    @State private var products: [Product] = Product.sampleList
+    @State private var products: [SBProduct] = []
     @State private var isAddPressed = false
-    @State private var productToEdit: Product? = nil
-    @State private var productToDelete: Product? = nil
+    @State private var productToEdit: SBProduct? = nil
+    @State private var productToDelete: SBProduct? = nil
     @State private var showDeleteConfirmation = false
     @State private var navigateToEdit = false
-
+    @State private var isLoading = false
+    @State private var errorMessage: String? = nil
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
                 HStack {
                     Spacer()
                     Text("Product Management")
-                        .font(R.font.outfitMedium.font(size: 24))  // dùng outfitMedium size 24
+                        .font(R.font.outfitMedium.font(size: 24))
                         .foregroundColor(.white)
                     Spacer()
                 }
@@ -22,9 +25,26 @@ struct SBProductManagementView: View {
                 .background(Color.main)
                 
                 ZStack {
-                    if products.isEmpty {
+                    if isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else if let error = errorMessage {
+                        VStack {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .multilineTextAlignment(.center)
+                            Button("Retry") {
+                                fetchProducts()
+                            }
+                            .padding()
+                            .background(Color.main)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                        }
+                        .padding()
+                    } else if products.isEmpty {
                         Text("No products yet. Tap below to add your first product.")
-                            .font(R.font.outfitRegular.font(size: 14))  // outfitRegular size 14
+                            .font(R.font.outfitRegular.font(size: 14))
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity)
@@ -50,6 +70,7 @@ struct SBProductManagementView: View {
                             SBEditProductView(product: product)
                                 .onDisappear {
                                     navigateToEdit = false
+                                    fetchProducts()
                                 }
                         } else {
                             EmptyView()
@@ -62,7 +83,7 @@ struct SBProductManagementView: View {
                         Spacer()
                         HStack {
                             Spacer()
-                            NavigationLink(destination: SBAddProductView()) {
+                            NavigationLink(destination: SBAddProductView(onDismiss: fetchProducts)) {
                                 Image(systemName: isAddPressed ? "plus.circle.fill" : "plus.circle")
                                     .resizable()
                                     .frame(width: 60, height: 60)
@@ -79,43 +100,73 @@ struct SBProductManagementView: View {
                             .padding(.bottom, 30)
                         }
                     }
-                    
                 }
             }
             .navigationBarHidden(true)
+            .onAppear(perform: fetchProducts)
         }
         .confirmationDialog("Are you sure you want to delete this product?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
-                if let product = productToDelete,
-                   let index = products.firstIndex(where: { $0.id == product.id }) {
-                    products.remove(at: index)
+                if let product = productToDelete {
+                    deleteProduct(product)
                 }
             }
             Button("Cancel", role: .cancel) {}
         }
     }
+    
+    private func fetchProducts() {
+        isLoading = true
+        errorMessage = nil
+        
+        guard let sellerId = UserRepository.shared.currentUser?.id else {
+            errorMessage = "User not found"
+            isLoading = false
+            return
+        }
+        
+        ProductRepository.shared.fetchProductsBySellerId(sellerId) { result in
+            isLoading = false
+            switch result {
+            case .success(let fetchedProducts):
+                products = fetchedProducts
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    private func deleteProduct(_ product: SBProduct) {
+        // TODO: Implement delete product API call
+        if let index = products.firstIndex(where: { $0.id == product.id }) {
+            products.remove(at: index)
+        }
+    }
 }
 
 struct SBSellerListProduct: View {
-    @Binding var products: [Product]
-    var onRequestDelete: (Product) -> Void
-    var onRequestEdit: (Product) -> Void
+    @Binding var products: [SBProduct]
+    var onRequestDelete: (SBProduct) -> Void
+    var onRequestEdit: (SBProduct) -> Void
     
     var body: some View {
         ScrollView {
             ForEach(products) { product in
                 HStack {
-                    Image(product.imageNames[0])
-                        .resizable()
-                        .frame(width: 70, height: 70)
-                        .cornerRadius(8)
+                    if let firstImage = product.productImages.first {
+                        KFImage.init(URL(string: firstImage.url))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 70, height: 70)
+                            .cornerRadius(8)
+                    }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(product.name)
-                            .font(R.font.outfitMedium.font(size: 16))  // outfitMedium size 16
+                            .font(R.font.outfitMedium.font(size: 16))
                         
-                        Text("$\(product.price, specifier: "%.2f") • Stock: \(product.stock)")
-                            .font(R.font.outfitRegular.font(size: 14)) // outfitRegular size 14
+                        Text("$\(product.basePrice, specifier: "%.2f") • Stock: \(product.quantity)")
+                            .font(R.font.outfitRegular.font(size: 14))
                             .foregroundColor(.gray)
                     }
                     

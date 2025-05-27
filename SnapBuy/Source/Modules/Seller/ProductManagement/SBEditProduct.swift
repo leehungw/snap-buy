@@ -20,15 +20,15 @@ struct SBEditProductView: View {
 
     let categories = ["Clothes", "Shoes", "Accessories", "Other"]
 
-    init(product: Product) {
+    init(product: SBProduct) {
         _productName = State(initialValue: product.name)
         _description = State(initialValue: product.description)
-        _price = State(initialValue: String(format: "%.2f", product.price))
-        _quantity = State(initialValue: String(product.stock))
-        _category = State(initialValue: product.category)
-        _selectedImages = State(initialValue: product.imageNames.compactMap { UIImage(named: $0) })
-        _addedColors = State(initialValue: product.colors)
-        _addedSizes = State(initialValue: product.sizes)
+        _price = State(initialValue: String(format: "%.2f", product.basePrice))
+        _quantity = State(initialValue: String(product.quantity))
+        _category = State(initialValue: product.categoryId.description)
+        _selectedImages = State(initialValue: product.productImages.compactMap { UIImage(named: $0.url) })
+        _addedColors = State(initialValue: product.productVariants.compactMap(\.color))
+        _addedSizes = State(initialValue: product.productVariants.compactMap(\.size))
     }
 
     var body: some View {
@@ -161,8 +161,4 @@ struct Header: View {
         .padding(.vertical)
         .background(.main)
     }
-}
-
-#Preview {
-    SBEditProductView(product: Product.sampleList[0])
 }
