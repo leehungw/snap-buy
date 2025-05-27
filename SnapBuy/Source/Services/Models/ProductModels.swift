@@ -45,20 +45,20 @@ struct RecommendationResponse: Codable {
 }
 
 struct CreateProductVariant: Codable {
-    let productId: Int = 0
+    var productId: Int = 0
     let size: String
     let color: String
     let price: Double
-    let status: Int = 0
+    var status: Int = 0
 }
 
 struct CreateProductRequest: Codable {
-    let id: Int = 0
+    var id: Int = 0
     let sellerId: String
     let name: String
     let description: String
     let basePrice: Double
-    let status: Int = 0
+    var status: Int = 0
     let categoryId: Int
     let quantity: Int
     let productImages: [String]

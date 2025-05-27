@@ -67,10 +67,9 @@ struct SBProductManagementView: View {
                     
                     NavigationLink(isActive: $navigateToEdit) {
                         if let product = productToEdit {
-                            SBEditProductView(product: product)
+                            SBEditProductView(product: product, onDismiss: fetchProducts)
                                 .onDisappear {
                                     navigateToEdit = false
-                                    fetchProducts()
                                 }
                         } else {
                             EmptyView()
@@ -125,7 +124,7 @@ struct SBProductManagementView: View {
             return
         }
         
-        ProductRepository.shared.fetchProductsBySellerId(sellerId) { result in
+        ProductRepository.shared.fetchAllProductsBySellerId(sellerId: sellerId) { result in
             isLoading = false
             switch result {
             case .success(let fetchedProducts):
@@ -137,9 +136,19 @@ struct SBProductManagementView: View {
     }
     
     private func deleteProduct(_ product: SBProduct) {
-        // TODO: Implement delete product API call
-        if let index = products.firstIndex(where: { $0.id == product.id }) {
-            products.remove(at: index)
+        isLoading = true
+        errorMessage = nil
+        
+        ProductRepository.shared.deleteProduct(productId: product.id) { result in
+            isLoading = false
+            switch result {
+            case .success:
+                if let index = products.firstIndex(where: { $0.id == product.id }) {
+                    products.remove(at: index)
+                }
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+            }
         }
     }
 }
@@ -162,8 +171,13 @@ struct SBSellerListProduct: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(product.name)
-                            .font(R.font.outfitMedium.font(size: 16))
+                        HStack {
+                            Text(product.name)
+                                .font(R.font.outfitMedium.font(size: 16))
+                            
+                            // Status Badge
+                            StatusBadge(status: product.status)
+                        }
                         
                         Text("$\(product.basePrice, specifier: "%.2f") • Stock: \(product.quantity)")
                             .font(R.font.outfitRegular.font(size: 14))
@@ -192,6 +206,31 @@ struct SBSellerListProduct: View {
                 .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
             }
         }
+    }
+}
+
+struct StatusBadge: View {
+    let status: Int
+    
+    var statusInfo: (text: String, color: Color) {
+        switch status {
+        case 0:
+            return ("Pending", .orange)
+        case 1:
+            return ("Approved", .green)
+        default:
+            return ("Unknown", .gray)
+        }
+    }
+    
+    var body: some View {
+        Text(statusInfo.text)
+            .font(R.font.outfitRegular.font(size: 12))
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(statusInfo.color)
+            .cornerRadius(12)
     }
 }
 
