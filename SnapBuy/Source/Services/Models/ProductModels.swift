@@ -43,7 +43,6 @@ struct SBProductResponse: Codable {
 struct RecommendationResponse: Codable {
     let recommendedProducts: [SBProduct]
 }
-
 struct ProductApprovalResponse: Codable {
     let result: Int
     let data: String?

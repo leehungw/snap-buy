@@ -3,6 +3,7 @@ import SwiftUI
 struct SBCategoryContent: View {
     @State private var categories: [SBCategory] = []
     
+    
     init() {
         UITableView.appearance().separatorStyle = .none
         UITableViewCell.appearance().backgroundColor = .clear

@@ -4,7 +4,15 @@ import Kingfisher
 struct SBCategoryItemView: View {
     let category: SBCategory
     
+    @State private var isActive: Bool = false
+    
     var body: some View {
+        NavigationLink(
+            destination: SBProductByCategoryView(category: category),
+            isActive: $isActive,
+            label: { EmptyView() }
+        )
+        .hidden()
         ZStack(alignment: .bottomLeading) {
             KFImage(URL(string: category.imageUrl))
                 .resizable()
@@ -36,5 +44,6 @@ struct SBCategoryItemView: View {
         .frame(height: 100)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+        .onTapGesture { isActive = true }
     }
 }
