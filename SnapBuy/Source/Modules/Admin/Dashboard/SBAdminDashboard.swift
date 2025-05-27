@@ -1,11 +1,50 @@
 import SwiftUI
 
-struct AdminDashboardView: View {
-    let totalUsers: Int
-    let totalShops: Int
-    let totalProducts: Int
-    let totalOrders: Int
+class SBAdminDashboardViewModel: ObservableObject {
+    @Published var totalUsers: Int = 0
+    @Published var totalShops: Int = 0
+    @Published var totalProducts: Int = 0
+    @Published var totalOrders: Int = 0
     
+    func fetchDashboardData() {
+        UserRepository.shared.fetchAllUsers { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self?.totalUsers = response.data.count ?? 0
+                }
+            case .failure:
+                break
+            }
+        }
+        
+        // Fetch total products
+        ProductRepository.shared.fetchAcceptedProducts { [weak self] result in
+            switch result {
+            case .success(let products):
+                DispatchQueue.main.async {
+                    self?.totalProducts = products.count
+                }
+            case .failure:
+                break
+            }
+        }
+        
+        UserRepository.shared.fetchAllUsers { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.main.async {
+                    self?.totalShops = response.data.filter { $0.isPremium}.count ?? 0
+                }
+            case .failure:
+                break
+            }
+        }
+    }
+}
+
+struct SBAdminDashboardView: View {
+    @StateObject private var viewModel = SBAdminDashboardViewModel()
     
     var body: some View {
         NavigationView {
@@ -26,24 +65,27 @@ struct AdminDashboardView: View {
                 
                 // Dashboard summary with navigation links
                 NavigationLink(destination: SBAdminUserManagementView()) {
-                    GridBoxView(title: "Total Users", value: "\(totalUsers)", color: .blue, systemImage: "person.2.fill")
+                    GridBoxView(title: "Total Users", value: "\(viewModel.totalUsers)", color: .blue, systemImage: "person.2.fill")
                 }
                 
                 NavigationLink(destination: SBAdminShopManagementView()) {
-                    GridBoxView(title: "Total Shops", value: "\(totalShops)", color: .green, systemImage: "building.2.fill")
+                    GridBoxView(title: "Total Shops", value: "\(viewModel.totalShops)", color: .green, systemImage: "building.2.fill")
                 }
                 
                 NavigationLink(destination: SBAdminProductManagementView()) {
-                    GridBoxView(title: "Total Products", value: "\(totalProducts)", color: .orange, systemImage: "bag.fill")
+                    GridBoxView(title: "Total Products", value: "\(viewModel.totalProducts)", color: .orange, systemImage: "bag.fill")
                 }
                 
                 NavigationLink(destination: SBAdminOrderManagement()) {
-                    GridBoxView(title: "Total Orders", value: "\(totalOrders)", color: .purple, systemImage: "cart.fill")
+                    GridBoxView(title: "Total Orders", value: "\(viewModel.totalOrders)", color: .purple, systemImage: "cart.fill")
                 }
                 
                 Spacer()
             }
             .padding()
+            .onAppear {
+                viewModel.fetchDashboardData()
+            }
         }
         .navigationBarHidden(true)
     }
@@ -123,5 +165,5 @@ struct OrderManagementView: View {
 }
 
 #Preview {
-    AdminDashboardView(totalUsers: 3, totalShops: 4, totalProducts: 2332, totalOrders: 43)
+    SBAdminDashboardView()
 }

@@ -117,6 +117,8 @@
 		DA958F3C2DD47B5400A98432 /* SBDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3B2DD47B4A00A98432 /* SBDashboard.swift */; };
 		DA958F3E2DD47C0200A98432 /* SBAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */; };
 		DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F402DD484A400A98432 /* SBProductManagementView.swift */; };
+		DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */; };
+		DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */; };
 		DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */; };
 		DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */; };
 		DAF3BC4B2DDDB4AF0099DBE7 /* SBAdminUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */; };
@@ -243,6 +245,8 @@
 		DA958F3B2DD47B4A00A98432 /* SBDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBDashboard.swift; sourceTree = "<group>"; };
 		DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAddProduct.swift; sourceTree = "<group>"; };
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
+		DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
+		DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatRepo.swift; sourceTree = "<group>"; };
 		DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminDashboard.swift; sourceTree = "<group>"; };
 		DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserManagement.swift; sourceTree = "<group>"; };
 		DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserDetail.swift; sourceTree = "<group>"; };
@@ -491,6 +495,7 @@
 			children = (
 				0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */,
 				0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */,
+				DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */,
 				0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */,
 				0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */,
 			);
@@ -626,6 +631,7 @@
 			children = (
 				0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */,
 				0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */,
+				DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */,
 				0A47B1422DD3274400FBD707 /* CategoryModels.swift */,
 				0A47B1402DD3272900FBD707 /* UserModels.swift */,
 			);
@@ -1077,6 +1083,7 @@
 				0A26C7162DDCCE590088EFAE /* NotiView.swift in Sources */,
 				0A26C7172DDCCE590088EFAE /* SBHomeView.swift in Sources */,
 				0A26C7182DDCCE590088EFAE /* SBWrapLayout.swift in Sources */,
+				DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */,
 				0AF9F5A52DE1FDBD000B9B6D /* TagModels.swift in Sources */,
 				DAF3BC552DDEFFDF0099DBE7 /* SBAdminShopManagement.swift in Sources */,
 				0A26C7192DDCCE590088EFAE /* SBAddressView.swift in Sources */,
@@ -1086,6 +1093,7 @@
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
 				0A5ECDAE2DE4C6C200E49072 /* UserModeManager.swift in Sources */,
+				DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */,
 				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
 				DA850D922DBB373900E952AA /* OrderModel.swift in Sources */,
 				DAF3BC4E2DDDBAD60099DBE7 /* SBAdminProductManagement.swift in Sources */,

@@ -2,6 +2,9 @@ import SwiftUI
 
 struct SBSettingsView: View {
     @Environment(\.dismiss) var dismiss
+    @State private var showLogoutAlert = false
+    @State private var navigateToLogin = false
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -40,7 +43,7 @@ struct SBSettingsView: View {
                         .font(R.font.outfitSemiBold.font(size: 16))) {
                         
                         Button(action: {
-                            // Handle logout
+                            showLogoutAlert = true
                         }) {
                             HStack {
                                 Image(systemName: "arrow.backward.circle")
@@ -58,6 +61,21 @@ struct SBSettingsView: View {
             
         }
         .navigationBarBackButtonHidden(true)
+        .alert(isPresented: $showLogoutAlert) {
+            Alert(
+                title: Text("Logout"),
+                message: Text("Are you sure you want to logout?"),
+                primaryButton: .destructive(Text("Logout")) {
+                    UserRepository.shared.logout()
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let keyWindow = windowScene.windows.first {
+                        keyWindow.rootViewController = UIHostingController(rootView: SBLoginView(shouldShowBackButton: false))
+                        keyWindow.makeKeyAndVisible()
+                    }
+                },
+                secondaryButton: .cancel()
+            )
+        }
     }
 }
 struct SettingsRow: View {
