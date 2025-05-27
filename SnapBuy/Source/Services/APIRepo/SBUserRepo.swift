@@ -165,4 +165,45 @@ final class UserRepository {
                                            headers: nil,
                                            completion: completion)
     }
+    
+    /// Update the user's lastProductId on the server when they view a product
+    func updateLastProduct(productId: Int, completion: @escaping SBValueAction<Result<Void, Error>>) {
+        // Ensure we have a user ID
+        guard let userId = UserRepository.shared.currentUser?.id else {
+            let err = NSError(
+                domain: "UserRepository",
+                code: -1005,
+                userInfo: [NSLocalizedDescriptionKey: "User not signed in"]
+            )
+            completion(.failure(err))
+            return
+        }
+
+        // Construct endpoint
+        let endpoint = "user/api/users/lastProduct/\(userId)/\(productId)"
+
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "PUT",
+            body: nil,
+            headers: nil
+        ) { (result: Result<APIErrorResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if response.code == 200 {
+                    // Optionally update local user
+                    completion(.success(()))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.code,
+                        userInfo: [NSLocalizedDescriptionKey: response.message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

@@ -1,8 +1,13 @@
 import SwiftUI
 import Foundation
 
+extension Notification.Name {
+    static let selectTab = Notification.Name("SelectTabNotification")
+}
+
 private struct CategorySection: Identifiable {
     let id: Int
+    let category: SBCategory
     let title: String
     let products: [SBProduct]
 }
@@ -33,7 +38,11 @@ struct SBHomeView: View {
                     Spacer()
                     
                     HStack(spacing: 16) {
-                        Image(systemName: "magnifyingglass")
+                        Button {
+                            NotificationCenter.default.post(name: .selectTab, object: nil, userInfo: ["tab": 4])
+                        } label: {
+                            Image(systemName: "magnifyingglass").foregroundColor(.gray)
+                        }
                         ZStack(alignment: .topTrailing) {
                             Image(systemName: "bell")
                             Circle()
@@ -78,6 +87,8 @@ struct SBHomeView: View {
 
 struct SBHomeContent: View {
     @State private var sections: [CategorySection] = []
+    @State private var isActive: Bool = false
+    @State private var recommendedProducts: [SBProduct] = []
     
     var body: some View {
         List {
@@ -87,15 +98,45 @@ struct SBHomeContent: View {
             }
             .listRowSeparator(.hidden)
 
+            // Recommended for You
+            if !recommendedProducts.isEmpty {
+                Section(header:
+                    Text("Recommended for You")
+                        .font(R.font.outfitBold.font(size: 20))
+                        .padding(.vertical, 8)
+                ) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(recommendedProducts) { product in
+                                SBProductCard(product: product)
+                                    .frame(width: 200)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .frame(height: 250)
+                    .padding(.top, 16)
+                }
+                .listRowSeparator(.hidden)
+            }
+
             ForEach(sections) { section in
                 Section(header:
                     HStack {
                         Text(section.title)
                             .font(R.font.outfitBold.font(size: 20))
                         Spacer()
-                        Text("See All")
+                    NavigationLink(
+                        destination: SBProductByCategoryView(category: section.category),
+                        isActive: $isActive,
+                        label: { EmptyView() }
+                    )
+                    Text("See All")
                             .foregroundColor(.main)
                             .font(R.font.outfitSemiBold.font(size: 15))
+                            .onTapGesture {
+                                isActive = true
+                            }
                     }
                 ) {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
@@ -123,6 +164,7 @@ struct SBHomeContent: View {
                                 let top4 = prods.prefix(4)
                                 let section = CategorySection(
                                     id: cat.id,
+                                    category: cat,
                                     title: cat.name,
                                     products: Array(top4)
                                 )
@@ -131,6 +173,15 @@ struct SBHomeContent: View {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            // Fetch recommended products
+            ProductRepository.shared.fetchRecommendedProducts { result in
+                if case .success(let recs) = result {
+                    DispatchQueue.main.async {
+                        recommendedProducts = recs
+
                     }
                 }
             }
