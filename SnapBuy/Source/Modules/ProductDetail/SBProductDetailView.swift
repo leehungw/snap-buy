@@ -10,6 +10,9 @@ struct SBProductDetailView: View {
     @State private var selectedDetent: PresentationDetent = .fraction(0.5)
     @State private var isExpanded: Bool = false
     @State private var showAllReviews = false
+    @State private var sellerData: UserData?
+    @State private var isLoadingSeller = true
+    @State private var sellerError: String?
     
     
     
@@ -172,38 +175,51 @@ struct SBProductDetailView: View {
                                 .foregroundColor(.main)
                         }
                         .padding(.bottom,10)
-                        NavigationLink(destination: SBStoreView()) {
+                        NavigationLink(destination: SBStoreView(sellerId: product.sellerId)) {
                             HStack {
-                                Image(systemName: "cube.box")
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .cornerRadius(24)
-                                    .padding(.trailing, 10)
-                                
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text(R.string.localizable.upboxBag())
-                                            .font(R.font.outfitBold.font(size: 16))
-                                        Image(systemName: "checkmark.seal.fill")
-                                            .foregroundColor(Color.main)
-                                            .font(.caption)
-                                    }
+                                if isLoadingSeller {
+                                    ProgressView()
+                                        .frame(width: 40, height: 40)
+                                } else if let seller = sellerData {
+                                    KFImage(URL(string: seller.imageURL))
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 40, height: 40)
+                                        .cornerRadius(24)
+                                        .padding(.trailing, 10)
                                     
-                                    Text(R.string.localizable.storeStatsFormat("104", "1.3k"))
-                                        .font(R.font.outfitRegular.font(size: 12))
-                                        .foregroundColor(.gray)
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            Text(seller.name)
+                                                .font(R.font.outfitBold.font(size: 16))
+                                            if seller.isPremium {
+                                                Image(systemName: "checkmark.seal.fill")
+                                                    .foregroundColor(Color.main)
+                                                    .font(.caption)
+                                            }
+                                        }
+                                        
+                                        Text(seller.userName)
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
+                                    }
+                                } else {
+                                    Image(systemName: "cube.box")
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
                                 }
+                                
                                 Spacer()
                                 
-                                Button(action: {}) {
-                                    Text(R.string.localizable.follow())
-                                        .font(R.font.outfitSemiBold.font(size: 14))
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 8)
-                                        .background(Color.main)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(20)
-                                }
+//                                Button(action: {}) {
+//                                    Text(R.string.localizable.follow())
+//                                        .font(R.font.outfitSemiBold.font(size: 14))
+//                                        .padding(.horizontal, 16)
+//                                        .padding(.vertical, 8)
+//                                        .background(Color.main)
+//                                        .foregroundColor(.white)
+//                                        .cornerRadius(20)
+//                                }
                             }
                         }
                         Text(R.string.localizable.rating)
@@ -257,6 +273,18 @@ struct SBProductDetailView: View {
                 // You can handle success or failure if needed
                 if case .failure(let error) = result {
                     print("Failed to update lastProductId:", error)
+                }
+            }
+            
+            // Fetch seller data
+            UserRepository.shared.fetchUserById(userId: product.sellerId) { result in
+                isLoadingSeller = false
+                switch result {
+                case .success(let user):
+                    sellerData = user
+                case .failure(let error):
+                    sellerError = error.localizedDescription
+                    print("Failed to fetch seller data:", error)
                 }
             }
         }

@@ -1,12 +1,10 @@
 import Foundation
 
-
-
 final class UserRepository {
     static let shared = UserRepository()
     private init() {}
     
-    var currentUser: UserData?
+    var currentUser: UserData? = .init(id: "5624994f-3a1a-4fa0-83ec-529ec3530f91", name: "cc", imageURL: "", userName: "", email: "", isAdmin: false, isPremium: true, isBanned: false, lastProductId: 0)
     
     func login(request: UserLoginRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
         guard let jsonData = try? JSONEncoder().encode(request) else {
@@ -164,6 +162,34 @@ final class UserRepository {
                                            body: nil,
                                            headers: nil,
                                            completion: completion)
+    }
+    
+    /// Fetch user information by user ID
+    func fetchUserById(userId: String, completion: @escaping SBValueAction<Result<UserData, Error>>) {
+        let endpoint = "user/api/users/\(userId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<UserLoginResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let userData = response.data {
+                    completion(.success(userData))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: response.error?.message ?? "Failed to fetch user data"]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     /// Update the user's lastProductId on the server when they view a product

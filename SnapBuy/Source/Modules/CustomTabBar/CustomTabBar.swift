@@ -1,13 +1,47 @@
 import SwiftUI
 import Combine
 
-struct CustomTabBar: View {
+enum BuyerTab: String, CaseIterable {
+    case home = "Home"
+    case notification = "Notification"
+    case cart = "Cart"
+    case search = "Search"
+    case user = "User"
     
+    var systemImage: String {
+        switch self {
+        case .home: return "house"
+        case .notification: return "bell"
+        case .cart: return "cart"
+        case .search: return "magnifyingglass"
+        case .user: return "person"
+        }
+    }
+}
+
+enum SellerTab: String, CaseIterable {
+    case dashboard = "Dashboard"
+    case products = "Products"
+    case orders = "Orders"
+    case statistics = "Statistics"
+    
+    var systemImage: String {
+        switch self {
+        case .dashboard: return "chart.bar"
+        case .products: return "shippingbox"
+        case .orders: return "list.clipboard"
+        case .statistics: return "chart.pie"
+        }
+    }
+}
+
+struct CustomTabBar: View {
     @Binding var tabSelection: Int
     var animation: Namespace.ID
+    @StateObject private var userModeManager = UserModeManager.shared
     
     private var tabWidth: CGFloat {
-        return screenWidth/5
+        return screenWidth/(userModeManager.currentMode == .buyer ? 5 : 4)
     }
     
     @State private var midPoint: CGFloat = 0.0
@@ -21,60 +55,95 @@ struct CustomTabBar: View {
                 .shadow(radius: 5)
             
             HStack(spacing: 0.0) {
-                ForEach(0..<TabModel.allCases.count, id: \.self) { index in
-                    let tab = TabModel.allCases[index]
-                    let isCurrentTab = tabSelection == index+1
-                    
-                    Button {
-                        withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
-                            tabSelection = index + 1
-                            midPoint = tabWidth * (-CGFloat(tabSelection-3))
-                        }
-                        
-                    } label: {
-                        VStack(spacing: 2.0) {
-                            Image(systemName: tab.systemImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .aspectRatio(isCurrentTab ? 0.4 : 0.6, contentMode: .fit)
-                                .frame(
-                                    width: isCurrentTab ? midSize : 35.0,
-                                    height: isCurrentTab ? midSize : 35.0)
-                                .foregroundStyle(
-                                    isCurrentTab ? .white : .gray
-                                )
-                                .background {
-                                    if isCurrentTab {
-                                        Circle()
-                                            .fill(.main.gradient)
-                                            .matchedGeometryEffect(id: "CurveAnimation", in: animation)
-                                    }
-                                }
-                                .offset(y: isCurrentTab ? -(midSize/2) : 0.0)
-                            
-                            if !isCurrentTab {
-                                Text(tab.rawValue)
-                                    .font(.caption)
-                                    .fontDesign(.rounded)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(isCurrentTab ? .white : .gray)
-                        .offset(y: !isCurrentTab ? -8.0 : 0.0)
+                if userModeManager.currentMode == .buyer {
+                    ForEach(0..<BuyerTab.allCases.count, id: \.self) { index in
+                        let tab = BuyerTab.allCases[index]
+                        tabButton(title: tab.rawValue,
+                                systemImage: tab.systemImage,
+                                index: index,
+                                midSize: midSize,
+                                totalTabs: 5)
                     }
-                    .buttonStyle(.plain)
+                } else {
+                    ForEach(0..<SellerTab.allCases.count, id: \.self) { index in
+                        let tab = SellerTab.allCases[index]
+                        tabButton(title: tab.rawValue,
+                                systemImage: tab.systemImage,
+                                index: index,
+                                midSize: midSize,
+                                totalTabs: 4)
+                    }
                 }
             }
         }
         .frame(maxHeight: midSize)
         .onAppear {
-            midPoint = tabWidth * (-CGFloat(1-3))
+            updateMidPoint()
         }
-        .onChange(of: tabSelection) { newValue in
+        .onChange(of: tabSelection) { _ in
+            updateMidPoint()
+        }
+        .onChange(of: userModeManager.currentMode) { _ in
+            updateMidPoint()
+        }
+    }
+    
+    private func tabButton(title: String, systemImage: String, index: Int, midSize: CGFloat, totalTabs: Int) -> some View {
+        let isCurrentTab = tabSelection == index + 1
+        
+        return Button {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
-                midPoint = tabWidth * (-CGFloat(newValue - 3))
+                tabSelection = index + 1
+                updateMidPoint()
             }
+        } label: {
+            VStack(spacing: 2.0) {
+                Image(systemName: systemImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(isCurrentTab ? 0.4 : 0.6, contentMode: .fit)
+                    .frame(
+                        width: isCurrentTab ? midSize : 35.0,
+                        height: isCurrentTab ? midSize : 35.0)
+                    .foregroundStyle(
+                        isCurrentTab ? .white : .gray
+                    )
+                    .background {
+                        if isCurrentTab {
+                            Circle()
+                                .fill(.main.gradient)
+                                .matchedGeometryEffect(id: "CurveAnimation", in: animation)
+                        }
+                    }
+                    .offset(y: isCurrentTab ? -(midSize/2) : 0.0)
+                
+                if !isCurrentTab {
+                    Text(title)
+                        .font(.caption)
+                        .fontDesign(.rounded)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .foregroundStyle(isCurrentTab ? .white : .gray)
+            .offset(y: !isCurrentTab ? -8.0 : 0.0)
         }
+        .buttonStyle(.plain)
+    }
+    
+    private func updateMidPoint() {
+        // Determine number of tabs for current mode
+        let totalTabs = userModeManager.currentMode == .buyer
+            ? BuyerTab.allCases.count
+            : SellerTab.allCases.count
+
+        // Calculate zero-based index for selection
+        let index = CGFloat(tabSelection - 1)
+
+        // Center position: (totalTabs - 1) / 2 allows even/odd handling
+        let centerPosition = CGFloat(totalTabs - 1) / 2
+
+        // Compute midPoint offset
+        midPoint = (centerPosition - index) * tabWidth
     }
 }
 
