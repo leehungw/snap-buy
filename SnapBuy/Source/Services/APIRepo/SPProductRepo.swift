@@ -140,4 +140,66 @@ final class ProductRepository {
             }
         }
     }
+    
+    /// Create a new product
+    func createProduct(request: CreateProductRequest, completion: @escaping (Result<SBProduct, Error>) -> Void) {
+        guard let jsonData = try? JSONEncoder().encode(request) else {
+            let encodingError = NSError(domain: "ProductRepository", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to encode product request"])
+            completion(.failure(encodingError))
+            return
+        }
+        
+        SBAPIService.shared.performRequest(
+            endpoint: "product/api/products/detail",
+            method: "POST",
+            body: jsonData,
+            headers: nil
+        ) { (result: Result<CreateProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let product = response.data {
+                    completion(.success(product))
+                } else {
+                    let message = response.error?.message ?? "Failed to create product"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Fetch products by seller ID
+    func fetchProductsBySellerId(_ sellerId: String, completion: @escaping (Result<[SBProduct], Error>) -> Void) {
+        let endpoint = "product/api/products/seller/\(sellerId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<SBProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let products = response.data {
+                    completion(.success(products))
+                } else {
+                    let message = response.error?.message ?? "No products found"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

@@ -33,6 +33,7 @@ final class SBAPIService {
                 }
                 return
             }
+            
             guard let data = data else {
                 DispatchQueue.main.async {
                     let noDataError = NSError(domain: "SBAPIService", code: -1001, userInfo: [NSLocalizedDescriptionKey: "No data received"])

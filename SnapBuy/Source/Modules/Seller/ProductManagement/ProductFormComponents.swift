@@ -1,54 +1,56 @@
 import SwiftUI
-//
-//struct ProductTextField: View {
-//    let title: String
-//    let placeholder: String
-//    @Binding var text: String
-//    var keyboardType: UIKeyboardType = .default
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 6) {
-//            Text(title)
-//                .font(R.font.outfitMedium.font(size: 14))
-//            TextField(placeholder, text: $text)
-//                .keyboardType(keyboardType)
-//                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                .font(R.font.outfitRegular.font(size: 14))
-//        }
-//    }
-//}
-//
-//struct ProductMultilineField: View {
-//    let title: String
-//    @Binding var text: String
-//    
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 6) {
-//            Text(title)
-//                .font(R.font.outfitMedium.font(size: 14))
-//            TextField("Enter \(title.lowercased())", text: $text, axis: .vertical)
-//                .lineLimit(4...8)
-//                .padding(8)
-//                .background(Color.gray.opacity(0.1))
-//                .cornerRadius(10)
-//                .font(R.font.outfitRegular.font(size: 14))
-//        }
-//    }
-//}
 
-struct ProductPicker<T: Hashable>: View {
+struct ProductTextField: View {
     let title: String
-    @Binding var selection: T
-    let options: [(T, String)]
+    let placeholder: String
+    @Binding var text: String
+    var keyboardType: UIKeyboardType = .default
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(R.font.outfitMedium.font(size: 14))
+            TextField(placeholder, text: $text)
+                .keyboardType(keyboardType)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(R.font.outfitRegular.font(size: 14))
+        }
+    }
+}
+
+struct ProductMultilineField: View {
+    let title: String
+    @Binding var text: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(R.font.outfitMedium.font(size: 14))
+            TextField("Enter \(title.lowercased())", text: $text, axis: .vertical)
+                .lineLimit(4...8)
+                .padding(8)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(10)
+                .font(R.font.outfitRegular.font(size: 14))
+        }
+    }
+}
+
+struct ProductPicker: View {
+    let title: String
+    @Binding var selection: String
+    let options: [String]
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 6) {
+                
                 Text(title)
                     .font(R.font.outfitMedium.font(size: 14))
                 Picker("Select \(title)", selection: $selection) {
-                    ForEach(options, id: \.0) { option in
-                        Text(option.1).tag(option.0)
+                    Text("Select \(title)").tag("")
+                    ForEach(options, id: \.self) { option in
+                        Text(option).tag(option)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
@@ -112,43 +114,43 @@ struct TagInputField: View {
         }
     }
 }
-//
-//struct ImagePickerView: View {
-//    @Binding var selectedImages: [UIImage]
-//    @Binding var showPicker: Bool
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 8) {
-//            Text("Product Images")
-//                .font(R.font.outfitMedium.font(size: 15))
-//            
-//            ScrollView(.horizontal, showsIndicators: false) {
-//                HStack(spacing: 12) {
-//                    ForEach(selectedImages, id: \.self) { image in
-//                        Image(uiImage: image)
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(width: 80, height: 80)
-//                            .clipped()
-//                            .cornerRadius(8)
-//                    }
-//                    
-//                    Button {
-//                        showPicker = true
-//                    } label: {
-//                        VStack {
-//                            Image(systemName: "plus")
-//                                .font(.title2)
-//                            Text("Add")
-//                                .font(R.font.outfitRegular.font(size: 12))
-//                        }
-//                        .frame(width: 80, height: 80)
-//                        .foregroundColor(.gray)
-//                        .background(Color.gray.opacity(0.1))
-//                        .cornerRadius(8)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//} 
+
+struct ImagePickerView: View {
+    @Binding var selectedImages: [UIImage]
+    @Binding var showPicker: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Product Images")
+                .font(R.font.outfitMedium.font(size: 15))
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(selectedImages, id: \.self) { image in
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipped()
+                            .cornerRadius(8)
+                    }
+                    
+                    Button {
+                        showPicker = true
+                    } label: {
+                        VStack {
+                            Image(systemName: "plus")
+                                .font(.title2)
+                            Text("Add")
+                                .font(R.font.outfitRegular.font(size: 12))
+                        }
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.gray)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                }
+            }
+        }
+    }
+}
