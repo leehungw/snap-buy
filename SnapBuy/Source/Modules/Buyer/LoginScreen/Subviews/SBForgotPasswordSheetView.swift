@@ -4,6 +4,10 @@ struct SBForgotPasswordSheetView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var email: String = ""
     @State private var isEnterNewPasswordPresented: Bool = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var isLoading = false
+    @State private var temporaryPassword = ""
     
     var body: some View {
         VStack(spacing: 16) {
@@ -22,7 +26,7 @@ struct SBForgotPasswordSheetView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 40)
             
-            VStack(alignment: .leading, spacing:  5) {
+            VStack(alignment: .leading, spacing: 5) {
                 HStack {
                     Text(RLocalizable.email())
                         .font(.title3)
@@ -34,20 +38,65 @@ struct SBForgotPasswordSheetView: View {
             .padding(.bottom, 20)
             
             SBButton(title: RLocalizable.sendCode(), style: .filled) {
-                isEnterNewPasswordPresented = true
+                if email.isEmpty {
+                    alertMessage = "Please enter your email address"
+                    showAlert = true
+                    return
+                }
+                
+                isLoading = true
                 DispatchQueue.global(qos: .background).async {
                     SBEmailService.shared.sendTemporaryPassword(to: email) { password in
-                        UserRepository.shared.updatePassword()
+                        DispatchQueue.main.async {
+                            isLoading = false
+                            if !password.isEmpty {
+                                temporaryPassword = password
+                                let request = UpdatePasswordRequest(newPassword: password)
+                                UserRepository.shared.updatePassword(request: request) { result in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success(let response):
+                                            if response.result == 1 {
+                                                isEnterNewPasswordPresented = true
+                                            } else {
+                                                alertMessage = response.error?.message ?? "Failed to update password"
+                                                showAlert = true
+                                            }
+                                        case .failure(let error):
+                                            alertMessage = error.localizedDescription
+                                            showAlert = true
+                                        }
+                                    }
+                                }
+                            } else {
+                                alertMessage = "Failed to send temporary password"
+                                showAlert = true
+                            }
+                        }
                     }
                 }
             }
         }
         .padding(.top, 20)
         .padding(.bottom, 40)
+        .overlay {
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .scaleEffect(1.5)
+            }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Password Reset"),
+                message: Text(alertMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
         .sheet(isPresented: $isEnterNewPasswordPresented, onDismiss: {
             dismiss()
         }) {
-            SBForgotPasswordSuccess()
+            SBForgotPasswordSuccess(temporaryPassword: temporaryPassword)
                 .presentationDetents([.fraction(0.6)])
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(50)
@@ -57,6 +106,7 @@ struct SBForgotPasswordSheetView: View {
 
 struct SBForgotPasswordSuccess: View {
     @Environment(\.dismiss) private var dismissSuccess
+    let temporaryPassword: String
     
     var body: some View {
         VStack(spacing: 24) {
@@ -71,6 +121,18 @@ struct SBForgotPasswordSuccess: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
             
+            Text("Your temporary password is: \(temporaryPassword)")
+                .font(.body)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            
+            Text("Please use this password to log in and change it immediately for security reasons.")
+                .font(.callout)
+                .foregroundColor(.red)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            
             SBButton(title: "Got It", style: .filled) {
                 dismissSuccess()
             }
@@ -82,5 +144,5 @@ struct SBForgotPasswordSuccess: View {
 }
 
 #Preview {
-    SBForgotPasswordSuccess()
+    SBForgotPasswordSuccess(temporaryPassword: "temp123")
 }

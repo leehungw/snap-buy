@@ -9,6 +9,7 @@ struct SBChangePasswordView: View {
     
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var isLoading: Bool = false
     
     var body: some View {
         SBSettingBaseView(title: "Change Password") {
@@ -74,17 +75,7 @@ struct SBChangePasswordView: View {
                 Spacer()
                 
                 Button(action: {
-                    if password.isEmpty || confirmPassword.isEmpty {
-                        alertMessage = "Please fill in both fields."
-                        showAlert = true
-                    } else if password != confirmPassword {
-                        alertMessage = "Passwords do not match."
-                        showAlert = true
-                    } else {
-                        // Proceed with changing password
-                        alertMessage = "Password changed successfully."
-                        showAlert = true
-                    }
+                    updatePassword()
                 }) {
                     Text("Save Changes")
                         .foregroundColor(.white)
@@ -97,11 +88,49 @@ struct SBChangePasswordView: View {
             }
             .padding(.horizontal, 20)
             .alert(isPresented: $showAlert) {
-                Alert(title: Text("Notice"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text("Password Update"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
+            .overlay {
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(1.5)
+                }
             }
             .padding(.vertical,20)
         }
         .navigationBarBackButtonHidden(true)
+    }
+    
+    private func updatePassword() {
+        if password.isEmpty || confirmPassword.isEmpty {
+            alertMessage = "Please fill in both fields."
+            showAlert = true
+            return
+        }
+        
+        if password != confirmPassword {
+            alertMessage = "Passwords do not match."
+            showAlert = true
+            return
+        }
+        
+        isLoading = true
+        let request = UpdatePasswordRequest(newPassword: password)
+        UserRepository.shared.updatePassword(request: request) { result in
+            isLoading = false
+            switch result {
+            case .success(let response):
+                if response.result == 1 {
+                    alertMessage = "Password updated successfully"
+                } else {
+                    alertMessage = response.error?.message ?? "Failed to update password"
+                }
+            case .failure(let error):
+                alertMessage = error.localizedDescription
+            }
+            showAlert = true
+        }
     }
 }
 
