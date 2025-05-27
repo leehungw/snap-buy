@@ -71,3 +71,9 @@ struct CreateProductResponse: Codable {
     let data: SBProduct?
     let error: APIErrorResponse?
 }
+
+struct ProductApprovalResponse: Codable {
+    let result: Int
+    let data: String?
+    let error: APIErrorResponse?
+}

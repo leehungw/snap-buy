@@ -1,44 +1,5 @@
 import Foundation
 
-struct UserLoginRequest: Codable {
-    let email: String
-    let password: String
-}
-
-struct GoogleLoginRequest: Codable {
-    let googleId: String
-    let email: String
-}
-
-struct SignUpRequest: Codable {
-    let userName: String
-    let email: String
-    let password: String
-}
-
-struct UserData: Codable {
-    let id: String
-    let name: String
-    let imageURL: String
-    let userName: String
-    let email: String
-    let isAdmin: Bool
-    let isPremium: Bool
-    let isBanned: Bool
-    let lastProductId: Int
-}
-
-struct APIErrorResponse: Codable {
-    let code: Int
-    let message: String
-}
-
-struct UserLoginResponse: Codable {
-    let result: Int
-    let data: UserData?
-    let error: APIErrorResponse?
-}
-
 final class UserRepository {
     static let shared = UserRepository()
     private init() {}
@@ -74,7 +35,7 @@ final class UserRepository {
             completion(.failure(encodingError))
             return
         }
-
+        
         SBAPIService.shared.performRequest(endpoint: "api/users/loginWithGoogle",
                                            method: "POST",
                                            body: jsonData,
@@ -97,7 +58,7 @@ final class UserRepository {
             completion(.failure(encodingError))
             return
         }
-
+        
         SBAPIService.shared.performRequest(endpoint: "api/users/signUp",
                                            method: "POST",
                                            body: jsonData,
@@ -114,8 +75,93 @@ final class UserRepository {
         }
     }
     
-    func updatePassword() {
+    func updateProfile(request: UpdateProfileRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
+        guard let jsonData = try? JSONEncoder().encode(request) else {
+            let encodingError = NSError(domain: "UserRepository", code: -1006, userInfo: [NSLocalizedDescriptionKey: "Unable to encode update profile request"])
+            completion(.failure(encodingError))
+            return
+        }
         
+        SBAPIService.shared.performRequest(endpoint: "api/users/profile",
+                                           method: "PUT",
+                                           body: jsonData,
+                                           headers: nil) { (result: Result<UserLoginResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let userData = response.data {
+                    UserRepository.shared.currentUser = userData
+                }
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func updatePassword(request: UpdatePasswordRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
+        guard let jsonData = try? JSONEncoder().encode(request) else {
+            let encodingError = NSError(domain: "UserRepository", code: -1007, userInfo: [NSLocalizedDescriptionKey: "Unable to encode update password request"])
+            completion(.failure(encodingError))
+            return
+        }
+        
+        SBAPIService.shared.performRequest(endpoint: "api/users/password",
+                                           method: "PUT",
+                                           body: jsonData,
+                                           headers: nil) { (result: Result<UserLoginResponse, Error>) in
+            switch result {
+            case .success(let response):
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func logout() {
+        self.currentUser = nil
+    }
+    
+    // MARK: - Admin Functions
+    
+    func fetchAllUsers(completion: @escaping SBValueAction<Result<AdminUsersResponse, Error>>) {
+        SBAPIService.shared.performRequest(endpoint: "user/api/users",
+                                           method: "GET",
+                                           body: nil,
+                                           headers: nil,
+                                           completion: completion)
+    }
+    
+    func fetchUserDetail(userId: String, completion: @escaping SBValueAction<Result<AdminUserDetailResponse, Error>>) {
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/\(userId)",
+                                           method: "GET",
+                                           body: nil,
+                                           headers: nil,
+                                           completion: completion)
+    }
+    
+    func banUser(userId: String, completion: @escaping SBValueAction<Result<BanUnbanResponse, Error>>) {
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/banUser/\(userId)",
+                                           method: "PUT",
+                                           body: nil,
+                                           headers: nil,
+                                           completion: completion)
+    }
+    
+    func unbanUser(userId: String, completion: @escaping SBValueAction<Result<BanUnbanResponse, Error>>) {
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/unbanUser/\(userId)",
+                                           method: "PUT",
+                                           body: nil,
+                                           headers: nil,
+                                           completion: completion)
+    }
+    
+    func fetchSellerStats(userId: String, completion: @escaping SBValueAction<Result<SellerStatsResponse, Error>>) {
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/\(userId)/seller-stats",
+                                           method: "GET",
+                                           body: nil,
+                                           headers: nil,
+                                           completion: completion)
     }
     
     /// Fetch user information by user ID
