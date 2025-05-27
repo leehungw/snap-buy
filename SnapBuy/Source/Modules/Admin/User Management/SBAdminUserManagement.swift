@@ -1,29 +1,20 @@
 import SwiftUI
 
-struct UserAdmin: Identifiable {
-    let id: UUID
-    var name: String
-    var email: String
-    var role: String
-    var isBlocked: Bool
-}
-
 
 struct SBAdminUserManagementView: View {
     @State private var searchText = ""
     @State private var selectedRole: String = "All"
     @Environment(\.dismiss) var dismiss
-    @State private var users: [UserAdmin] = [
-        UserAdmin(id: UUID(), name: "Minh Le", email: "minh@example.com", role: "seller", isBlocked: false),
-        UserAdmin(id: UUID(), name: "Lan Nguyen", email: "lan@example.com", role: "buyer", isBlocked: true),
-        UserAdmin(id: UUID(), name: "Admin", email: "admin@example.com", role: "admin", isBlocked: false),
-    ]
+    @State private var users: [UserData] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     
     let roles = ["All", "Admin", "Seller", "Buyer"]
 
-    var filteredUsers: [UserAdmin] {
+    var filteredUsers: [UserData] {
         users.filter {
-            (selectedRole == "All" || $0.role.lowercased() == selectedRole.lowercased()) &&
+            let userRole = $0.isAdmin ? "Admin" : ($0.isPremium ? "Seller" : "Buyer")
+            return (selectedRole == "All" || userRole == selectedRole) &&
             (searchText.isEmpty || $0.name.lowercased().contains(searchText.lowercased()) || $0.email.lowercased().contains(searchText.lowercased()))
         }
     }
@@ -43,7 +34,7 @@ struct SBAdminUserManagementView: View {
                 .background(RoundedRectangle(cornerRadius: 12).stroke(lineWidth: 1))
                 .background(Color.white)
                 .padding(.horizontal)
-                // Role Filter
+                
                 Picker("Role", selection: $selectedRole) {
                     ForEach(roles, id: \.self) { role in
                         Text(role).tag(role)
@@ -52,57 +43,122 @@ struct SBAdminUserManagementView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
                 
-                List {
-                    ForEach(filteredUsers) { user in
-                        NavigationLink(destination: SBAdminUserDetailView(user: user)) {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(user.name)
-                                        .font(R.font.outfitMedium.font(size: 16))
-                                    Text(user.email)
-                                        .font(R.font.outfitRegular.font(size: 14))
-                                        .foregroundColor(.gray)
-                                }
-                                Spacer()
-                                HStack(alignment: .center) {
-                                    Text(user.role.capitalized)
-                                        .font(R.font.outfitMedium.font(size: 14))
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 6)
-                                        .background(roleColor(user.role))
-                                        .cornerRadius(8)
-                                    Spacer()
-                                    Button(action: {
-                                        toggleBlock(user)
-                                    }) {
-                                        Image(systemName: user.isBlocked ? "lock.fill" : "lock.open")
-                                            .foregroundColor(user.isBlocked ? .red : .green)
-                                            .padding(.leading, 8)
+                if isLoading {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                } else if let error = errorMessage {
+                    Spacer()
+                    Text(error)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    Button("Try Again") {
+                        reloadUsers()
+                    }
+                    .buttonStyle(.bordered)
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(filteredUsers, id: \.id) { user in
+                            NavigationLink(destination: SBAdminUserDetailView(user: user, onUserUpdated: reloadUsers)) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(user.name)
+                                            .font(R.font.outfitMedium.font(size: 16))
+                                        Text(user.email)
+                                            .font(R.font.outfitRegular.font(size: 14))
+                                            .foregroundColor(.gray)
                                     }
+                                    Spacer()
+                                    HStack(alignment: .center) {
+                                        Text(user.isAdmin ? "Admin" : (user.isPremium ? "Seller" : "Buyer"))
+                                            .font(R.font.outfitMedium.font(size: 14))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 10)
+                                            .padding(.vertical, 6)
+                                            .background(roleColor(user))
+                                            .cornerRadius(8)
+                                        Spacer()
+                                        if !user.isAdmin {
+                                            Button(action: {
+                                                toggleBlock(user)
+                                            }) {
+                                                Image(systemName: user.isBanned ? "lock.fill" : "lock.open")
+                                                    .foregroundColor(user.isBanned ? .red : .green)
+                                                    .padding(.leading, 8)
+                                            }
+                                        }
+                                    }
+                                    .frame(width: 100)
                                 }
-                                .frame(width: 100)
+                                .padding(.vertical, 6)
                             }
-                            .padding(.vertical, 6)
                         }
                     }
                 }
             }
         }
         .navigationBarBackButtonHidden(true)
-    }
-
-    private func toggleBlock(_ user: UserAdmin) {
-        if let index = users.firstIndex(where: { $0.id == user.id }) {
-            users[index].isBlocked.toggle()
+        .onAppear {
+            if users.isEmpty {
+                reloadUsers()
+            }
         }
     }
 
-    private func roleColor(_ role: String) -> Color {
-        switch role.lowercased() {
-        case "admin": return .red
-        case "seller": return .orange
-        default: return .blue
+    private func reloadUsers() {
+        isLoading = true
+        errorMessage = nil
+        
+        UserRepository.shared.fetchAllUsers { result in
+            isLoading = false
+            switch result {
+            case .success(let response):
+                if response.result == 1 {
+                    self.users = response.data
+                } else if let error = response.error {
+                    self.errorMessage = error.message
+                }
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    private func toggleBlock(_ user: UserData) {
+        if user.isBanned {
+            UserRepository.shared.unbanUser(userId: user.id) { result in
+                switch result {
+                case .success(let response):
+                    if response.result == 1 && response.data == 1 {
+                        reloadUsers()
+                    }
+                case .failure(let error):
+                    print("Error unblocking user: \(error.localizedDescription)")
+                }
+            }
+        } else {
+            UserRepository.shared.banUser(userId: user.id) { result in
+                switch result {
+                case .success(let response):
+                    if response.result == 1 && response.data == 1 {
+                        reloadUsers()
+                    }
+                case .failure(let error):
+                    print("Error blocking user: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    private func roleColor(_ user: UserData) -> Color {
+        if user.isAdmin {
+            return .red
+        } else if user.isPremium {
+            return .orange
+        } else {
+            return .blue
         }
     }
 }

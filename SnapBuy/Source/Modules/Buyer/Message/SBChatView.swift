@@ -1,10 +1,15 @@
 import SwiftUI
+import Combine
 
 struct SBChatView: View {
     let user: User
     @State private var inputText: String = ""
     @Environment(\.dismiss) var dismiss
-    @State private var messages: [ChatMessage] = sampleChatMessages
+    @State private var messages: [ChatMessage] = []
+    @State private var cancellables = Set<AnyCancellable>()
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    @State private var showError = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -59,14 +64,19 @@ struct SBChatView: View {
             // MARK: - Messages
             ScrollViewReader { proxy in
                 ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(messages) { msg in
-                            MessageBubble(message: msg)
-                                .id(msg.id)
+                    if isLoading && messages.isEmpty {
+                        ProgressView()
+                            .padding()
+                    } else {
+                        VStack(spacing: 12) {
+                            ForEach(messages) { msg in
+                                MessageBubble(message: msg)
+                                    .id(msg.id)
+                            }
                         }
+                        .padding(.horizontal)
+                        .padding(.top, 10)
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 10)
                 }
                 .background(
                     LinearGradient(
@@ -112,22 +122,75 @@ struct SBChatView: View {
             .padding(.top, 50)
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            setupMessageUpdates()
+        }
+        .onDisappear {
+            ChatRepository.shared.stopMessagePolling()
+        }
+//        .alert("Error", isPresented: $showError, message: {
+//            Text(errorMessage ?? "An error occurred")
+//        })
+    }
+    
+    // MARK: - Chat Logic
+    private func setupMessageUpdates() {
+        isLoading = true
+        
+        // Initial fetch
+        ChatRepository.shared.fetchMessages(userId: user.id.uuidString) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let response):
+                    if let newMessages = response.data {
+                        messages = newMessages
+                    }
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
+        }
+        
+        // Start real-time updates
+        ChatRepository.shared.startMessagePolling(userId: user.id.uuidString)
+        
+        ChatRepository.shared.messageUpdates
+            .receive(on: DispatchQueue.main)
+            .sink { newMessages in
+                messages = newMessages
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Send Logic
-    func sendMessage() {
+    private func sendMessage() {
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         
-        let newMessage = ChatMessage(
-            text: trimmed,
-            time: DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short),
-            isUser: true
-        )
-        messages.append(newMessage)
-        inputText = ""
+        let request = SendMessageRequest(receiverId: user.id.uuidString, text: trimmed)
+        
+        ChatRepository.shared.sendMessage(request: request) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    if let message = response.data {
+                        messages.append(message)
+                        inputText = ""
+                    } else if let error = response.error {
+                        errorMessage = error.message
+                        showError = true
+                    }
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
+        }
     }
 }
+
 struct MessageBubble: View {
     let message: ChatMessage
     
@@ -142,7 +205,7 @@ struct MessageBubble: View {
                     .cornerRadius(15)
                 if !message.isUser { Spacer() }
             }
-            Text(message.time)
+            Text(message.timeString)
                 .font(.caption)
                 .foregroundColor(.gray)
                 .padding(.horizontal, 4)
@@ -150,6 +213,7 @@ struct MessageBubble: View {
         .frame(maxWidth: .infinity, alignment: message.isUser ? .trailing : .leading)
     }
 }
+
 #Preview {
     SBMessageView()
 }
