@@ -55,33 +55,33 @@ struct ListRecentView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
-                ForEach(sellerOrder.sample) { order in
-                    NavigationLink(destination: OrderDetailView(order: order)) {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Order #\(order.id.uuidString.prefix(6))")
-                                    .font(.custom("Outfit-Medium", size: 14))
-                                    .foregroundColor(.black)
-                                Text("\(order.items.count) item\(order.items.count > 1 ? "s" : "")")
-                                    .font(.custom("Outfit-Regular", size: 12))
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            Spacer()
-                            
-                            Text(order.status.rawValue)
-                                .font(.custom("Outfit-Medium", size: 12))
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 4)
-                                .background(colorForStatus(order.status).opacity(0.2))
-                                .foregroundColor(colorForStatus(order.status))
-                                .cornerRadius(8)
-                        }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                    }
-                }
+//                ForEach(sellerOrder.sample) { order in
+//                    NavigationLink(destination: OrderDetailView(order: order)) {
+//                        HStack {
+//                            VStack(alignment: .leading, spacing: 4) {
+//                                Text("Order #\(order.id.uuidString.prefix(6))")
+//                                    .font(.custom("Outfit-Medium", size: 14))
+//                                    .foregroundColor(.black)
+//                                Text("\(order.items.count) item\(order.items.count > 1 ? "s" : "")")
+//                                    .font(.custom("Outfit-Regular", size: 12))
+//                                    .foregroundColor(.gray)
+//                            }
+//                            
+//                            Spacer()
+//                            
+//                            Text(order.status.rawValue)
+//                                .font(.custom("Outfit-Medium", size: 12))
+//                                .padding(.horizontal, 10)
+//                                .padding(.vertical, 4)
+//                                .background(colorForStatus(order.status).opacity(0.2))
+//                                .foregroundColor(colorForStatus(order.status))
+//                                .cornerRadius(8)
+//                        }
+//                        .padding()
+//                        .background(Color(.systemGray6))
+//                        .cornerRadius(10)
+//                    }
+//                }
             }
         }
         .padding(.horizontal)
