@@ -34,7 +34,7 @@ struct SBPaymentView: View {
     @State private var showSuccessfullyOrderSheet = false
     @State private var selectedAddress: String = ""
     @State private var selectedCoordinate: CLLocationCoordinate2D?
-    @State private var selectedPayment: UUID? = nil
+    @State private var selectedPayment: UUID? = paymentMethods[0].id
     @StateObject private var addressViewModel = SBAddressViewModel()
     
     var body: some View {
@@ -118,9 +118,24 @@ struct SBPaymentView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(product.title)
                                     .font(R.font.outfitMedium.font(size: 18))
-                                Text(R.string.localizable.colorFormat(product.color))
-                                    .font(R.font.outfitRegular.font(size: 13))
-                                    .foregroundColor(.gray)
+                                HStack(spacing: 8) {
+                                    Text("Color:")
+                                        .font(R.font.outfitRegular.font(size: 13))
+                                        .foregroundColor(.gray)
+                                    Circle()
+                                        .fill(Color(hex: product.color) ?? .gray)
+                                        .frame(width: 16, height: 16)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.gray, lineWidth: 0.5)
+                                        )
+                                    Text("Size: \(product.size)")
+                                        .font(R.font.outfitRegular.font(size: 13))
+                                        .foregroundColor(.gray)
+                                    Text("Qty: \(product.quantity)")
+                                        .font(R.font.outfitRegular.font(size: 13))
+                                        .foregroundColor(.gray)
+                                }
                             }
                             
                             Spacer()
@@ -216,7 +231,7 @@ struct SBPaymentView: View {
             }
         .onAppear {
             if selectedPayment == nil {
-                selectedPayment = paymentMethods.first?.id
+                selectedPayment = paymentMethods[0].id
             }
             addressViewModel.requestLocation()
         }
@@ -259,7 +274,7 @@ struct SBSuccessfulOrderView: View {
 
 struct SBPaymentMethodView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedPaymentID: UUID? = nil
+    @State private var selectedPaymentID: UUID?
     @Binding var selectedPayment: UUID?
     
     var body: some View {
@@ -317,6 +332,10 @@ struct SBPaymentMethodView: View {
             }
         }
         .padding()
+        .onAppear {
+            // Initialize with the current selection from the parent view
+            selectedPaymentID = selectedPayment
+        }
     }
 }
 #Preview {
