@@ -98,6 +98,8 @@
 		0AF9F5A72DE2294A000B9B6D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A62DE2294A000B9B6D /* SearchViewModel.swift */; };
 		1136D81B7CB8C1798433F2A6 /* Pods_SnapBuy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68E662488D45EFC313A2A406 /* Pods_SnapBuy.framework */; };
 		DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5045702DC0AD9400DCE3EA /* MessageModel.swift */; };
+		DA6BBB662DE61CFC005BF7E7 /* SBOrderRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */; };
+		DA6BBB682DE61D05005BF7E7 /* OrderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */; };
 		DA850D922DBB373900E952AA /* OrderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA850D912DBB373300E952AA /* OrderModel.swift */; };
 		DA8B424C2DD991BB00A543DD /* SBEditProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B424B2DD991AF00A543DD /* SBEditProduct.swift */; };
 		DA8B424F2DD9BE0600A543DD /* OrderManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B424E2DD9BDFA00A543DD /* OrderManagementView.swift */; };
@@ -227,6 +229,8 @@
 		8BDE79FAB67DEB8843E5A04A /* Pods-SnapBuy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.release.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.release.xcconfig"; sourceTree = "<group>"; };
 		DA5045702DC0AD9400DCE3EA /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		DA6A84AB2D809E7700454EEF /* SnapBuy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapBuy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOrderRepo.swift; sourceTree = "<group>"; };
+		DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModels.swift; sourceTree = "<group>"; };
 		DA850D912DBB373300E952AA /* OrderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModel.swift; sourceTree = "<group>"; };
 		DA8B424B2DD991AF00A543DD /* SBEditProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEditProduct.swift; sourceTree = "<group>"; };
 		DA8B424E2DD9BDFA00A543DD /* OrderManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderManagementView.swift; sourceTree = "<group>"; };
@@ -496,6 +500,7 @@
 		0A61F9A02DAF47E6003A9DAD /* APIRepo */ = {
 			isa = PBXGroup;
 			children = (
+				DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */,
 				0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */,
 				0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */,
 				DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */,
@@ -632,6 +637,7 @@
 		0AB9B0642DBFC56700E54E28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */,
 				0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */,
 				0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */,
 				DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */,
@@ -1039,6 +1045,7 @@
 				0AB9B0682DBFC56700E54E28 /* PopularModel.swift in Sources */,
 				0A26C6DE2DDCCE010088EFAE /* SBVerificationView.swift in Sources */,
 				DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */,
+				DA6BBB682DE61D05005BF7E7 /* OrderModels.swift in Sources */,
 				0A26C6DF2DDCCE010088EFAE /* SBEmailVerificationTextView.swift in Sources */,
 				0A26C6E02DDCCE010088EFAE /* SBSignUpView.swift in Sources */,
 				DA958F1B2DD1F8EE00A98432 /* ReviewModel.swift in Sources */,
@@ -1078,6 +1085,7 @@
 				0A26C70D2DDCCE590088EFAE /* SBCategoryView.swift in Sources */,
 				0A26C70E2DDCCE590088EFAE /* SBRangeSlider.swift in Sources */,
 				0AF9F5A72DE2294A000B9B6D /* SearchViewModel.swift in Sources */,
+				DA6BBB662DE61CFC005BF7E7 /* SBOrderRepo.swift in Sources */,
 				0A26C70F2DDCCE590088EFAE /* SBTextInput.swift in Sources */,
 				0A26C7102DDCCE590088EFAE /* SBButton.swift in Sources */,
 				0A26C7112DDCCE590088EFAE /* SBChatView.swift in Sources */,
