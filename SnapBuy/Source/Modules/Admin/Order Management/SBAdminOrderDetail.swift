@@ -1,75 +1,120 @@
 import SwiftUI
 
 struct SBAdminOrderDetail: View {
-    @State var order: sellerOrder
-    let onUpdateStatus: (sellerOrder) -> Void
+    let order: SBOrderModel
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationView {
             List {
+                Section(header: Text("Order Information").font(R.font.outfitMedium.font(size: 16))) {
+                    Text("Order ID: #\(order.id)")
+                        .font(R.font.outfitRegular.font(size: 14))
+                    Text("Status: \(order.status)")
+                        .font(R.font.outfitRegular.font(size: 14))
+                        .foregroundColor(colorForStatus(order.status))
+                }
+                
                 Section(header: Text("Buyer Information").font(R.font.outfitMedium.font(size: 16))) {
-                    Text("Name: \(order.buyer.name)")
+                    Text("Buyer ID: \(order.buyerId)")
                         .font(R.font.outfitRegular.font(size: 14))
-                    Text("Address: \(order.buyer.address)")
-                        .font(R.font.outfitRegular.font(size: 14))
-                    Text("Phone: \(order.buyer.phone)")
+                    Text("Address: \(order.shippingAddress)")
                         .font(R.font.outfitRegular.font(size: 14))
                 }
+                
                 Section(header: Text("Order Items").font(R.font.outfitMedium.font(size: 16))) {
-                    ForEach(order.items) { item in
-                        HStack {
-                            Image(item.imageName)
-                                .resizable()
-                                .frame(width: 50, height: 50)
+                    ForEach(order.orderItems) { item in
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .top) {
+                                AsyncImage(url: URL(string: item.productImageUrl)) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                } placeholder: {
+                                    Color.gray.opacity(0.2)
+                                }
+                                .frame(width: 60, height: 60)
                                 .cornerRadius(8)
-                            VStack(alignment: .leading) {
-                                Text(item.title)
-                                    .font(R.font.outfitMedium.font(size: 16))
-                                Text("Color: \(item.color)")
-                                    .font(R.font.outfitRegular.font(size: 13))
-                                    .foregroundColor(.gray)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(item.productName)
+                                        .font(R.font.outfitMedium.font(size: 14))
+                                    if !item.productNote.isEmpty {
+                                        Text(item.productNote)
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
+                                    }
+                                    Text("Quantity: \(item.quantity)")
+                                        .font(R.font.outfitRegular.font(size: 12))
+                                        .foregroundColor(.gray)
+                                    Text("Price: $\(String(format: "%.2f", item.unitPrice))")
+                                        .font(R.font.outfitRegular.font(size: 12))
+                                        .foregroundColor(.gray)
+                                }
                             }
-                            Spacer()
-                            Text("Qty: \(item.quantity)")
-                                .font(R.font.outfitRegular.font(size: 14))
-                            Text(formatCurrency(item.price * Double(item.quantity)))
-                                .font(R.font.outfitMedium.font(size: 14))
-                                .bold()
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                Section(header: Text("Order Status").font(R.font.outfitMedium.font(size: 16))) {
-                    Picker("Status", selection: $order.status) {
-                        ForEach(OrderStatus.allCases) { status in
-                            Text(status.rawValue).font(R.font.outfitRegular.font(size: 14)).tag(status)
                         }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
                 }
-                Section {
+                
+                Section(header: Text("Order Summary").font(R.font.outfitMedium.font(size: 16))) {
                     HStack {
+                        Text("Total Items")
+                            .font(R.font.outfitRegular.font(size: 14))
                         Spacer()
-                        Button("Save Changes") {
-                            onUpdateStatus(order)
-                            dismiss()
-                        }
-                        .font(R.font.outfitMedium.font(size: 16))
-                        .foregroundColor(.blue)
+                        Text("\(order.orderItems.count)")
+                            .font(R.font.outfitMedium.font(size: 14))
+                    }
+                    
+                    HStack {
+                        Text("Total Amount")
+                            .font(R.font.outfitRegular.font(size: 14))
                         Spacer()
+                        Text("$\(String(format: "%.2f", order.totalAmount))")
+                            .font(R.font.outfitMedium.font(size: 14))
+                            .foregroundColor(.green)
                     }
                 }
             }
             .navigationTitle("Order Details")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Close") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
-
-    func formatCurrency(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "en_US")
-        return formatter.string(from: NSNumber(value: amount)) ?? "$\(amount)"
+    
+    private func colorForStatus(_ status: String) -> Color {
+        switch status {
+        case OrderStatus.pending.rawValue:
+            return .orange
+        case OrderStatus.inProgress.rawValue:
+            return .blue
+        case OrderStatus.complete.rawValue:
+            return .green
+        case OrderStatus.delivered.rawValue:
+            return .purple
+        case OrderStatus.cancelled.rawValue:
+            return .red
+        default:
+            return .gray
+        }
     }
 }
+
+#Preview {
+    SBAdminOrderDetail(order: SBOrderModel(
+        id: "ORD-123",
+        buyerId: "BUYER-123",
+        sellerId: "SELLER-123",
+        totalAmount: 99.99,
+        shippingAddress: "123 Main St",
+        orderItems: [],
+        status: "Pending"
+    ))
+}
+
+
