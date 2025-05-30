@@ -1,4 +1,27 @@
 import SwiftUI
+import Kingfisher
+import MapKit
+
+struct LocationMapView: View {
+    let coordinate: CLLocationCoordinate2D
+    
+    var body: some View {
+        Map(coordinateRegion: .constant(MKCoordinateRegion(
+            center: coordinate,
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        )), annotationItems: [coordinate]) { location in
+            MapMarker(coordinate: location)
+        }
+        .frame(height: 150)
+        .cornerRadius(12)
+    }
+}
+
+extension CLLocationCoordinate2D: Identifiable {
+    public var id: String {
+        "\(latitude)-\(longitude)"
+    }
+}
 
 struct SBPaymentView: View {
     
@@ -9,8 +32,11 @@ struct SBPaymentView: View {
     @State private var navigateToAddress = false
     @State private var showMethodSheet = false
     @State private var showSuccessfullyOrderSheet = false
-    @State private var selectedAddress: String = "San Diego, CA"
+    @State private var selectedAddress: String = ""
+    @State private var selectedCoordinate: CLLocationCoordinate2D?
     @State private var selectedPayment: UUID? = nil
+    @StateObject private var addressViewModel = SBAddressViewModel()
+    
     var body: some View {
         SBBaseView {
             VStack(alignment: .leading, spacing: 25) {
@@ -44,25 +70,28 @@ struct SBPaymentView: View {
                                 .foregroundColor(Color.main)
                         }
                     }
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "mappin.circle.fill")
-                            .resizable()
-                            .frame(width: 80, height: 80)
-                            .foregroundColor(.red)
-                        Spacer()
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(R.string.localizable.house)
-                                .font(R.font.outfitBold.font(size: 16))
-                            Text(selectedAddress)
-                                .font(R.font.outfitRegular.font(size: 16))
-                                .foregroundColor(.gray)
-                        }
-                        .frame(width: 200)
+                    
+                    if addressViewModel.isLoadingLocation {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 150)
+                    } else if let coordinate = selectedCoordinate ?? addressViewModel.coordinate {
+                        LocationMapView(coordinate: coordinate)
+                    }
+                    
+                    if !addressViewModel.currentAddress.isEmpty || !selectedAddress.isEmpty {
+                        Text(selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress)
+                            .font(R.font.outfitRegular.font(size: 16))
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
                     }
                 }
                 NavigationLink(
-                                    destination: SBAddressView(selectedAddress: $selectedAddress),
-                                    isActive: $navigateToAddress
+                    destination: SBAddressView(
+                        selectedAddress: $selectedAddress,
+                        selectedCoordinate: $selectedCoordinate
+                    ),
+                    isActive: $navigateToAddress
                 ) {
                     EmptyView()
                 }
@@ -74,10 +103,17 @@ struct SBPaymentView: View {
                     
                     ForEach(products) { product in
                         HStack(spacing: 12) {
-                            Image(product.imageName)
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                                .cornerRadius(10)
+                            if let url = URL(string: product.imageName) {
+                                KFImage(url)
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(10)
+                            } else {
+                                Image(product.imageName)
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(10)
+                            }
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(product.title)
@@ -182,8 +218,8 @@ struct SBPaymentView: View {
             if selectedPayment == nil {
                 selectedPayment = paymentMethods.first?.id
             }
+            addressViewModel.requestLocation()
         }
-
         .navigationBarBackButtonHidden(true)
     }
 }
