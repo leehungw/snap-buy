@@ -381,6 +381,34 @@ final class ProductRepository {
             }
         }
     }
+    
+    func fetchProductById(productId: Int, completion: @escaping (Result<SBProduct, Error>) -> Void) {
+        let endpoint = "product/api/products/\(productId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<CreateProductResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let product = response.data {
+                    completion(.success(product))
+                } else {
+                    let message = response.error?.message ?? "Product not found"
+                    let err = NSError(
+                        domain: "ProductRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
 
 struct DeleteProductResponse: Codable {

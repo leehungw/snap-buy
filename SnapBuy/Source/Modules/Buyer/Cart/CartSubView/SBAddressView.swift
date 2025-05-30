@@ -1,10 +1,13 @@
 import SwiftUI
+import CoreLocation
+import MapKit
 
 struct SBAddressView: View {
     @Binding var selectedAddress: String
-    @State private var searchText: String = "San Diego, CA"
+    @Binding var selectedCoordinate: CLLocationCoordinate2D?
+    @StateObject private var viewModel = SBAddressViewModel()
     @Environment(\.dismiss) var dismiss
-    @State private var selectedLocationID: UUID? = nil
+    @State private var customLocation: String = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 25) {
@@ -36,84 +39,129 @@ struct SBAddressView: View {
             }
             .padding(.horizontal)
 
-            // Search Field
-            HStack {
-                Image(systemName: "location.circle")
-                    .foregroundColor(.gray)
-                TextField("Enter location", text: $searchText)
-                Spacer()
-                Image(systemName: "location.north.fill")
-                    .foregroundColor(.gray)
+            // Custom Location Input
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    TextField("Enter address", text: $customLocation)
+                        .textFieldStyle(PlainTextFieldStyle())
+                    
+                    if !customLocation.isEmpty {
+                        Button(action: {
+                            viewModel.geocodeAddress(customLocation)
+                        }) {
+                            Text("Find")
+                                .font(R.font.outfitMedium.font(size: 14))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.main)
+                                .cornerRadius(12)
+                        }
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                )
             }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-            )
             .padding(.horizontal)
 
-            // Select Location
-            Text(R.string.localizable.chooseYourLocation)
-                .font(R.font.outfitBold.font(size: 20))
-                .padding(.horizontal)
-
-            VStack(spacing: 12) {
-                ForEach(locations.indices, id: \.self) { index in
-                    let location = locations[index]
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(location.name)
-                                .font(.headline)
-                            Text(location.subtitle)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+            // Location Section
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Location")
+                    .font(R.font.outfitBold.font(size: 16))
+                
+                if viewModel.isLoadingLocation {
+                    VStack {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 200)
+                    }
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(12)
+                } else {
+                    VStack(spacing: 12) {
+                        if let coordinate = viewModel.coordinate {
+                            Map(coordinateRegion: .constant(viewModel.region),
+                                annotationItems: [coordinate]) { location in
+                                MapMarker(coordinate: location)
+                            }
+                            .frame(height: 200)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.1))
+                                .frame(height: 200)
+                                .overlay(
+                                    Text("No location selected")
+                                        .foregroundColor(.gray)
+                                )
                         }
-                        Spacer()
-                        ZStack {
-                            Circle()
-                                .fill(location.color.opacity(0.2))
-                                .frame(width: 50, height: 50)
-                            Circle()
-                                .fill(location.color)
-                                .frame(width: 10, height: 10)
+                        
+                        if let error = viewModel.locationError {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(error)
+                                    .foregroundColor(.red)
+                                    .font(R.font.outfitRegular.font(size: 14))
+                                
+                                Button(action: {
+                                    viewModel.requestLocation()
+                                }) {
+                                    Text("Use Current Location Instead")
+                                        .font(R.font.outfitMedium.font(size: 14))
+                                        .foregroundColor(.main)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        if !viewModel.currentAddress.isEmpty {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(viewModel.currentAddress)
+                                        .font(R.font.outfitRegular.font(size: 14))
+                                        .foregroundColor(.black)
+                                }
+                                
+                                Spacer()
+                                
+                                Button(action: {
+                                    selectedAddress = viewModel.currentAddress
+                                    selectedCoordinate = viewModel.coordinate
+                                    dismiss()
+                                }) {
+                                    Text("Confirm")
+                                        .font(R.font.outfitMedium.font(size: 14))
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color.main)
+                                        .cornerRadius(12)
+                                }
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            )
                         }
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(selectedLocationID == location.id ? Color.purple : Color.gray.opacity(0.2), lineWidth: 2)
-                    )
-                    .onTapGesture {
-                        selectedLocationID = location.id
-                    }
-                    .padding(.horizontal)
                 }
             }
+            .padding(.horizontal)
 
             Spacer()
-
-            // Confirm Button
-            Button(action: {
-                if let selectedID = selectedLocationID,
-                   let selected = locations.first(where: { $0.id == selectedID }) {
-                    selectedAddress = searchText + "," + selected.name
-                    dismiss()
-                }
-            }) {
-                Text(R.string.localizable.confirm)
-                    .font(R.font.outfitMedium.font(size: 20))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.main)
-                    .cornerRadius(25)
-            }
-            .padding()
         }
-        .padding(.horizontal,10)
+        .padding(.horizontal, 10)
         .navigationBarHidden(true)
+        .onAppear {
+            if viewModel.currentAddress.isEmpty {
+                viewModel.requestLocation()
+            }
+        }
     }
 }
+
 #Preview {
-    SBAddressView(selectedAddress: .constant("San Diego, CA"))
+    SBAddressView(selectedAddress: .constant("San Diego, CA"), selectedCoordinate: .constant(nil))
 }
