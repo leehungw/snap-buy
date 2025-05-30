@@ -28,5 +28,9 @@
 		<string>Outfit-Regular.ttf</string>
 		<string>Outfit-Bold.ttf</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show nearby stores and provide accurate delivery information.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We need your location to show nearby stores and provide accurate delivery information.</string>
 ***REMOVED***
 ***REMOVED***

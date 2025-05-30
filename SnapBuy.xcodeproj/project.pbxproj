@@ -65,6 +65,7 @@
 		0A5ECDB42DE4E37100E49072 /* ProductFormComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDB32DE4E37100E49072 /* ProductFormComponents.swift */; };
 		0A5ECDB62DE4E85D00E49072 /* ImgurService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDB52DE4E85D00E49072 /* ImgurService.swift */; };
 		0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */; };
+		0A9FC9422DE8C882001A0343 /* SBAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9FC9412DE8C882001A0343 /* SBAddressViewModel.swift */; };
 		0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */; };
 		0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */; };
 		0AA7A10E2D91CD9D00EB5684 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */; };
@@ -189,6 +190,7 @@
 		0A5ECDB32DE4E37100E49072 /* ProductFormComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFormComponents.swift; sourceTree = "<group>"; };
 		0A5ECDB52DE4E85D00E49072 /* ImgurService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImgurService.swift; sourceTree = "<group>"; };
 		0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserRepo.swift; sourceTree = "<group>"; };
+		0A9FC9412DE8C882001A0343 /* SBAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAddressViewModel.swift; sourceTree = "<group>"; };
 		0AA7A0DB2D91CD9D00EB5684 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		0AA7A0DC2D91CD9D00EB5684 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		0AA7A0DD2D91CD9D00EB5684 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 			children = (
 				0A26C6E12DDCCE590088EFAE /* SBAddressView.swift */,
 				0A26C6E22DDCCE590088EFAE /* SBPaymentView.swift */,
+				0A9FC9412DE8C882001A0343 /* SBAddressViewModel.swift */,
 			);
 			path = CartSubView;
 			sourceTree = "<group>";
@@ -1031,6 +1034,7 @@
 				0AB9B0662DBFC56700E54E28 /* ColorModel.swift in Sources */,
 				0AB9B0672DBFC56700E54E28 /* AddressModel.swift in Sources */,
 				DA8B42572DD9D93400A543DD /* SBSellerSettingView.swift in Sources */,
+				0A9FC9422DE8C882001A0343 /* SBAddressViewModel.swift in Sources */,
 				DA958F2B2DD202C700A98432 /* SBEditNotiView.swift in Sources */,
 				0AB9B0682DBFC56700E54E28 /* PopularModel.swift in Sources */,
 				0A26C6DE2DDCCE010088EFAE /* SBVerificationView.swift in Sources */,

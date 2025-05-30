@@ -2,12 +2,15 @@ import SwiftUI
 
 struct CartItem: Identifiable {
     let id = UUID()
-    let imageName: String
+    let imageName: String // This will now store either a local image name or URL string
     let title: String
     let color: String
     let price: Double
     let quantity: Int
+}
 
+// Example items for preview
+extension CartItem {
     static let cartitems: [CartItem] = [
         CartItem(imageName: "img_1", title: "Bix Bag Limited Edition 229", color: "Berown", price: 67.0, quantity: 1),
         CartItem(imageName: "img_2", title: "Bix Bag Limited Edition 229", color: "Berown", price: 26.0, quantity: 1),
