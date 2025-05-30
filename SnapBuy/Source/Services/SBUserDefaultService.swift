@@ -1,6 +1,12 @@
 import Foundation
 import Combine
 
+struct SBCartStorageItem: Codable {
+    let productId: Int
+    let variantId: Int
+    let quantity: Int
+}
+
 class SBUserDefaultService {
     static let instance = SBUserDefaultService()
     private var cancellables = Set<AnyCancellable>()
@@ -8,7 +14,20 @@ class SBUserDefaultService {
     @UserDefaultWrapper("did_show_onboarding", defaultValue: false)
     var didShowOnboarding: Bool
     
+    @UserDefaultWrapper("cart_items", defaultValue: [])
+    var cartItems: [SBCartStorageItem]
+    
     private init() {
+    }
+    
+    func addToCart(productId: Int, variantId: Int, quantity: Int) {
+        var currentItems = cartItems
+        currentItems.append(SBCartStorageItem(productId: productId, variantId: variantId, quantity: quantity))
+        cartItems = currentItems
+    }
+    
+    func clearCart() {
+        cartItems = []
     }
 }
 

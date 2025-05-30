@@ -1,11 +1,38 @@
+extension Color {
+    /// Initialize a Color from a hex string (e.g. "#FF0000" or "FF0000")
+    init?(hex: String) {
+        var hexString = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        if hexString.hasPrefix("#") {
+            hexString.removeFirst()
+        }
+        guard hexString.count == 6,
+              let intCode = Int(hexString, radix: 16) else {
+            return nil
+        }
+        let red = Double((intCode >> 16) & 0xFF) / 255.0
+        let green = Double((intCode >> 8) & 0xFF) / 255.0
+        let blue = Double(intCode & 0xFF) / 255.0
+        self.init(red: red, green: green, blue: blue)
+    }
+}
+
 import SwiftUI
 import Kingfisher
+
+extension Sequence where Element: Hashable {
+    /// Returns elements in their first-encountered order, removing duplicates.
+    func unique() -> [Element] {
+        var seen = Set<Element>()
+        return filter { seen.insert($0).inserted }
+    }
+}
 
 struct SBProductDetailView: View {
     let product: SBProduct
     @Environment(\.dismiss) var dismiss
     @State private var quantity: Int = 1
-    @State private var selectedColor: Color = .brown
+    @State private var selectedColor: String?
+    @State private var selectedSize: String?
     @State private var currentIndex: Int = 0
     @State private var selectedDetent: PresentationDetent = .fraction(0.5)
     @State private var isExpanded: Bool = false
@@ -13,11 +40,35 @@ struct SBProductDetailView: View {
     @State private var sellerData: UserData?
     @State private var isLoadingSeller = true
     @State private var sellerError: String?
-    
-    
+    @State private var showVariantAlert = false
+    @State private var showAddedToCartAlert = false
+    @State private var addToCartMessage = ""
     
     var productImages: [String] {
         product.productImages.map { $0.url }
+    }
+    
+    var availableColors: [String] {
+        product.productVariants.map { $0.color }.unique()
+    }
+    
+    var availableSizes: [String] {
+        product.productVariants.map { $0.size }.unique()
+    }
+    
+    var selectedVariant: SBProductVariant? {
+        guard let selectedColor = selectedColor,
+              let selectedSize = selectedSize else {
+            return nil
+        }
+        
+        return product.productVariants.first { variant in
+            variant.color == selectedColor && variant.size == selectedSize
+        }
+    }
+    
+    var totalPrice: Double {
+        product.basePrice * Double(quantity)
     }
     
     var body: some View {
@@ -59,22 +110,38 @@ struct SBProductDetailView: View {
                         Text(product.name)
                             .font(R.font.outfitBold.font(size:25))
                         Spacer()
-                        HStack(spacing: 8) {
-                            Button(action: { if quantity > 1 { quantity -= 1 } }) {
+                        HStack(spacing: 10) {
+                            Button(action: {
+                                if quantity > 1 {
+                                    quantity -= 1
+                                }
+                            }) {
                                 Image(systemName: "minus")
+                                    .frame(width: 12, height: 12)
                                     .padding(8)
+                                    .foregroundColor(.black)
                                     .background(Color.white)
                                     .clipShape(Circle())
                             }
+
                             Text("\(quantity)")
-                                .font(.headline)
-                            Button(action: { quantity += 1 }) {
+                                .frame(width: 18)
+                                .font(R.font.outfitBold.font(size: 15))
+
+                            Button(action: {
+                                if quantity < product.quantity {
+                                    quantity += 1
+                                }
+                            }) {
                                 Image(systemName: "plus")
+                                    .frame(width: 12, height: 12)
                                     .padding(8)
+                                    .foregroundColor(quantity >= product.quantity ? .gray : .black)
                                     .background(Color.white)
                                     .clipShape(Circle())
                             }
                         }
+                        .frame(width: 100, height: 35)
                     }
                     .padding(.top,20)
                     HStack {
@@ -94,41 +161,47 @@ struct SBProductDetailView: View {
                         .font(R.font.outfitBold.font(size:14))
                         .padding(.top,10)
                     
-                    HStack(spacing: 16) {
-                        ForEach([Color.brown, .black, .cyan, .green], id: \.self) { color in
-                            Circle()
-                                .fill(color)
-                                .frame(width: 28, height: 28)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.gray, lineWidth: selectedColor == color ? 2 : 0)
-                                )
-                                .onTapGesture {
-                                    selectedColor = color
-                                }
-                        }
-                    }
-                    
-                    // Product Variants
-                    Text("Variants")
-                        .font(R.font.outfitBold.font(size:14))
-                        .padding(.top, 10)
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(product.productVariants, id: \.id) { variant in
-                                VStack {
-                                    Text("\(variant.size)")
-                                        .font(.caption)
-                                    Circle()
-                                        .fill(Color(variant.color))
-                                        .frame(width: 24, height: 24)
-                                }
-                                .padding(8)
-                                .background(Color.gray.opacity(0.1))
-                                .cornerRadius(8)
+                        HStack(spacing: 16) {
+                            ForEach(availableColors, id: \.self) { color in
+                                Circle()
+                                    .fill(
+                                        Color(hex: color) ?? Color.gray.opacity(0.3)
+                                    )
+                                    .frame(width: 28, height: 28)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(selectedColor == color ? Color.main : Color.gray, lineWidth: selectedColor == color ? 3 : 1)
+                                    )
+                                    .onTapGesture {
+                                        selectedColor = color
+                                    }
+                                    .padding(4)
                             }
                         }
                     }
+                    
+                    Text("Size")
+                        .font(R.font.outfitBold.font(size:14))
+                        .padding(.top, 10)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(availableSizes, id: \.self) { size in
+                                Text(size)
+                                    .font(.subheadline)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(selectedSize == size ? Color.main : Color.gray.opacity(0.1))
+                                    .foregroundColor(selectedSize == size ? .white : .black)
+                                    .cornerRadius(8)
+                                    .onTapGesture {
+                                        selectedSize = size
+                                    }
+                            }
+                        }
+                    }
+                    
                     
                     // Tags
                     Text("Tags")
@@ -142,11 +215,33 @@ struct SBProductDetailView: View {
                             .cornerRadius(6)
                     }
                     HStack {
-                        Text("$\(String(format: "%.2f", product.basePrice))")
-                            .font(.title)
-                            .fontWeight(.bold)
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                            Text("$")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text(String(format: "%.2f", totalPrice))
+                                .font(.title)
+                                .fontWeight(.bold)
+                        }
                         Spacer()
-                        Button(action: {}) {
+                        Button(action: {
+                            if selectedVariant != nil {
+                                SBUserDefaultService.instance.addToCart(
+                                    productId: product.id,
+                                    variantId: selectedVariant!.id,
+                                    quantity: quantity
+                                )
+                                addToCartMessage = "Added \(quantity) item\(quantity > 1 ? "s" : "") to cart"
+                                showAddedToCartAlert = true
+                                
+                                // Hide the alert after 2 seconds
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showAddedToCartAlert = false
+                                }
+                            } else {
+                                showVariantAlert = true
+                            }
+                        }) {
                             HStack {
                                 Image(systemName: "bag.fill")
                                 Text("Add to Cart")
@@ -266,6 +361,30 @@ struct SBProductDetailView: View {
                 .padding(.horizontal, 16)
             }
             .padding(.bottom, 60)
+            .overlay(
+                Group {
+                    if showAddedToCartAlert {
+                        VStack {
+                            Text(addToCartMessage)
+                                .font(R.font.outfitMedium.font(size: 16))
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.main)
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
+                        }
+                        .transition(.move(edge: .top))
+                        .animation(.spring(), value: showAddedToCartAlert)
+                        .padding(.top, 100)
+                    }
+                }
+                , alignment: .top
+            )
+        }
+        .alert("Select Options", isPresented: $showVariantAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Please select both size and color before adding to cart")
         }
         .onAppear {
             // Update user's last viewed product
