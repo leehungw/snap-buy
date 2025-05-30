@@ -428,6 +428,7 @@ struct SBCartView: View {
                 imageName: image.url,
                 title: product.name,
                 color: variant.color,
+                size: variant.size,
                 price: product.basePrice,
                 quantity: quantities[product.id, default: 1]
             )
