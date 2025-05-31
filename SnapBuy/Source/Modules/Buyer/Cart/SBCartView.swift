@@ -425,6 +425,9 @@ struct SBCartView: View {
                 return nil
             }
             return CartItem(
+                productId: product.id,
+                variantId: variant.id,
+                sellerId: product.sellerId,
                 imageName: image.url,
                 title: product.name,
                 color: variant.color,

@@ -1,13 +1,5 @@
 import SwiftUI
 
-enum OrderStatus: String, CaseIterable, Identifiable {
-    case pending = "Pending"
-    case inProgress = "In Progress"
-    case complete = "Complete"
-    case delivered = "Delivered"
-    case cancelled = "Cancelled"
-    var id: String { self.rawValue }
-}
 struct BuyerInfo {
     var name: String
     var address: String

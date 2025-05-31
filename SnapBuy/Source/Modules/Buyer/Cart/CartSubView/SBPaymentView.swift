@@ -36,6 +36,66 @@ struct SBPaymentView: View {
     @State private var selectedCoordinate: CLLocationCoordinate2D?
     @State private var selectedPayment: UUID? = paymentMethods[0].id
     @StateObject private var addressViewModel = SBAddressViewModel()
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    
+    private var selectedPaymentMethod: PaymentMethod? {
+        paymentMethods.first { $0.id == selectedPayment }
+    }
+    
+    private func createOrder() {
+        guard let selectedMethod = selectedPaymentMethod else { return }
+        
+        // Only proceed if COD is selected
+        guard selectedMethod.name == "COD" else {
+            // Handle other payment methods here
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        // Get the first product's seller ID (assuming all products are from the same seller)
+        guard let firstProduct = products.first else {
+            isLoading = false
+            errorMessage = "No products in cart"
+            return
+        }
+        
+        // Create order items
+        let orderItems = products.map { product in
+            OrderRepository.createOrderItem(
+                productId: product.productId,
+                productName: product.title,
+                productImageUrl: product.imageName,
+                productNote: "\(product.color) - \(product.size)",
+                productVariantId: product.variantId,
+                quantity: product.quantity,
+                unitPrice: product.price
+            )
+        }
+        
+        // Create the order using the seller ID from the first product
+        OrderRepository.shared.createOrder(
+            buyerId: UserRepository.shared.currentUser?.id ?? "",
+            sellerId: firstProduct.sellerId, // Use the seller ID from the product
+            totalAmount: totalPrice + 6, // Including shipping
+            shippingAddress: selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress,
+            items: orderItems,
+            status: OrderStatus.pending.rawValue
+        ) { result in
+            isLoading = false
+            
+            switch result {
+            case .success(_):
+                showSuccessfullyOrderSheet = true
+                // Clear the cart after successful order
+                SBUserDefaultService.instance.clearCart()
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
     
     var body: some View {
         SBBaseView {
@@ -195,17 +255,33 @@ struct SBPaymentView: View {
                     }
                 }
                 
-                // Checkout Button
-                Button(action: {
-                    showSuccessfullyOrderSheet = true
-                }) {
-                    Text(R.string.localizable.checkoutNow())
-                        .font(R.font.outfitMedium.font(size: 20))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.main)
-                        .foregroundColor(.white)
-                        .cornerRadius(25)
+                if isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        // ... existing scroll view content ...
+                    }
+                    
+                    if let error = errorMessage {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .padding(.horizontal)
+                    }
+                    
+                    // Checkout Button
+                    Button(action: createOrder) {
+                        Text(R.string.localizable.checkoutNow())
+                            .font(R.font.outfitMedium.font(size: 20))
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.main)
+                            .foregroundColor(.white)
+                            .cornerRadius(25)
+                    }
+                    .disabled(isLoading)
+                    .padding()
                 }
                 
                 Spacer()
@@ -214,21 +290,21 @@ struct SBPaymentView: View {
             .padding(.horizontal,10)
         }
         .sheet(isPresented: $showMethodSheet) {
-                VStack {
-                    SBPaymentMethodView(selectedPayment: $selectedPayment)
-                }
-                .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            VStack {
+                SBPaymentMethodView(selectedPayment: $selectedPayment)
             }
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
         .sheet(isPresented: $showSuccessfullyOrderSheet) {
-                VStack {
-                    SBSuccessfulOrderView()
-                }
-                .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            VStack {
+                SBSuccessfulOrderView()
             }
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
         .onAppear {
             if selectedPayment == nil {
                 selectedPayment = paymentMethods[0].id
@@ -254,21 +330,8 @@ struct SBSuccessfulOrderView: View {
                 .foregroundColor(.gray)
                 .frame(maxWidth: 300, alignment: .center)
             Spacer()
-            Button(action: {
-                
-            }) {
-                Text(R.string.localizable.orderTracking)
-                    .font(R.font.outfitMedium.font(size: 20))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.main)
-                    .foregroundColor(.white)
-                    .cornerRadius(25)
-            }
-            
         }
         .padding()
-        
     }
 }
 
