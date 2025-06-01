@@ -91,6 +91,7 @@
 		0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A1392D92FA6A00EB5684 /* SBComponentProvider.swift */; };
 		0AB5CD972DEB3989002E6C97 /* SBPaypalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB5CD962DEB3974002E6C97 /* SBPaypalService.swift */; };
 		0AB5CD9D2DEB400B002E6C97 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0AB5CD9C2DEB400B002E6C97 /* PayPalConfig.plist */; };
+		0AB5CDA22DEC726B002E6C97 /* SBPayPalOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB5CDA02DEC726B002E6C97 /* SBPayPalOnboardingView.swift */; };
 		0AB9B0652DBFC56700E54E28 /* CartItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0602DBFC56700E54E28 /* CartItemModel.swift */; };
 		0AB9B0662DBFC56700E54E28 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0612DBFC56700E54E28 /* ColorModel.swift */; };
 		0AB9B0672DBFC56700E54E28 /* AddressModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B05F2DBFC56700E54E28 /* AddressModel.swift */; };
@@ -221,6 +222,7 @@
 		0AA7A1392D92FA6A00EB5684 /* SBComponentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBComponentProvider.swift; sourceTree = "<group>"; };
 		0AB5CD962DEB3974002E6C97 /* SBPaypalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaypalService.swift; sourceTree = "<group>"; };
 		0AB5CD9C2DEB400B002E6C97 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
+		0AB5CDA02DEC726B002E6C97 /* SBPayPalOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayPalOnboardingView.swift; sourceTree = "<group>"; };
 		0AB9B05F2DBFC56700E54E28 /* AddressModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressModel.swift; sourceTree = "<group>"; };
 		0AB9B0602DBFC56700E54E28 /* CartItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemModel.swift; sourceTree = "<group>"; };
 		0AB9B0612DBFC56700E54E28 /* ColorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
@@ -640,6 +642,14 @@
 			path = SnapBuy;
 			sourceTree = "<group>";
 		};
+		0AB5CDA12DEC726B002E6C97 /* PayPalOnboarding */ = {
+			isa = PBXGroup;
+			children = (
+				0AB5CDA02DEC726B002E6C97 /* SBPayPalOnboardingView.swift */,
+			);
+			path = PayPalOnboarding;
+			sourceTree = "<group>";
+		};
 		0AB9B0642DBFC56700E54E28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,6 +788,7 @@
 				DA8B424D2DD9BDF000A543DD /* OrderManagement */,
 				DA958F3F2DD47C0400A98432 /* ProductManagement */,
 				DA958F3A2DD47B3A00A98432 /* Dashboard */,
+				0AB5CDA12DEC726B002E6C97 /* PayPalOnboarding */,
 			);
 			path = Seller;
 			sourceTree = "<group>";
@@ -1122,6 +1133,7 @@
 				0A47C4CE2D94F8D90091E2D4 /* ProductDetail+Sample.swift in Sources */,
 				0A47C4D42D94F8E60091E2D4 /* UIApplication+Ext.swift in Sources */,
 				0A47C4D52D94F8E60091E2D4 /* Types.swift in Sources */,
+				0AB5CDA22DEC726B002E6C97 /* SBPayPalOnboardingView.swift in Sources */,
 				0AF9F5A32DE1F929000B9B6D /* SBTagRepo.swift in Sources */,
 				0A47C4CF2D94F8D90091E2D4 /* Banner+Sample.swift in Sources */,
 				0A47C4D02D94F8D90091E2D4 /* Category+Sample.swift in Sources */,
