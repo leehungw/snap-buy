@@ -1,4 +1,5 @@
 import SwiftUI
+import PayPal
 import Kingfisher
 import MapKit
 
@@ -25,7 +26,7 @@ extension CLLocationCoordinate2D: Identifiable {
 
 struct SBPaymentView: View {
     
-    @Environment(\.dismiss) var dismiss
+    @SwiftUI.Environment(\.dismiss) var dismiss
     
     let products: [CartItem]
     let totalPrice: Double
@@ -46,22 +47,44 @@ struct SBPaymentView: View {
     private func createOrder() {
         guard let selectedMethod = selectedPaymentMethod else { return }
         
-        // Only proceed if COD is selected
-        guard selectedMethod.name == "COD" else {
-            // Handle other payment methods here
-            return
-        }
-        
         isLoading = true
         errorMessage = nil
         
-        // Get the first product's seller ID (assuming all products are from the same seller)
-        guard let firstProduct = products.first else {
-            isLoading = false
-            errorMessage = "No products in cart"
+        if selectedMethod.name == "PayPal" {
+            // Handle PayPal payment
+            let payPalClient = SBPaypalService.shared.payPalClient
+            
+            // Start PayPal web checkout
+            Task {
+                do {
+                    // First create the order through PayPal API
+                    let orderId = try await SBPaypalService.shared.createOrder(amount: totalPrice + 6)
+                    
+                    // Create PayPal request with the received order ID
+                    let request = PayPalWebCheckoutRequest(
+                        orderID: orderId,
+                        fundingSource: .paypal
+                    )
+                    
+                    // Start the checkout process
+                    let result = try await payPalClient.start(request: request)
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                        print("PayPal payment successful")
+                        self.showSuccessfullyOrderSheet = true
+                        SBUserDefaultService.instance.clearCart()
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                        self.errorMessage = error.localizedDescription
+                    }
+                }
+            }
             return
         }
         
+        // Handle COD payment
         // Create order items
         let orderItems = products.map { product in
             OrderRepository.createOrderItem(
@@ -78,7 +101,7 @@ struct SBPaymentView: View {
         // Create the order using the seller ID from the first product
         OrderRepository.shared.createOrder(
             buyerId: UserRepository.shared.currentUser?.id ?? "",
-            sellerId: firstProduct.sellerId, // Use the seller ID from the product
+            sellerId: products.first?.sellerId ?? "",
             totalAmount: totalPrice + 6, // Including shipping
             shippingAddress: selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress,
             items: orderItems,
@@ -89,7 +112,6 @@ struct SBPaymentView: View {
             switch result {
             case .success(_):
                 showSuccessfullyOrderSheet = true
-                // Clear the cart after successful order
                 SBUserDefaultService.instance.clearCart()
             case .failure(let error):
                 errorMessage = error.localizedDescription
@@ -336,7 +358,7 @@ struct SBSuccessfulOrderView: View {
 }
 
 struct SBPaymentMethodView: View {
-    @Environment(\.dismiss) var dismiss
+    @SwiftUI.Environment(\.dismiss) var dismiss
     @State private var selectedPaymentID: UUID?
     @Binding var selectedPayment: UUID?
     
@@ -401,6 +423,7 @@ struct SBPaymentMethodView: View {
         }
     }
 }
+
 #Preview {
     SBPaymentView(
         products: Array(CartItem.cartitems.prefix(3)),
