@@ -25,20 +25,17 @@ extension CLLocationCoordinate2D: Identifiable {
 }
 
 struct SBPaymentView: View {
-    
     @SwiftUI.Environment(\.dismiss) var dismiss
     
     let products: [CartItem]
     let totalPrice: Double
     @State private var navigateToAddress = false
     @State private var showMethodSheet = false
-    @State private var showSuccessfullyOrderSheet = false
     @State private var selectedAddress: String = ""
     @State private var selectedCoordinate: CLLocationCoordinate2D?
     @State private var selectedPayment: UUID? = paymentMethods[0].id
     @StateObject private var addressViewModel = SBAddressViewModel()
-    @State private var isLoading = false
-    @State private var errorMessage: String?
+    @StateObject private var paymentViewModel = PaymentViewModel()
     
     private var selectedPaymentMethod: PaymentMethod? {
         paymentMethods.first { $0.id == selectedPayment }
@@ -47,75 +44,9 @@ struct SBPaymentView: View {
     private func createOrder() {
         guard let selectedMethod = selectedPaymentMethod else { return }
         
-        isLoading = true
-        errorMessage = nil
-        
-        if selectedMethod.name == "PayPal" {
-            // Handle PayPal payment
-            let payPalClient = SBPaypalService.shared.payPalClient
-            
-            // Start PayPal web checkout
-            Task {
-                do {
-                    // First create the order through PayPal API
-                    let orderId = try await SBPaypalService.shared.createOrder(amount: totalPrice + 6)
-                    
-                    // Create PayPal request with the received order ID
-                    let request = PayPalWebCheckoutRequest(
-                        orderID: orderId,
-                        fundingSource: .paypal
-                    )
-                    
-                    // Start the checkout process
-                    let result = try await payPalClient.start(request: request)
-                    DispatchQueue.main.async {
-                        self.isLoading = false
-                        print("PayPal payment successful")
-                        self.showSuccessfullyOrderSheet = true
-                        SBUserDefaultService.instance.clearCart()
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.isLoading = false
-                        self.errorMessage = error.localizedDescription
-                    }
-                }
-            }
-            return
-        }
-        
-        // Handle COD payment
-        // Create order items
-        let orderItems = products.map { product in
-            OrderRepository.createOrderItem(
-                productId: product.productId,
-                productName: product.title,
-                productImageUrl: product.imageName,
-                productNote: "\(product.color) - \(product.size)",
-                productVariantId: product.variantId,
-                quantity: product.quantity,
-                unitPrice: product.price
-            )
-        }
-        
-        // Create the order using the seller ID from the first product
-        OrderRepository.shared.createOrder(
-            buyerId: UserRepository.shared.currentUser?.id ?? "",
-            sellerId: products.first?.sellerId ?? "",
-            totalAmount: totalPrice + 6, // Including shipping
-            shippingAddress: selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress,
-            items: orderItems,
-            status: OrderStatus.pending.rawValue
-        ) { result in
-            isLoading = false
-            
-            switch result {
-            case .success(_):
-                showSuccessfullyOrderSheet = true
-                SBUserDefaultService.instance.clearCart()
-            case .failure(let error):
-                errorMessage = error.localizedDescription
-            }
+        // Only PayPal platform payments are supported
+        Task {
+            await paymentViewModel.processPayment(products: products, totalAmount: totalPrice + 6)
         }
     }
     
@@ -277,7 +208,7 @@ struct SBPaymentView: View {
                     }
                 }
                 
-                if isLoading {
+                if paymentViewModel.isLoading {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
@@ -285,7 +216,7 @@ struct SBPaymentView: View {
                         // ... existing scroll view content ...
                     }
                     
-                    if let error = errorMessage {
+                    if let error = paymentViewModel.errorMessage {
                         Text(error)
                             .foregroundColor(.red)
                             .font(R.font.outfitRegular.font(size: 14))
@@ -302,7 +233,7 @@ struct SBPaymentView: View {
                             .foregroundColor(.white)
                             .cornerRadius(25)
                     }
-                    .disabled(isLoading)
+                    .disabled(paymentViewModel.isLoading)
                     .padding()
                 }
                 
@@ -319,7 +250,7 @@ struct SBPaymentView: View {
             .presentationDragIndicator(.visible)
             .presentationCornerRadius(50)
         }
-        .sheet(isPresented: $showSuccessfullyOrderSheet) {
+        .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
             VStack {
                 SBSuccessfulOrderView()
             }
