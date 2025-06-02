@@ -100,6 +100,10 @@
 		DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5045702DC0AD9400DCE3EA /* MessageModel.swift */; };
 		DA6BBB662DE61CFC005BF7E7 /* SBOrderRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */; };
 		DA6BBB682DE61D05005BF7E7 /* OrderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */; };
+		DA72B3A52DEAA4160080645C /* SBOrderDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA72B3A42DEAA4150080645C /* SBOrderDetailSheet.swift */; };
+		DA72B3AA2DEBB9670080645C /* ReviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA72B3A92DEBB9670080645C /* ReviewModels.swift */; };
+		DA72B3AC2DEBB9820080645C /* SBReviewRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA72B3AB2DEBB9820080645C /* SBReviewRepo.swift */; };
+		DA72B3AE2DEBBAB10080645C /* SBUnreviewedItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA72B3AD2DEBBAB10080645C /* SBUnreviewedItemsView.swift */; };
 		DA850D922DBB373900E952AA /* OrderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA850D912DBB373300E952AA /* OrderModel.swift */; };
 		DA8B424C2DD991BB00A543DD /* SBEditProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B424B2DD991AF00A543DD /* SBEditProduct.swift */; };
 		DA8B424F2DD9BE0600A543DD /* OrderManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B424E2DD9BDFA00A543DD /* OrderManagementView.swift */; };
@@ -122,13 +126,15 @@
 		DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F402DD484A400A98432 /* SBProductManagementView.swift */; };
 		DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */; };
 		DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */; };
+		DAE23DEB2DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */; };
+		DAE23DED2DEDA3C60044BAA9 /* VoucherModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */; };
+		DAE23DEF2DEDA3D20044BAA9 /* SBVoucherRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */; };
 		DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */; };
 		DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */; };
 		DAF3BC4B2DDDB4AF0099DBE7 /* SBAdminUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */; };
 		DAF3BC4E2DDDBAD60099DBE7 /* SBAdminProductManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4D2DDDBACB0099DBE7 /* SBAdminProductManagement.swift */; };
 		DAF3BC502DDDBBC30099DBE7 /* AdminHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4F2DDDBBBD0099DBE7 /* AdminHeader.swift */; };
 		DAF3BC522DDDBC850099DBE7 /* SBAdminProductDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC512DDDBC750099DBE7 /* SBAdminProductDetail.swift */; };
-		DAF3BC552DDEFFDF0099DBE7 /* SBAdminShopManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC542DDEFFBE0099DBE7 /* SBAdminShopManagement.swift */; };
 		DAF3BC5A2DDF04160099DBE7 /* SBAdminOrderManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC592DDF040B0099DBE7 /* SBAdminOrderManagement.swift */; };
 		DAF3BC5C2DDF069A0099DBE7 /* SBAdminOrderDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC5B2DDF06910099DBE7 /* SBAdminOrderDetail.swift */; };
 		DAF3BC5F2DDF09A10099DBE7 /* SBAdminSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC5E2DDF099B0099DBE7 /* SBAdminSettings.swift */; };
@@ -231,6 +237,10 @@
 		DA6A84AB2D809E7700454EEF /* SnapBuy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapBuy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOrderRepo.swift; sourceTree = "<group>"; };
 		DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModels.swift; sourceTree = "<group>"; };
+		DA72B3A42DEAA4150080645C /* SBOrderDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOrderDetailSheet.swift; sourceTree = "<group>"; };
+		DA72B3A92DEBB9670080645C /* ReviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModels.swift; sourceTree = "<group>"; };
+		DA72B3AB2DEBB9820080645C /* SBReviewRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBReviewRepo.swift; sourceTree = "<group>"; };
+		DA72B3AD2DEBBAB10080645C /* SBUnreviewedItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUnreviewedItemsView.swift; sourceTree = "<group>"; };
 		DA850D912DBB373300E952AA /* OrderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModel.swift; sourceTree = "<group>"; };
 		DA8B424B2DD991AF00A543DD /* SBEditProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEditProduct.swift; sourceTree = "<group>"; };
 		DA8B424E2DD9BDFA00A543DD /* OrderManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderManagementView.swift; sourceTree = "<group>"; };
@@ -253,13 +263,15 @@
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
 		DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatRepo.swift; sourceTree = "<group>"; };
+		DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminVoucherManagement.swift; sourceTree = "<group>"; };
+		DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoucherModels.swift; sourceTree = "<group>"; };
+		DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVoucherRepo.swift; sourceTree = "<group>"; };
 		DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminDashboard.swift; sourceTree = "<group>"; };
 		DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserManagement.swift; sourceTree = "<group>"; };
 		DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserDetail.swift; sourceTree = "<group>"; };
 		DAF3BC4D2DDDBACB0099DBE7 /* SBAdminProductManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminProductManagement.swift; sourceTree = "<group>"; };
 		DAF3BC4F2DDDBBBD0099DBE7 /* AdminHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminHeader.swift; sourceTree = "<group>"; };
 		DAF3BC512DDDBC750099DBE7 /* SBAdminProductDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminProductDetail.swift; sourceTree = "<group>"; };
-		DAF3BC542DDEFFBE0099DBE7 /* SBAdminShopManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminShopManagement.swift; sourceTree = "<group>"; };
 		DAF3BC592DDF040B0099DBE7 /* SBAdminOrderManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminOrderManagement.swift; sourceTree = "<group>"; };
 		DAF3BC5B2DDF06910099DBE7 /* SBAdminOrderDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminOrderDetail.swift; sourceTree = "<group>"; };
 		DAF3BC5E2DDF099B0099DBE7 /* SBAdminSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminSettings.swift; sourceTree = "<group>"; };
@@ -401,6 +413,7 @@
 		0A26C7032DDCCE590088EFAE /* User */ = {
 			isa = PBXGroup;
 			children = (
+				DA72B3A42DEAA4150080645C /* SBOrderDetailSheet.swift */,
 				0A26C7022DDCCE590088EFAE /* SBUserView.swift */,
 			);
 			path = User;
@@ -500,8 +513,10 @@
 		0A61F9A02DAF47E6003A9DAD /* APIRepo */ = {
 			isa = PBXGroup;
 			children = (
+				DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */,
 				DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */,
 				0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */,
+				DA72B3AB2DEBB9820080645C /* SBReviewRepo.swift */,
 				0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */,
 				DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */,
 				0A47B1442DD3297300FBD707 /* SBCategoryRepo.swift */,
@@ -637,6 +652,8 @@
 		0AB9B0642DBFC56700E54E28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */,
+				DA72B3A92DEBB9670080645C /* ReviewModels.swift */,
 				DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */,
 				0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */,
 				0A4E667F2DDAD7AF0082C57D /* ProductModels.swift */,
@@ -741,6 +758,7 @@
 			isa = PBXGroup;
 			children = (
 				DA958F342DD4610500A98432 /* SBWriteReviewView.swift */,
+				DA72B3AD2DEBBAB10080645C /* SBUnreviewedItemsView.swift */,
 			);
 			path = Review;
 			sourceTree = "<group>";
@@ -795,12 +813,20 @@
 			path = ProductManagement;
 			sourceTree = "<group>";
 		};
+		DAE23DEA2DEDA3A60044BAA9 /* Voucher Management */ = {
+			isa = PBXGroup;
+			children = (
+				DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */,
+			);
+			path = "Voucher Management";
+			sourceTree = "<group>";
+		};
 		DAF3BC432DDD73C40099DBE7 /* Admin */ = {
 			isa = PBXGroup;
 			children = (
+				DAE23DEA2DEDA3A60044BAA9 /* Voucher Management */,
 				DAF3BC5D2DDF09930099DBE7 /* Settings */,
 				DAF3BC582DDF04020099DBE7 /* Order Management */,
-				DAF3BC532DDEFFAF0099DBE7 /* Shop Management */,
 				DAF3BC4F2DDDBBBD0099DBE7 /* AdminHeader.swift */,
 				DAF3BC4C2DDDBAC10099DBE7 /* Product Management */,
 				DAF3BC472DDDB3230099DBE7 /* User Management */,
@@ -833,14 +859,6 @@
 				DAF3BC4D2DDDBACB0099DBE7 /* SBAdminProductManagement.swift */,
 			);
 			path = "Product Management";
-			sourceTree = "<group>";
-		};
-		DAF3BC532DDEFFAF0099DBE7 /* Shop Management */ = {
-			isa = PBXGroup;
-			children = (
-				DAF3BC542DDEFFBE0099DBE7 /* SBAdminShopManagement.swift */,
-			);
-			path = "Shop Management";
 			sourceTree = "<group>";
 		};
 		DAF3BC582DDF04020099DBE7 /* Order Management */ = {
@@ -1069,10 +1087,13 @@
 				0A47C4BE2D94F6D10091E2D4 /* SBBannerCarousel.swift in Sources */,
 				0A47B1452DD3297B00FBD707 /* SBCategoryRepo.swift in Sources */,
 				DAF3BC5F2DDF09A10099DBE7 /* SBAdminSettings.swift in Sources */,
+				DAE23DEF2DEDA3D20044BAA9 /* SBVoucherRepo.swift in Sources */,
+				DA72B3AA2DEBB9670080645C /* ReviewModels.swift in Sources */,
 				0A47C4EB2D9505560091E2D4 /* SBOBPageView.swift in Sources */,
 				DA958F322DD44E0E00A98432 /* SBUpgradeAccountView.swift in Sources */,
 				0AA7A12E2D91CF3600EB5684 /* R.generated.swift in Sources */,
 				0A26C7042DDCCE590088EFAE /* SBPaymentView.swift in Sources */,
+				DAE23DED2DEDA3C60044BAA9 /* VoucherModels.swift in Sources */,
 				0A26C7052DDCCE590088EFAE /* SBFilterSheetView.swift in Sources */,
 				0A26C7062DDCCE590088EFAE /* SBSearchContentView.swift in Sources */,
 				0A26C7072DDCCE590088EFAE /* SBCombinedSearchView.swift in Sources */,
@@ -1081,6 +1102,7 @@
 				0A26C7092DDCCE590088EFAE /* SBForgotPasswordSheetView.swift in Sources */,
 				0A5ECDB62DE4E85D00E49072 /* ImgurService.swift in Sources */,
 				0A26C70A2DDCCE590088EFAE /* SBCartView.swift in Sources */,
+				DAE23DEB2DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift in Sources */,
 				0A26C70B2DDCCE590088EFAE /* SBSearchMainView.swift in Sources */,
 				0A26C70D2DDCCE590088EFAE /* SBCategoryView.swift in Sources */,
 				0A26C70E2DDCCE590088EFAE /* SBRangeSlider.swift in Sources */,
@@ -1097,12 +1119,13 @@
 				0A26C7182DDCCE590088EFAE /* SBWrapLayout.swift in Sources */,
 				DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */,
 				0AF9F5A52DE1FDBD000B9B6D /* TagModels.swift in Sources */,
-				DAF3BC552DDEFFDF0099DBE7 /* SBAdminShopManagement.swift in Sources */,
 				0A26C7192DDCCE590088EFAE /* SBAddressView.swift in Sources */,
 				0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */,
 				0A47C4D92D94F8F60091E2D4 /* BezierCurvePath.swift in Sources */,
 				DA8B42512DD9C5CE00A543DD /* OrderDetailView.swift in Sources */,
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
+				DA72B3AE2DEBBAB10080645C /* SBUnreviewedItemsView.swift in Sources */,
+				DA72B3AC2DEBB9820080645C /* SBReviewRepo.swift in Sources */,
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
 				0A5ECDAE2DE4C6C200E49072 /* UserModeManager.swift in Sources */,
 				DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */,
@@ -1137,6 +1160,7 @@
 				DA958F3E2DD47C0200A98432 /* SBAddProduct.swift in Sources */,
 				0A47B1432DD3274900FBD707 /* CategoryModels.swift in Sources */,
 				DA8B424F2DD9BE0600A543DD /* OrderManagementView.swift in Sources */,
+				DA72B3A52DEAA4160080645C /* SBOrderDetailSheet.swift in Sources */,
 				DA958F262DD2019100A98432 /* SBChangePasswordView.swift in Sources */,
 				DA958F2F2DD3989200A98432 /* NotificationsModel.swift in Sources */,
 				DA8B424C2DD991BB00A543DD /* SBEditProduct.swift in Sources */,

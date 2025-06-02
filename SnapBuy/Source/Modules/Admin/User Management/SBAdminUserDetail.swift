@@ -11,7 +11,7 @@ struct SBAdminUserDetailView: View {
     @State private var showingBlockAlert = false
     @State private var shouldDismiss = false
     @State private var sellerStats: SellerStats?
-    let buyerStats = (purchaseCount: 12, totalSpent: 35400.0, totalOrders: 10)
+    @State private var buyerStats: BuyerStats?
     
     init(user: UserData, onUserUpdated: @escaping () -> Void) {
         self.user = user
@@ -60,12 +60,17 @@ struct SBAdminUserDetailView: View {
                         color: user.isBanned ? .red : .green)
             }
             
-            if !user.isAdmin && !user.isPremium {
-                statCard(title: "Purchase Count", value: "\(buyerStats.purchaseCount)", icon: "cart.fill", color: .blue)
-                statCard(title: "Total Spent", value: formatCurrency(buyerStats.totalSpent), icon: "creditcard.fill", color: .orange)
-                statCard(title: "Total Orders", value: "\(buyerStats.totalOrders)", icon: "doc.plaintext", color: .green)
-            } else if user.isPremium {
-                if let stats = sellerStats {
+            if !user.isAdmin {
+                if !user.isPremium {
+                    if let stats = buyerStats {
+                        statCard(title: "Purchase Count", value: "\(stats.purchaseCount)", icon: "cart.fill", color: .blue)
+                        statCard(title: "Total Spent", value: formatCurrency(stats.totalSpent), icon: "creditcard.fill", color: .orange)
+                        statCard(title: "Total Orders", value: "\(stats.totalOrders)", icon: "doc.plaintext", color: .green)
+                    } else {
+                        ProgressView()
+                            .frame(height: 100)
+                    }
+                } else if let stats = sellerStats {
                     statCard(title: "Product Count", value: "\(stats.productCount)", icon: "bag.fill", color: .purple)
                     statCard(title: "Total Revenue", value: formatCurrency(stats.totalRevenue), icon: "dollarsign.circle.fill", color: .pink)
                     statCard(title: "Total Purchases", value: "\(stats.totalPurchases)", icon: "cart.badge.plus", color: .blue)
@@ -112,6 +117,8 @@ struct SBAdminUserDetailView: View {
         .onAppear {
             if user.isPremium {
                 fetchSellerStats()
+            } else if !user.isAdmin {
+                fetchBuyerStats()
             }
         }
     }
@@ -119,12 +126,23 @@ struct SBAdminUserDetailView: View {
     private func fetchSellerStats() {
         UserRepository.shared.fetchSellerStats(userId: user.id) { result in
             switch result {
-            case .success(let response):
-                if response.result == 1 {
-                    self.sellerStats = response.data
-                }
+            case .success(let stats):
+                self.sellerStats = stats
             case .failure(let error):
                 print("Error fetching seller stats: \(error.localizedDescription)")
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    private func fetchBuyerStats() {
+        UserRepository.shared.fetchBuyerStats(userId: user.id) { result in
+            switch result {
+            case .success(let stats):
+                self.buyerStats = stats
+            case .failure(let error):
+                print("Error fetching buyer stats: \(error.localizedDescription)")
+                self.errorMessage = error.localizedDescription
             }
         }
     }
