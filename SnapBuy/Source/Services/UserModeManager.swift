@@ -15,6 +15,8 @@ final class UserModeManager: ObservableObject {
     @Published var isOnboardingPayPal = false
     @Published var paypalOnboardingURL: String?
     @Published var onboardingError: String?
+    @Published var isPayPalConnected = false
+    @Published var merchantId: String?
     
     private init() {
         // Check if user is premium and set initial mode
@@ -53,6 +55,18 @@ final class UserModeManager: ObservableObject {
             isOnboardingPayPal = true
             onboardingError = nil
             
+            // First check if we have a stored merchant ID
+            if let merchantId = merchantId {
+                // Check the status of the existing connection
+                let status = try await SBPaypalService.shared.checkSellerStatus(sellerMerchantId: merchantId)
+                if status.isFullyOnboarded {
+                    isPayPalConnected = true
+                    isOnboardingPayPal = false
+                    return
+                }
+            }
+            
+            // If not connected, get a new onboarding URL
             let onboardingUrl = try await SBPaypalService.shared.onboardSeller(
                 sellerId: user.id,
                 email: user.email,
@@ -60,9 +74,33 @@ final class UserModeManager: ObservableObject {
             )
             
             paypalOnboardingURL = onboardingUrl
+            isPayPalConnected = false
         } catch {
             onboardingError = error.localizedDescription
+            isPayPalConnected = false
         }
         isOnboardingPayPal = false
+    }
+    
+    func handlePayPalReturn(url: URL) {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let merchantIdParam = components.queryItems?.first(where: { $0.name == "merchantIdInPayPal" })?.value,
+              let permissionsGranted = components.queryItems?.first(where: { $0.name == "permissionsGranted" })?.value,
+              permissionsGranted == "true" else {
+            onboardingError = "PayPal connection failed"
+            return
+        }
+        
+        // Store the merchant ID
+        merchantId = merchantIdParam
+        
+        // Clear the onboarding URL since we're now connected
+        paypalOnboardingURL = nil
+        isPayPalConnected = true
+        
+        // Verify the connection
+        Task {
+            await checkPayPalOnboarding()
+        }
     }
 } 
