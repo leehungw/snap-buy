@@ -115,11 +115,6 @@ struct SBAdminOrderManagement: View {
     }
 
     private func loadOrders() {
-        guard let sellerId = UserRepository.shared.currentUser?.id else {
-            print("No seller ID available")
-            return
-        }
-        
         isLoading = true
         errorMessage = nil
         
@@ -138,8 +133,8 @@ struct SBAdminOrderManagement: View {
                 }
             }
         } else {
-            // Fetch all orders for seller
-            OrderRepository.shared.fetchListSellerOrders(sellerId: sellerId) { result in
+            // Fetch all orders
+            OrderRepository.shared.fetchAllOrders { result in
                 DispatchQueue.main.async {
                     isLoading = false
                     switch result {
@@ -160,7 +155,7 @@ struct SBAdminOrderManagement: View {
             return .orange
         case OrderStatus.inProgress.rawValue:
             return .blue
-        case OrderStatus.complete.rawValue:
+        case OrderStatus.success.rawValue:
             return .green
         case OrderStatus.delivered.rawValue:
             return .purple
