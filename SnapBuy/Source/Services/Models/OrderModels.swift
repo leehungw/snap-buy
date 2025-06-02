@@ -3,18 +3,20 @@ import Foundation
 enum OrderStatus: String, Identifiable {
     case pending = "Pending"
     case inProgress = "In Progress"
-    case complete = "Complete"
+    case success = "Success"
     case delivered = "Delivered"
     case cancelled = "Cancelled"
     
     var id: String { self.rawValue }
     
     static var allCases: [OrderStatus] {
-        return [.pending, .inProgress, .complete, .delivered, .cancelled]
+        return [.pending, .inProgress, .delivered, .success, .cancelled]
     }
     
     static func fromString(_ value: String) -> OrderStatus? {
-        return OrderStatus.allCases.first { $0.rawValue == value }
+        return OrderStatus.allCases.first {
+            $0.rawValue.capitalized == value.lowercased()
+        }
     }
     
     static var allValues: [String] {
@@ -42,6 +44,7 @@ struct SBOrderItemModel: Codable, Identifiable {
     var productVariantId: Int
     var quantity: Int
     var unitPrice: Double
+    var isReviewed: Bool
 }
 
 // MARK: - Response Models
@@ -52,6 +55,11 @@ struct OrderResponse: Codable {
 
 struct OrderListResponse: Codable {
     let data: [SBOrderModel]?
+    let error: APIErrorResponse?
+}
+
+struct OrderItemsResponse: Codable {
+    let data: [SBOrderItemModel]?
     let error: APIErrorResponse?
 }
 

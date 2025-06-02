@@ -4,7 +4,7 @@ final class UserRepository {
     static let shared = UserRepository()
     private init() {}
     
-    var currentUser: UserData? = .init(id: "5624994f-3a1a-4fa0-83ec-529ec3530f91", name: "cc", imageURL: "", userName: "", email: "", isAdmin: false, isPremium: false, isBanned: false, lastProductId: 0)
+    var currentUser: UserData? = .init(id: "5624994f-3a1a-4fa0-83ec-529ec3530f91", name: "cc", imageURL: "", userName: "", email: "", isAdmin: false, isPremium: true, isBanned: false, lastProductId: 0)
     
     func login(request: UserLoginRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
         guard let jsonData = try? JSONEncoder().encode(request) else {
@@ -224,6 +224,62 @@ final class UserRepository {
                         domain: "UserRepository",
                         code: response.code,
                         userInfo: [NSLocalizedDescriptionKey: response.message]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // MARK: - Stats Functions
+    
+    func fetchBuyerStats(userId: String, completion: @escaping SBValueAction<Result<BuyerStats, Error>>) {
+        let endpoint = "order/api/orders/buyer/stats/\(userId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<BuyerStatsResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let stats = response.data {
+                    completion(.success(stats))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: response.error?.message ?? "Failed to fetch buyer stats"]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchSellerStats(userId: String, completion: @escaping SBValueAction<Result<SellerStats, Error>>) {
+        let endpoint = "order/api/orders/seller/stats/\(userId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<SellerStatsResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let stats = response.data {
+                    completion(.success(stats))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: response.error?.message ?? "Failed to fetch seller stats"]
                     )
                     completion(.failure(err))
                 }
