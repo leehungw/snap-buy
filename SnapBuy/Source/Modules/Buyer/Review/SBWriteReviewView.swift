@@ -2,149 +2,212 @@ import SwiftUI
 import PhotosUI
 
 struct SBWriteReviewView: View {
-    let purchased: Purchased
+    let order: SBOrderItemModel
     
     @State private var rating: Int = 0
     @State private var reviewText: String = ""
     @State private var selectedImages: [UIImage] = []
     @State private var showPhotoPicker = false
+    @State private var isSubmitting = false
+    @State private var showAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
     
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        ZStack {
+            Color(.systemGray6)
+                .ignoresSafeArea()
             
-            HStack {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                        .foregroundColor(Color.black)
+            VStack(spacing: 0) {
+                // Navigation Bar
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.black)
+                    }
+                    Spacer()
+                    Text("Write a Review")
+                        .font(R.font.outfitSemiBold.font(size: 18))
+                    Spacer()
+                    Color.clear
+                        .frame(width: 24, height: 24) // Balance the back button
                 }
-                Spacer()
-                Text("Write a Review")
-                    .font(R.font.outfitRegular.font(size: 16))
-                    .padding(.trailing,15)
-                Spacer()
-            }
-            .padding(.horizontal)
-            .padding(.top,20)
-            VStack (alignment: .leading) {
-                VStack (alignment: .leading, spacing: 15) {
-                    HStack(spacing: 16) {
-                        Image(purchased.imageName)
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .cornerRadius(8)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(purchased.title)
-                                .font(R.font.outfitSemiBold.font(size: 16))
-                            
-                            Text("Color: \(purchased.color)")
-                                .font(R.font.outfitRegular.font(size: 14))
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    Divider()
-                    
-                    // Rating
-                    VStack(alignment: .leading) {
-                        Text("Rating")
-                            .font(R.font.outfitMedium.font(size: 15))
-                        
-                        HStack(spacing: 8) {
-                            ForEach(1...5, id: \.self) { star in
-                                Image(systemName: star <= rating ? "star.fill" : "star")
+                .padding(.horizontal)
+                .padding(.vertical, 12)
+                .background(Color.white)
+                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+                
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Product Card
+                        HStack(spacing: 16) {
+                            AsyncImage(url: URL(string: order.productImageUrl)) { image in
+                                image
                                     .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.main)
-                                    .onTapGesture {
-                                        rating = star
-                                    }
+                                    .scaledToFill()
+                            } placeholder: {
+                                Color.gray.opacity(0.2)
                             }
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
-                    
-                    // Review Text
-                    VStack(alignment: .leading) {
-                        Text("Write review at least 10 words")
-                            .font(R.font.outfitMedium.font(size: 15))
-                        
-                        TextEditor(text: $reviewText)
-                            .frame(height: 270)
-                            .padding(8)
-                            .background(Color.gray.opacity(0.1))
+                            .frame(width: 70, height: 70)
                             .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.gray.opacity(0.2))
-                            )
+                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                             
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 10)
-                    
-                    // Image Picker
-                    VStack(alignment: .leading) {
-                        Text("Add image or video (optional)")
-                            .font(R.font.outfitMedium.font(size: 15))
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(selectedImages, id: \.self) { image in
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 80, height: 80)
-                                        .clipped()
-                                        .cornerRadius(8)
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(order.productName)
+                                    .font(R.font.outfitSemiBold.font(size: 16))
+                                    .lineLimit(2)
+                                
+                                if !order.productNote.isEmpty {
+                                    Text(order.productNote)
+                                        .font(R.font.outfitRegular.font(size: 14))
+                                        .foregroundColor(.gray)
                                 }
                                 
-                                Button(action: {
-                                    showPhotoPicker = true
-                                }) {
-                                    VStack {
-                                        Image(systemName: "plus")
-                                            .font(.title2)
-                                        Text("Add")
-                                            .font(.caption)
-                                    }
-                                    .frame(width: 80, height: 80)
+                                Text("Quantity: \(order.quantity)")
+                                    .font(R.font.outfitRegular.font(size: 14))
                                     .foregroundColor(.gray)
-                                    .background(Color.gray.opacity(0.1))
-                                    .cornerRadius(8)
+                            }
+                            Spacer()
+                        }
+                        .padding(16)
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.03), radius: 10, x: 0, y: 2)
+                        
+                        // Rating Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Rating")
+                                .font(R.font.outfitSemiBold.font(size: 16))
+                            
+                            HStack(spacing: 12) {
+                                ForEach(1...5, id: \.self) { star in
+                                    Image(systemName: star <= rating ? "star.fill" : "star")
+                                        .font(.system(size: 28))
+                                        .foregroundColor(star <= rating ? .yellow : .gray.opacity(0.3))
+                                        .onTapGesture {
+                                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                                rating = star
+                                            }
+                                        }
+                                }
+                            }
+                            .padding(.bottom, 4)
+                        }
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.03), radius: 10, x: 0, y: 2)
+                        
+                        // Review Text Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Your Review")
+                                .font(R.font.outfitSemiBold.font(size: 16))
+                            
+                            ZStack(alignment: .topLeading) {
+                                TextEditor(text: $reviewText)
+                                    .frame(minHeight: 120, maxHeight: 200)
+                                    .font(R.font.outfitRegular.font(size: 15))
+                                    .padding(12)
+                                    .background(Color(.systemGray6))
+                                    .cornerRadius(12)
+                                
+                                if reviewText.isEmpty {
+                                    Text("Share your experience about this product...")
+                                        .font(R.font.outfitRegular.font(size: 15))
+                                        .foregroundColor(.gray.opacity(0.8))
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 16)
+                                }
+                            }
+                            
+                            Text("\(reviewText.count) characters (minimum 10)")
+                                .font(R.font.outfitRegular.font(size: 12))
+                                .foregroundColor(.gray)
+                        }
+                        .padding(16)
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.03), radius: 10, x: 0, y: 2)
+                        
+                        // Image Upload Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Add Photos")
+                                .font(R.font.outfitSemiBold.font(size: 16))
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    Button(action: { showPhotoPicker = true }) {
+                                        VStack(spacing: 8) {
+                                            Image(systemName: "plus.circle.fill")
+                                                .font(.system(size: 24))
+                                            Text("Add")
+                                                .font(R.font.outfitRegular.font(size: 12))
+                                        }
+                                        .frame(width: 80, height: 80)
+                                        .foregroundColor(.main)
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(12)
+                                    }
+                                    
+                                    ForEach(selectedImages, id: \.self) { image in
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 80, height: 80)
+                                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                                    }
                                 }
                             }
                         }
+                        .padding(16)
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.03), radius: 10, x: 0, y: 2)
                     }
-                    .padding(.horizontal)
+                    .padding(16)
                 }
-                .padding(.vertical,15)
+                
+                // Submit Button
+                VStack {
+                    Button(action: submitReview) {
+                        HStack {
+                            if isSubmitting {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            } else {
+                                Text("Submit Review")
+                                    .font(R.font.outfitSemiBold.font(size: 16))
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(isValid() ? Color.main : Color.gray.opacity(0.3))
+                        .foregroundColor(.white)
+                        .cornerRadius(27)
+                        .shadow(color: isValid() ? Color.main.opacity(0.3) : .clear, radius: 8, x: 0, y: 4)
+                    }
+                    .disabled(!isValid() || isSubmitting)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                }
                 .background(Color.white)
-                .cornerRadius(10)
-                Spacer()
+                .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: -4)
             }
-            .padding(10)
-            .background(Color.gray.opacity(0.2))
-            
-            // Submit Button
-            Button(action: submitReview) {
-                Text("Submit Review")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(isValid() ? Color.main : Color.gray.opacity(0.4))
-                    .foregroundColor(.white)
-                    .cornerRadius(30)
-            }
-            .padding(.horizontal)
-            .disabled(!isValid())
         }
-        
+        .alert(alertTitle, isPresented: $showAlert) {
+            Button("OK", role: .cancel) {
+                if alertTitle == "Success" {
+                    dismiss()
+                }
+            }
+        } message: {
+            Text(alertMessage)
+        }
         .photosPicker(
             isPresented: $showPhotoPicker,
             selection: Binding(
@@ -165,7 +228,6 @@ struct SBWriteReviewView: View {
         .navigationBarBackButtonHidden(true)
     }
     
-    
     // Kiểm tra dữ liệu
     func isValid() -> Bool {
         return rating > 0 && reviewText.trimmingCharacters(in: .whitespacesAndNewlines).count >= 10
@@ -173,15 +235,86 @@ struct SBWriteReviewView: View {
     
     // Logic gửi review
     func submitReview() {
-        print("📝 Review Submitted")
-        print("⭐️ Rating: \(rating)")
-        print("✍️ Text: \(reviewText)")
-        print("🖼️ Images: \(selectedImages.count)")
+        isSubmitting = true
         
-        dismiss()
+        // Upload images first if there are any
+        if !selectedImages.isEmpty {
+            ImgurService.shared.uploadImages(selectedImages) { result in
+                switch result {
+                case .success(let imageUrls):
+                    // Submit review with uploaded image URLs
+                    ReviewRepository.shared.submitReview(
+                        orderId: order.orderId,
+                        productId: order.productId,
+                        rating: rating,
+                        content: reviewText,
+                        images: imageUrls,
+                        productNote: order.productNote
+                    ) { result in
+                        switch result {
+                        case .success(let reviewData):
+                            // Update order item review status
+                            OrderRepository.shared.updateOrderItemReviewStatus(orderItemId: order.id) { updateResult in
+                                isSubmitting = false
+                                switch updateResult {
+                                case .success:
+                                    alertTitle = "Success"
+                                    alertMessage = "Review submitted successfully"
+                                    showAlert = true
+                                case .failure(let error):
+                                    alertTitle = "Warning"
+                                    alertMessage = "Review submitted but failed to update status: \(error.localizedDescription)"
+                                    showAlert = true
+                                }
+                            }
+                        case .failure(let error):
+                            isSubmitting = false
+                            alertTitle = "Error"
+                            alertMessage = error.localizedDescription
+                            showAlert = true
+                        }
+                    }
+                    
+                case .failure(let error):
+                    isSubmitting = false
+                    alertTitle = "Error"
+                    alertMessage = "Failed to upload images: \(error.localizedDescription)"
+                    showAlert = true
+                }
+            }
+        } else {
+            // Submit review without images
+            ReviewRepository.shared.submitReview(
+                orderId: order.orderId,
+                productId: order.productId,
+                rating: rating,
+                content: reviewText,
+                images: [],
+                productNote: order.productNote
+            ) { result in
+                switch result {
+                case .success(let reviewData):
+                    // Update order item review status
+                    OrderRepository.shared.updateOrderItemReviewStatus(orderItemId: order.id) { updateResult in
+                        isSubmitting = false
+                        switch updateResult {
+                        case .success:
+                            alertTitle = "Success"
+                            alertMessage = "Review submitted successfully"
+                            showAlert = true
+                        case .failure(let error):
+                            alertTitle = "Warning"
+                            alertMessage = "Review submitted but failed to update status: \(error.localizedDescription)"
+                            showAlert = true
+                        }
+                    }
+                case .failure(let error):
+                    isSubmitting = false
+                    alertTitle = "Error"
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    SBWriteReviewView(purchased: Purchased(title: "Bix Bag Limited Edition 229", imageName: "cat_access", color: "Berown", quantity: 1, price: 24.00, status: "Complete"))
 }

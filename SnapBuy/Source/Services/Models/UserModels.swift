@@ -78,7 +78,7 @@ struct BanUnbanResponse: Codable {
 
 struct SellerStatsResponse: Codable {
     let result: Int
-    let data: SellerStats
+    let data: SellerStats?
     let error: APIErrorResponse?
 }
 
@@ -87,9 +87,15 @@ struct SellerStats: Codable {
     let totalRevenue: Double
     let totalPurchases: Int
 }
+
+struct BuyerStatsResponse: Codable {
+    let result: Int
+    let data: BuyerStats?
+    let error: APIErrorResponse?
+}
+
 struct BuyerStats: Codable {
-    let purchaseCount: Int?
-    let totalSpent: Double?
-    let totalOrders: Int?
-    
+    let purchaseCount: Int
+    let totalSpent: Double
+    let totalOrders: Int
 }

@@ -30,7 +30,6 @@ struct RootView: App {
                         }
                     }
             }
-//            SBAdminDashboardView()
         }
     }
 }
