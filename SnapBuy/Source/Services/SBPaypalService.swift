@@ -147,6 +147,7 @@ class SBPaypalService {
             ],
             "partner_config_override": [
                 "return_url": "snapbuy://return",
+                "partner_logo_url": "https://your-app-logo-url.com/logo.png",
                 "return_url_description": "Return to SnapBuy app"
             ],
             "preferred_language_code": "en-US",
@@ -156,18 +157,23 @@ class SBPaypalService {
         let jsonData = try JSONSerialization.data(withJSONObject: referralData)
         request.httpBody = jsonData
         
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
         // Debug logging
         if let requestBody = String(data: jsonData, encoding: .utf8) {
             print("Debug - PayPal Request Body: \(requestBody)")
         }
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        // Debug logging
         if let responseString = String(data: data, encoding: .utf8) {
             print("Debug - PayPal Response: \(responseString)")
         }
         
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
+            if let errorString = String(data: data, encoding: .utf8) {
+                throw NSError(domain: "PayPalError", code: -1, userInfo: [NSLocalizedDescriptionKey: errorString])
+            }
             throw NSError(domain: "PayPalError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create partner referral"])
         }
         
@@ -262,5 +268,74 @@ class SBPaypalService {
               httpResponse.statusCode == 201 else {
             throw NSError(domain: "PayPal", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to capture PayPal order"])
         }
+    }
+    
+    // MARK: - Webhook Configuration
+    private func setupWebhooks() async throws {
+        let accessToken = try await getAccessToken()
+        
+        let url = URL(string: "https://api-m.sandbox.paypal.com/v1/notifications/webhooks")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        // Replace with your actual webhook URL
+        let webhookData: [String: Any] = [
+            "url": "https://your-server.com/paypal/webhooks",
+            "event_types": [
+                ["name": "MERCHANT.ONBOARDING.COMPLETED"],
+                ["name": "MERCHANT.PARTNER-CONSENT.REVOKED"]
+            ]
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: webhookData)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw NSError(domain: "PayPalError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to setup webhooks"])
+        }
+    }
+    
+    // MARK: - Seller Tracking
+    
+    /// Track seller onboarding status
+    func checkSellerStatus(sellerMerchantId: String) async throws -> SellerStatus {
+        let accessToken = try await getAccessToken()
+        
+        let url = URL(string: "https://api-m.sandbox.paypal.com/v1/customer/partners/\(PayPalConfig.partnerId)/merchant-integrations/\(sellerMerchantId)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw NSError(domain: "PayPalError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to check seller status"])
+        }
+        
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw NSError(domain: "PayPalError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format"])
+        }
+        
+        return SellerStatus(
+            merchantId: json["merchant_id"] as? String ?? "",
+            paymentsReceivable: json["payments_receivable"] as? Bool ?? false,
+            primaryEmailConfirmed: json["primary_email_confirmed"] as? Bool ?? false
+        )
+    }
+}
+
+struct SellerStatus {
+    let merchantId: String
+    let paymentsReceivable: Bool
+    let primaryEmailConfirmed: Bool
+    
+    var isFullyOnboarded: Bool {
+        return paymentsReceivable && primaryEmailConfirmed
     }
 }

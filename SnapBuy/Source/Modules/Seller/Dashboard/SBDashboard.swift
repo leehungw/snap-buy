@@ -1,25 +1,44 @@
 import SwiftUI
 
 struct SBSellerDashboardView: View {
+    @StateObject private var userModeManager = UserModeManager.shared
+    @State private var showPayPalOnboarding = false
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Welcome back, Seller!")
-                            .font(R.font.outfitSemiBold.font(size: 20))
-                            .foregroundColor(.white)
+                        if let user = UserRepository.shared.currentUser {
+                            Text("Welcome back, \(user.name)!")
+                                .font(R.font.outfitSemiBold.font(size: 20))
+                                .foregroundColor(.white)
+                        } else {
+                            Text("Welcome back, Seller!")
+                                .font(R.font.outfitSemiBold.font(size: 20))
+                                .foregroundColor(.white)
+                        }
                         Text("Here's your business overview")
                             .font(R.font.outfitRegular.font(size: 14))
                             .foregroundColor(.white)
                     }
                     Spacer()
                     Button(action: {
-                        print("Menu tapped")
+                        showPayPalOnboarding = true
                     }) {
-                        Image(systemName: "person.crop.circle")
-                            .font(.title)
-                            .foregroundColor(.white)
+                        ZStack {
+                            Image(systemName: "person.crop.circle")
+                                .font(.title)
+                                .foregroundColor(.white)
+                            
+                            // Show a red dot indicator if PayPal is not connected
+                            if userModeManager.paypalOnboardingURL != nil {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 10, height: 10)
+                                    .offset(x: 8, y: -8)
+                            }
+                        }
                     }
                 }
                 .padding()
@@ -44,8 +63,10 @@ struct SBSellerDashboardView: View {
                         .font(R.font.outfitBold.font(size: 18))
                         .padding(.horizontal)
                     ListRecentView()
-                    
                 }
+            }
+            .sheet(isPresented: $showPayPalOnboarding) {
+                SBPayPalOnboardingView()
             }
         }
     }

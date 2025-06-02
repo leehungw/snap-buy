@@ -5,6 +5,7 @@ class PaymentViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var showSuccessfullyOrderSheet = false
+    @Published var sellerStatus: SellerStatus?
     
     func processPayment(products: [CartItem], totalAmount: Double) async {
         guard let firstProduct = products.first else { return }
@@ -57,17 +58,32 @@ class PaymentViewModel: ObservableObject {
                 businessName: businessName
             )
             
-            // Here you would typically open this URL in a web view or browser
-            // and handle the return URL in your app delegate
-            print("Seller should complete onboarding at: \(onboardingUrl)")
-            
+            // Store the onboarding URL for later use
             DispatchQueue.main.async {
                 self.isLoading = false
+                UserModeManager.shared.paypalOnboardingURL = onboardingUrl
             }
         } catch {
             DispatchQueue.main.async {
                 self.isLoading = false
                 self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    func checkSellerStatus(merchantId: String) async {
+        isLoading = true
+        
+        do {
+            let status = try await SBPaypalService.shared.checkSellerStatus(sellerMerchantId: merchantId)
+            DispatchQueue.main.async {
+                self.sellerStatus = status
+                self.isLoading = false
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
+                self.isLoading = false
             }
         }
     }
