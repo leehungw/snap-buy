@@ -154,64 +154,36 @@ struct OrdersListView: View {
     var body: some View {
         
         VStack(alignment: .leading, spacing: 12) {
-            Text("Orders")
-                .font(.custom("Outfit", size: 16))
-                .fontWeight(.semibold)
-                .padding(.horizontal)
-
-            ScrollView {
-                VStack(spacing: 10) {
-                    ForEach(sellerOrder.sample) { order in
-                        NavigationLink(destination: OrderDetailView(order: order)) {
-                            HStack {
-                                Text("Order #\(order.id.uuidString.prefix(6))")
-                                    .font(.custom("Outfit-Medium", size: 14))
-                                    .foregroundColor(.black)
-                                Spacer()
-                                Text(order.status.rawValue)
-                                    .font(.custom("Outfit-Regular", size: 12))
-                                    .foregroundColor(.gray)
-                                Text("\(order.totalQuantity) item\(order.totalQuantity > 1 ? "s" : "")")
-                                    .font(.custom("Outfit-Regular", size: 12))
-                                    .foregroundColor(.gray)
-                            }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(10)
-                            .padding(.horizontal)
-                        }
-                    }
-                }
-            }
-            .frame(maxHeight: 250)
+//            Text("Orders")
+//                .font(.custom("Outfit", size: 16))
+//                .fontWeight(.semibold)
+//                .padding(.horizontal)
+//
+//            ScrollView {
+//                VStack(spacing: 10) {
+//                    ForEach(sellerOrder.sample) { order in
+//                        NavigationLink(destination: OrderDetailView(order: order)) {
+//                            HStack {
+//                                Text("Order #\(order.id.uuidString.prefix(6))")
+//                                    .font(.custom("Outfit-Medium", size: 14))
+//                                    .foregroundColor(.black)
+//                                Spacer()
+//                                Text(order.status.rawValue)
+//                                    .font(.custom("Outfit-Regular", size: 12))
+//                                    .foregroundColor(.gray)
+//                                Text("\(order.totalQuantity) item\(order.totalQuantity > 1 ? "s" : "")")
+//                                    .font(.custom("Outfit-Regular", size: 12))
+//                                    .foregroundColor(.gray)
+//                            }
+//                            .padding()
+//                            .background(Color(.systemGray6))
+//                            .cornerRadius(10)
+//                            .padding(.horizontal)
+//                        }
+//                    }
+//                }
+//            }
+//            .frame(maxHeight: 250)
         }
     }
-}
-
-#Preview {
-    SalesStatisticsView(
-        allWeeklyData: [
-            SalesData(label: "W1", revenue: 500),
-            SalesData(label: "W2", revenue: 900),
-            SalesData(label: "W3", revenue: 700),
-            SalesData(label: "W4", revenue: 1300)
-        ],
-        allMonthlyData: [
-            SalesData(label: "Jan", revenue: 1000),
-            SalesData(label: "Feb", revenue: 2200),
-            SalesData(label: "Mar", revenue: 3100),
-            SalesData(label: "Apr", revenue: 1700),
-            SalesData(label: "May", revenue: 2490),
-            SalesData(label: "Jun", revenue: 2000)
-        ],
-        allYearlyData: [
-            SalesData(label: "2021", revenue: 12000),
-            SalesData(label: "2022", revenue: 16000),
-            SalesData(label: "2023", revenue: 20000),
-            SalesData(label: "2024", revenue: 24500)
-        ],
-        totalOrders: 150,
-        totalItemsSold: 520,
-        totalRevenue: 18290
-    )
 }

@@ -232,4 +232,60 @@ final class UserRepository {
             }
         }
     }
+    
+    // MARK: - Stats Functions
+    
+    func fetchBuyerStats(userId: String, completion: @escaping SBValueAction<Result<BuyerStats, Error>>) {
+        let endpoint = "order/api/orders/buyer/stats/\(userId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<BuyerStatsResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let stats = response.data {
+                    completion(.success(stats))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: response.error?.message ?? "Failed to fetch buyer stats"]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchSellerStats(userId: String, completion: @escaping SBValueAction<Result<SellerStats, Error>>) {
+        let endpoint = "order/api/orders/seller/stats/\(userId)"
+        
+        SBAPIService.shared.performRequest(
+            endpoint: endpoint,
+            method: "GET",
+            body: nil,
+            headers: nil
+        ) { (result: Result<SellerStatsResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let stats = response.data {
+                    completion(.success(stats))
+                } else {
+                    let err = NSError(
+                        domain: "UserRepository",
+                        code: response.error?.code ?? -1,
+                        userInfo: [NSLocalizedDescriptionKey: response.error?.message ?? "Failed to fetch seller stats"]
+                    )
+                    completion(.failure(err))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

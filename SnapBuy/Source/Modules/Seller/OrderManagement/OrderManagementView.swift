@@ -1,15 +1,65 @@
 import SwiftUI
 
-struct SBOrderManagementView: View {
-    @State private var orders: [sellerOrder] = sellerOrder.sample
-    @State private var selectedStatus: OrderStatus? = nil
-
-    var filteredOrders: [sellerOrder] {
+class OrderManagementViewModel: ObservableObject {
+    @Published var orders: [SBOrderModel] = []
+    @Published var isLoading = false
+    @Published var error: String?
+    @Published var selectedStatus: String? = nil
+    
+    var filteredOrders: [SBOrderModel] {
         if let status = selectedStatus {
             return orders.filter { $0.status == status }
         }
         return orders
     }
+    
+    func fetchOrders() {
+        isLoading = true
+        error = nil
+        
+        guard let sellerId = UserRepository.shared.currentUser?.id else {
+            error = "User not logged in"
+            isLoading = false
+            return
+        }
+        
+        OrderRepository.shared.fetchListSellerOrders(sellerId: sellerId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let orders):
+                    self?.orders = orders
+                case .failure(let error):
+                    self?.error = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    func updateOrderStatus(orderId: String, status: String) {
+        isLoading = true
+        error = nil
+        
+        OrderRepository.shared.updateOrderStatus(orderId: orderId, status: status) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let updatedOrder):
+                    // Update the order in the local array
+                    if let index = self?.orders.firstIndex(where: { $0.id == orderId }) {
+                        self?.orders[index] = updatedOrder
+                    }
+                case .failure(let error):
+                    self?.error = error.localizedDescription
+                }
+            }
+        }
+    }
+}
+
+struct SBOrderManagementView: View {
+    @StateObject private var viewModel = OrderManagementViewModel()
+    @State private var showErrorAlert = false
 
     var body: some View {
         NavigationView {
@@ -28,24 +78,24 @@ struct SBOrderManagementView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
                         Button("All") {
-                            selectedStatus = nil
+                            viewModel.selectedStatus = nil
                         }
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(selectedStatus == nil ? .white : .gray)
+                        .foregroundColor(viewModel.selectedStatus == nil ? .white : .gray)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
-                        .background(selectedStatus == nil ? Color.main : Color.gray.opacity(0.2))
+                        .background(viewModel.selectedStatus == nil ? Color.main : Color.gray.opacity(0.2))
                         .cornerRadius(20)
 
-                        ForEach(OrderStatus.allCases) { status in
-                            Button(status.rawValue) {
-                                selectedStatus = status
+                        ForEach(OrderStatus.allValues, id: \.self) { status in
+                            Button(status) {
+                                viewModel.selectedStatus = status
                             }
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(selectedStatus == status ? .white : .gray)
+                            .foregroundColor(viewModel.selectedStatus == status ? .white : .gray)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(selectedStatus == status ? Color.main : Color.gray.opacity(0.2))
+                            .background(viewModel.selectedStatus == status ? Color.main : Color.gray.opacity(0.2))
                             .cornerRadius(20)
                         }
                     }
@@ -53,107 +103,110 @@ struct SBOrderManagementView: View {
                 }
                 .padding(.vertical)
 
-                // Order list
-                List {
-                    ForEach(filteredOrders) { order in
-                        NavigationLink(destination: OrderDetailView(order: order)) {
-                            HStack(alignment: .top, spacing: 16) {
-                                // Ảnh sản phẩm đầu tiên
-                                if let firstItem = order.items.first {
-                                    Image(firstItem.imageName)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 60, height: 60)
-                                        .cornerRadius(8)
-                                        .clipped()
-                                }
-
-                                VStack(alignment: .leading, spacing: 8) {
-                                    HStack {
-                                        
-                                        Text(order.orderTitle)
-                                            .font(.system(size: 16, weight: .medium))
-                                            .lineLimit(2)
-                                            .multilineTextAlignment(.leading)
-
-                                        Spacer()
-
-                                        // Trạng thái
-                                        Text(order.status.rawValue)
-                                            .font(.system(size: 14))
-                                            .foregroundColor(colorForStatus(order.status))
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(colorForStatus(order.status).opacity(0.2))
-                                            .cornerRadius(8)
-                                    }
-
-                                    // Tổng số lượng và tổng tiền
-                                    HStack(spacing: 16) {
-                                        Text("Quantity: \(order.totalQuantity)")
-                                        Text("Total: $\(order.totalAmount, specifier: "%.2f")")
-                                    }
-                                    .font(.system(size: 14))
-                                    .foregroundColor(.secondary)
-
-                                    // Nút cập nhật trạng thái
-                                    HStack {
-                                        Spacer()
-                                        Menu {
-                                            ForEach(OrderStatus.allCases) { status in
-                                                Button(status.rawValue) {
-                                                    updateStatus(of: order, to: status)
-                                                }
-                                            }
-                                        } label: {
-                                            Text("Update Status")
-                                                .font(.system(size: 14, weight: .medium))
-                                                .foregroundColor(.blue)
-                                                .padding(.top, 4)
-                                        }
-                                    }
+                if viewModel.isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    // Order list
+                    List {
+                        ForEach(viewModel.filteredOrders, id: \.id) { order in
+                            NavigationLink(destination: OrderDetailView(orderId: order.id)) {
+                                OrderRowView(order: order) { status in
+                                    viewModel.updateOrderStatus(orderId: order.id, status: status)
                                 }
                             }
-                            .padding(.vertical, 8)
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                            .listRowBackground(Color.clear)
                         }
                     }
+                    .listStyle(.plain)
+                    .refreshable {
+                        viewModel.fetchOrders()
+                    }
                 }
-                .listStyle(.plain)
             }
             .navigationBarHidden(true)
+            .alert("Error", isPresented: $showErrorAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(viewModel.error ?? "Unknown error occurred")
+            }
+            .onChange(of: viewModel.error) { newValue in
+                showErrorAlert = newValue != nil
+            }
+            .onAppear {
+                viewModel.fetchOrders()
+            }
         }
     }
+}
 
-    private func updateStatus(of order: sellerOrder, to newStatus: OrderStatus) {
-        if let index = orders.firstIndex(where: { $0.id == order.id }) {
-            orders[index].status = newStatus
+struct OrderRowView: View {
+    let order: SBOrderModel
+    let onStatusUpdate: (String) -> Void
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Order #\(order.id)")
+                    .font(R.font.outfitBold.font(size: 16))
+                
+                Spacer()
+                
+                Menu {
+                    ForEach(OrderStatus.allValues, id: \.self) { status in
+                        Button(status) {
+                            onStatusUpdate(status)
+                        }
+                    }
+                } label: {
+                    Text(order.status)
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(colorForStatus(order.status))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(colorForStatus(order.status).opacity(0.2))
+                        .cornerRadius(12)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 16) {
+                    Label("Items: \(order.orderItems.count)", systemImage: "cart")
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(.secondary)
+                    
+                    Label(String(format: "$%.2f", order.totalAmount), systemImage: "dollarsign.circle")
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(.green)
+                }
+                
+                if !order.shippingAddress.isEmpty {
+                    Label(order.shippingAddress, systemImage: "location")
+                        .font(R.font.outfitRegular.font(size: 14))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+            }
         }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
-extension sellerOrder {
-    var totalQuantity: Int {
-        items.reduce(0) { $0 + $1.quantity }
-    }
-
-    var totalAmount: Double {
-        items.reduce(0) { $0 + $1.price * Double($1.quantity) }
-    }
-
-    var orderTitle: String {
-        items.map { $0.title }.joined(separator: ", ")
-    }
-}
-
-#Preview {
-    SBOrderManagementView()
-}
-func colorForStatus(_ status: OrderStatus) -> Color {
+func colorForStatus(_ status: String) -> Color {
     switch status {
-    case .pending: return .gray
-    case .inProgress: return .orange
-    case .complete: return .blue
-    case .delivered: return .green
-    case .cancelled: return .red
+    case OrderStatus.pending.rawValue: return .gray
+    case OrderStatus.inProgress.rawValue: return .orange
+    case OrderStatus.success.rawValue: return .blue
+    case OrderStatus.delivered.rawValue: return .green
+    case OrderStatus.cancelled.rawValue: return .red
+    default: return .gray
     }
 }
+
+//#Preview {
+//    SBOrderManagementView()
+//}

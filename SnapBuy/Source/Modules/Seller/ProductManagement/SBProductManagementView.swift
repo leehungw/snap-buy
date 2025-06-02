@@ -1,6 +1,31 @@
 import SwiftUI
 import Kingfisher
 
+enum ProductStatus: Int, CaseIterable {
+    case all = -1
+    case pending = 0
+    case approved = 1
+    case cancelled = 2
+    
+    var title: String {
+        switch self {
+        case .all: return "All"
+        case .pending: return "Pending"
+        case .approved: return "Approved"
+        case .cancelled: return "Cancelled"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .all: return .gray
+        case .pending: return .orange
+        case .approved: return .green
+        case .cancelled: return .red
+        }
+    }
+}
+
 struct SBProductManagementView: View {
     @State private var products: [SBProduct] = []
     @State private var isAddPressed = false
@@ -10,6 +35,14 @@ struct SBProductManagementView: View {
     @State private var navigateToEdit = false
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
+    @State private var selectedStatus: ProductStatus = .all
+    
+    var filteredProducts: [SBProduct] {
+        if selectedStatus == .all {
+            return products
+        }
+        return products.filter { $0.status == selectedStatus.rawValue }
+    }
     
     var body: some View {
         NavigationView {
@@ -23,6 +56,25 @@ struct SBProductManagementView: View {
                 }
                 .padding()
                 .background(Color.main)
+                
+                // Status Filter
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(ProductStatus.allCases, id: \.rawValue) { status in
+                            FilterChip(
+                                title: status.title,
+                                isSelected: selectedStatus == status,
+                                color: status.color
+                            ) {
+                                withAnimation {
+                                    selectedStatus = status
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.vertical, 8)
                 
                 ZStack {
                     if isLoading {
@@ -50,9 +102,17 @@ struct SBProductManagementView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.top, 40)
                             .padding()
+                    } else if filteredProducts.isEmpty {
+                        Text("No \(selectedStatus.title.lowercased()) products found.")
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 40)
+                            .padding()
                     } else {
                         SBSellerListProduct(
-                            products: $products,
+                            products: .constant(filteredProducts),
                             onRequestDelete: { product in
                                 productToDelete = product
                                 showDeleteConfirmation = true
@@ -153,6 +213,31 @@ struct SBProductManagementView: View {
     }
 }
 
+struct FilterChip: View {
+    let title: String
+    let isSelected: Bool
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(R.font.outfitMedium.font(size: 14))
+                .foregroundColor(isSelected ? .white : color)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule()
+                        .fill(isSelected ? color : color.opacity(0.1))
+                )
+                .overlay(
+                    Capsule()
+                        .strokeBorder(color, lineWidth: isSelected ? 0 : 1)
+                )
+        }
+    }
+}
+
 struct SBSellerListProduct: View {
     @Binding var products: [SBProduct]
     var onRequestDelete: (SBProduct) -> Void
@@ -214,10 +299,12 @@ struct StatusBadge: View {
     
     var statusInfo: (text: String, color: Color) {
         switch status {
-        case 0:
-            return ("Pending", .orange)
-        case 1:
-            return ("Approved", .green)
+        case ProductStatus.pending.rawValue:
+            return (ProductStatus.pending.title, ProductStatus.pending.color)
+        case ProductStatus.approved.rawValue:
+            return (ProductStatus.approved.title, ProductStatus.approved.color)
+        case ProductStatus.cancelled.rawValue:
+            return (ProductStatus.cancelled.title, ProductStatus.cancelled.color)
         default:
             return ("Unknown", .gray)
         }

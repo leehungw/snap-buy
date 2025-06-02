@@ -3,10 +3,10 @@ import SwiftUI
 struct SBEditProfileView: View {
     @State private var username: String = ""
     @State private var email: String = ""
-    @State private var isSeller: Bool = true
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var isLoading = false
+    @StateObject private var userModeManager = UserModeManager.shared
     
     init() {
         if let currentUser = UserRepository.shared.currentUser {
@@ -24,16 +24,24 @@ struct SBEditProfileView: View {
                     .frame(width: 100, height: 100)
                     .clipShape(Circle())
                     .padding(.top, 20)
-                HStack {
-                    if isSeller {
-                        Text("Go to Seller")
-                            .font(R.font.outfitBold.font(size: 16))
+                
+                if let user = UserRepository.shared.currentUser {
+                    if user.isPremium {
+                        Button(action: {
+                            userModeManager.switchMode()
+                        }) {
+                            HStack {
+                                Image(systemName: userModeManager.currentMode == .seller ? "arrow.left" : "arrow.right")
+                                Text(userModeManager.currentMode == .buyer ? "Switch to Seller" : "Switch to Buyer")
+                                    .font(R.font.outfitBold.font(size: 16))
+                            }
                             .foregroundColor(.main)
                             .padding(10)
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.main, lineWidth: 2)
                             )
+                        }
                     } else {
                         NavigationLink(destination: SBUpgradeAccountView()) {
                             Text("Upgrade To Seller")
