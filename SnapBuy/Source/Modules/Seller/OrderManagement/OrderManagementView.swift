@@ -37,10 +37,15 @@ class OrderManagementViewModel: ObservableObject {
     }
     
     func updateOrderStatus(orderId: String, status: String) {
+        isLoading = true
+        error = nil
+        
         OrderRepository.shared.updateOrderStatus(orderId: orderId, status: status) { [weak self] result in
             DispatchQueue.main.async {
+                self?.isLoading = false
                 switch result {
                 case .success(let updatedOrder):
+                    // Update the order in the local array
                     if let index = self?.orders.firstIndex(where: { $0.id == orderId }) {
                         self?.orders[index] = updatedOrder
                     }
@@ -106,10 +111,12 @@ struct SBOrderManagementView: View {
                     List {
                         ForEach(viewModel.filteredOrders, id: \.id) { order in
                             NavigationLink(destination: OrderDetailView(orderId: order.id)) {
-                                OrderRowView(order: order) {
-                                    viewModel.updateOrderStatus(orderId: order.id, status: $0)
+                                OrderRowView(order: order) { status in
+                                    viewModel.updateOrderStatus(orderId: order.id, status: status)
                                 }
                             }
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                            .listRowBackground(Color.clear)
                         }
                     }
                     .listStyle(.plain)
@@ -139,48 +146,53 @@ struct OrderRowView: View {
     let onStatusUpdate: (String) -> Void
     
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Order #\(order.id)")
-                        .font(.system(size: 16, weight: .medium))
-                    
-                    Spacer()
-                    
-                    Text(order.status)
-                        .font(.system(size: 14))
-                        .foregroundColor(colorForStatus(order.status))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(colorForStatus(order.status).opacity(0.2))
-                        .cornerRadius(8)
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Order #\(order.id)")
+                    .font(R.font.outfitBold.font(size: 16))
                 
-                HStack(spacing: 16) {
-                    Text("Items: \(order.orderItems.count)")
-                    Text("Total: $\(order.totalAmount, specifier: "%.2f")")
-                }
-                .font(.system(size: 14))
-                .foregroundColor(.secondary)
+                Spacer()
                 
-                HStack {
-                    Spacer()
-                    Menu {
-                        ForEach(OrderStatus.allValues, id: \.self) { status in
-                            Button(status) {
-                                onStatusUpdate(status)
-                            }
+                Menu {
+                    ForEach(OrderStatus.allValues, id: \.self) { status in
+                        Button(status) {
+                            onStatusUpdate(status)
                         }
-                    } label: {
-                        Text("Update Status")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.blue)
-                            .padding(.top, 4)
                     }
+                } label: {
+                    Text(order.status)
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(colorForStatus(order.status))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(colorForStatus(order.status).opacity(0.2))
+                        .cornerRadius(12)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 16) {
+                    Label("Items: \(order.orderItems.count)", systemImage: "cart")
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(.secondary)
+                    
+                    Label(String(format: "$%.2f", order.totalAmount), systemImage: "dollarsign.circle")
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(.green)
+                }
+                
+                if !order.shippingAddress.isEmpty {
+                    Label(order.shippingAddress, systemImage: "location")
+                        .font(R.font.outfitRegular.font(size: 14))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                 }
             }
         }
-        .padding(.vertical, 8)
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
@@ -188,7 +200,7 @@ func colorForStatus(_ status: String) -> Color {
     switch status {
     case OrderStatus.pending.rawValue: return .gray
     case OrderStatus.inProgress.rawValue: return .orange
-    case OrderStatus.complete.rawValue: return .blue
+    case OrderStatus.success.rawValue: return .blue
     case OrderStatus.delivered.rawValue: return .green
     case OrderStatus.cancelled.rawValue: return .red
     default: return .gray

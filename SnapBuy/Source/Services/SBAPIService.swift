@@ -26,29 +26,75 @@ final class SBAPIService {
                                                          body: body,
                                                          headers: headers)
         
+        // Debug print request
+        print("🌐 API Request:")
+        print("URL:", request.url?.absoluteString ?? "")
+        print("Method:", method)
+        print("Headers:", headers ?? [:])
+        if let body = body, let bodyString = String(data: body, encoding: .utf8) {
+            print("Body:", bodyString)
+        }
+        
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
+                print("❌ Network Error:", error)
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
                 return
             }
             
+            // Debug print response
+            if let httpResponse = response as? HTTPURLResponse {
+                print("📥 Response Status Code:", httpResponse.statusCode)
+            }
+            
             guard let data = data else {
+                print("❌ No Data Received")
                 DispatchQueue.main.async {
                     let noDataError = NSError(domain: "SBAPIService", code: -1001, userInfo: [NSLocalizedDescriptionKey: "No data received"])
                     completion(.failure(noDataError))
                 }
                 return
             }
+            
+            // Debug print raw response data
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("📥 Raw Response Data:")
+                print(responseString)
+            }
+            
             do {
                 let decodedObject = try JSONDecoder().decode(T.self, from: data)
                 DispatchQueue.main.async {
                     completion(.success(decodedObject))
                 }
-            } catch let decodeError {
+            } catch {
+                print("❌ Decode Error:", error)
+                if let decodingError = error as? DecodingError {
+                    switch decodingError {
+                    case .keyNotFound(let key, let context):
+                        print("Key Not Found:", key)
+                        print("Coding Path:", context.codingPath)
+                        print("Debug Description:", context.debugDescription)
+                    case .valueNotFound(let type, let context):
+                        print("Value Not Found for type:", type)
+                        print("Coding Path:", context.codingPath)
+                        print("Debug Description:", context.debugDescription)
+                    case .typeMismatch(let type, let context):
+                        print("Type Mismatch for type:", type)
+                        print("Coding Path:", context.codingPath)
+                        print("Debug Description:", context.debugDescription)
+                    case .dataCorrupted(let context):
+                        print("Data Corrupted")
+                        print("Coding Path:", context.codingPath)
+                        print("Debug Description:", context.debugDescription)
+                    @unknown default:
+                        print("Unknown decoding error:", error)
+                    }
+                }
                 DispatchQueue.main.async {
-                    completion(.failure(decodeError))
+                    completion(.failure(error))
                 }
             }
         }
