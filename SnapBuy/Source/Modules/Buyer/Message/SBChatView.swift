@@ -126,11 +126,13 @@ struct SBChatView: View {
             setupMessageUpdates()
         }
         .onDisappear {
-            ChatRepository.shared.stopMessagePolling()
+            ChatRepository.shared.stopRealtimeUpdates()
         }
-//        .alert("Error", isPresented: $showError, message: {
-//            Text(errorMessage ?? "An error occurred")
-//        })
+        .alert("Error", isPresented: $showError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage ?? "An error occurred")
+        }
     }
     
     // MARK: - Chat Logic
@@ -138,7 +140,7 @@ struct SBChatView: View {
         isLoading = true
         
         // Initial fetch
-        ChatRepository.shared.fetchMessages(userId: user.id.uuidString) { result in
+        ChatRepository.shared.fetchChatMessages(chatRoomId: user.id.uuidString) { result in
             DispatchQueue.main.async {
                 isLoading = false
                 switch result {
@@ -153,15 +155,25 @@ struct SBChatView: View {
             }
         }
         
-        // Start real-time updates
-        ChatRepository.shared.startMessagePolling(userId: user.id.uuidString)
-        
-        ChatRepository.shared.messageUpdates
-            .receive(on: DispatchQueue.main)
-            .sink { newMessages in
-                messages = newMessages
+        // Start real-time updates with SignalR
+        guard let currentUserId = UserRepository.shared.currentUser?.id else { return }
+        ChatRepository.shared.startRealtimeUpdates(selectedChatId: user.id.uuidString, userId: currentUserId)
+    }
+    
+    private func fetchLatestMessages() {
+        ChatRepository.shared.fetchChatMessages(chatRoomId: user.id.uuidString) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    if let newMessages = response.data {
+                        messages = newMessages
+                    }
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
             }
-            .store(in: &cancellables)
+        }
     }
     
     // MARK: - Send Logic
@@ -169,9 +181,19 @@ struct SBChatView: View {
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         
-        let request = SendMessageRequest(receiverId: user.id.uuidString, text: trimmed)
+        guard let currentUserId = UserRepository.shared.currentUser?.id else {
+            errorMessage = "User not logged in"
+            showError = true
+            return
+        }
         
-        ChatRepository.shared.sendMessage(request: request) { result in
+        let request = SendTextRequest(
+            userSendId: currentUserId,
+            userReceiveId: user.id.uuidString,
+            message: trimmed
+        )
+        
+        ChatRepository.shared.sendText(request: request) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
@@ -189,28 +211,162 @@ struct SBChatView: View {
             }
         }
     }
+    
+    private func sendImage(_ imageData: Data) {
+        guard let currentUserId = UserRepository.shared.currentUser?.id else {
+            errorMessage = "User not logged in"
+            showError = true
+            return
+        }
+        
+        let request = SendImageRequest(
+            userSendId: currentUserId,
+            userReceiveId: user.id.uuidString,
+            imageData: imageData
+        )
+        
+        ChatRepository.shared.sendImage(request: request) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    if let message = response.data {
+                        messages.append(message)
+                    } else if let error = response.error {
+                        errorMessage = error.message
+                        showError = true
+                    }
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
+        }
+    }
+    
+    private func sendVideo(_ videoData: Data) {
+        guard let currentUserId = UserRepository.shared.currentUser?.id else {
+            errorMessage = "User not logged in"
+            showError = true
+            return
+        }
+        
+        let request = SendVideoRequest(
+            userSendId: currentUserId,
+            userReceiveId: user.id.uuidString,
+            videoData: videoData
+        )
+        
+        ChatRepository.shared.sendVideo(request: request) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    if let message = response.data {
+                        messages.append(message)
+                    } else if let error = response.error {
+                        errorMessage = error.message
+                        showError = true
+                    }
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
+        }
+    }
 }
 
 struct MessageBubble: View {
     let message: ChatMessage
     
     var body: some View {
-        VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
-            HStack {
-                if message.isUser { Spacer() }
-                Text(message.text)
-                    .padding()
-                    .background(message.isUser ? Color.main : Color(.systemGray5))
-                    .foregroundColor(message.isUser ? .white : .black)
-                    .cornerRadius(15)
-                if !message.isUser { Spacer() }
+        HStack(alignment: .bottom, spacing: 8) {
+            if !message.isUser {
+                AsyncImage(url: URL(string: message.avatar)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    Color.gray.opacity(0.3)
+                }
+                .frame(width: 32, height: 32)
+                .clipShape(Circle())
             }
-            Text(message.timeString)
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding(.horizontal, 4)
+            
+            VStack(alignment: message.isUser ? .trailing : .leading, spacing: 4) {
+                HStack {
+                    if message.isUser { Spacer() }
+                    
+                    VStack(alignment: message.isUser ? .trailing : .leading, spacing: 8) {
+                        switch message.type {
+                        case .text:
+                            Text(message.message)
+                                .padding()
+                                .background(message.isUser ? Color.main : Color(.systemGray5))
+                                .foregroundColor(message.isUser ? .white : .black)
+                                .cornerRadius(15)
+                            
+                        case .image:
+                            if let mediaUrl = message.mediaLink, let url = URL(string: mediaUrl) {
+                                AsyncImage(url: url) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                .frame(maxWidth: 200, maxHeight: 200)
+                                .cornerRadius(15)
+                            }
+                            
+                        case .video:
+                            if let mediaUrl = message.mediaLink {
+                                VideoPlayer(url: mediaUrl)
+                                    .frame(maxWidth: 200, maxHeight: 200)
+                                    .cornerRadius(15)
+                            }
+                        }
+                        
+                        Text(message.timeString)
+                            .font(.caption2)
+                            .foregroundColor(.gray)
+                    }
+                    
+                    if !message.isUser { Spacer() }
+                }
+            }
+            
+            if message.isUser {
+                AsyncImage(url: URL(string: message.avatar)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    Color.gray.opacity(0.3)
+                }
+                .frame(width: 32, height: 32)
+                .clipShape(Circle())
+            }
         }
-        .frame(maxWidth: .infinity, alignment: message.isUser ? .trailing : .leading)
+        .padding(.horizontal)
+    }
+}
+
+struct VideoPlayer: View {
+    let url: String
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.1)
+            Image(systemName: "play.circle.fill")
+                .font(.largeTitle)
+                .foregroundColor(.white)
+        }
+        .onTapGesture {
+            // Handle video playback
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+        }
     }
 }
 
