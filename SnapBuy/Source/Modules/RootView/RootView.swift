@@ -9,7 +9,11 @@ struct RootView: App {
             if SBUserDefaultService.instance.didShowOnboarding {
                 SBLoginView(shouldShowBackButton: false)
                     .onOpenURL { url in
-                        GIDSignIn.sharedInstance.handle(url)
+                        if url.scheme == "snapbuy" {
+                            UserModeManager.shared.handlePayPalReturn(url: url)
+                        } else {
+                            GIDSignIn.sharedInstance.handle(url)
+                        }
                     }
                     .onAppear {
                         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
@@ -19,7 +23,11 @@ struct RootView: App {
             } else {
                 SBOBView()
                     .onOpenURL { url in
-                        GIDSignIn.sharedInstance.handle(url)
+                        if url.scheme == "snapbuy" {
+                            UserModeManager.shared.handlePayPalReturn(url: url)
+                        } else {
+                            GIDSignIn.sharedInstance.handle(url)
+                        }
                     }
             }
         }

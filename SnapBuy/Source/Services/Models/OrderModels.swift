@@ -10,8 +10,9 @@ enum OrderStatus: String, Identifiable {
     var id: String { self.rawValue }
     
     static var allCases: [OrderStatus] {
-        return [.pending, .inProgress, .delivered, .success, .cancelled]
+        return [.pending, .inProgress, .success, .delivered, .cancelled]
     }
+    
     
     static func fromString(_ value: String) -> OrderStatus? {
         return OrderStatus.allCases.first {
@@ -62,4 +63,3 @@ struct OrderItemsResponse: Codable {
     let data: [SBOrderItemModel]?
     let error: APIErrorResponse?
 }
-
