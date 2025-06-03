@@ -40,6 +40,18 @@ class SBAdminDashboardViewModel: ObservableObject {
                 break
             }
         }
+        
+        // Fetch total orders
+        OrderRepository.shared.fetchAllOrders { [weak self] result in
+            switch result {
+            case .success(let orders):
+                DispatchQueue.main.async {
+                    self?.totalOrders = orders.count
+                }
+            case .failure:
+                break
+            }
+        }
     }
 }
 
@@ -68,9 +80,6 @@ struct SBAdminDashboardView: View {
                     GridBoxView(title: "Total Users", value: "\(viewModel.totalUsers)", color: .blue, systemImage: "person.2.fill")
                 }
                 
-                NavigationLink(destination: SBAdminShopManagementView()) {
-                    GridBoxView(title: "Total Shops", value: "\(viewModel.totalShops)", color: .green, systemImage: "building.2.fill")
-                }
                 
                 NavigationLink(destination: SBAdminProductManagementView()) {
                     GridBoxView(title: "Total Products", value: "\(viewModel.totalProducts)", color: .orange, systemImage: "bag.fill")
@@ -78,6 +87,10 @@ struct SBAdminDashboardView: View {
                 
                 NavigationLink(destination: SBAdminOrderManagement()) {
                     GridBoxView(title: "Total Orders", value: "\(viewModel.totalOrders)", color: .purple, systemImage: "cart.fill")
+                }
+                
+                NavigationLink(destination: SBAdminVoucherManagement()) {
+                    GridBoxView(title: "Total Vouchers", value: "0", color: .pink, systemImage: "ticket.fill")
                 }
                 
                 Spacer()

@@ -44,6 +44,11 @@ struct SBProductDetailView: View {
     @State private var showAddedToCartAlert = false
     @State private var addToCartMessage = ""
     
+    // Add states for reviews
+    @State private var productReviews: [ProductReview] = []
+    @State private var isLoadingReviews = true
+    @State private var reviewError: String?
+    
     var productImages: [String] {
         product.productImages.map { $0.url }
     }
@@ -69,6 +74,95 @@ struct SBProductDetailView: View {
     
     var totalPrice: Double {
         product.basePrice * Double(quantity)
+    }
+    
+    var averageRating: Double {
+        if productReviews.isEmpty {
+            return 0.0
+        }
+        let total = productReviews.reduce(0) { $0 + $1.starNumber }
+        return Double(total) / Double(productReviews.count)
+    }
+    
+    var reviewsSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if isLoadingReviews {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            } else if let error = reviewError {
+                Text(error)
+                    .foregroundColor(.red)
+                    .font(R.font.outfitRegular.font(size: 14))
+                    .padding()
+            } else if productReviews.isEmpty {
+                Text("No reviews yet")
+                    .font(R.font.outfitRegular.font(size: 14))
+                    .foregroundColor(.gray)
+                    .padding()
+            } else {
+                ForEach(showAllReviews ? productReviews : Array(productReviews.prefix(3))) { review in
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            if let user = review.user {
+                                KFImage(URL(string: user.imageURL ?? ""))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 30, height: 30)
+                                    .clipShape(Circle())
+                            }
+                            
+                            Text(review.reviewerName)
+                                .font(R.font.outfitBold.font(size: 13))
+                            Spacer()
+                            Text(review.productNote)
+                                .font(R.font.outfitRegular.font(size: 12))
+                                .foregroundColor(.gray)
+                        }
+                        
+                        HStack(spacing: 2) {
+                            ForEach(0..<5, id: \.self) { index in
+                                Image(systemName: index + 1 <= Int(review.starNumber) ? "star.fill" : 
+                                      Double(index) + 0.5 <= review.starNumber ? "star.leadinghalf.filled" : "star")
+                                    .foregroundColor(.yellow)
+                                    .font(.caption)
+                            }
+                        }
+                        
+                        Text(review.reviewComment)
+                            .font(R.font.outfitRegular.font(size: 13))
+                            .foregroundColor(.gray)
+                        
+                        if !review.productReviewImages.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(review.productReviewImages, id: \.self) { imageUrl in
+                                        KFImage(URL(string: imageUrl))
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 60, height: 60)
+                                            .cornerRadius(8)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(.vertical, 5)
+                    Divider()
+                }
+                
+                if productReviews.count > 3 {
+                    Button(action: {
+                        showAllReviews.toggle()
+                    }) {
+                        Text(showAllReviews ? "Show Less" : "See All Reviews")
+                            .font(R.font.outfitMedium.font(size: 14))
+                            .foregroundColor(.main)
+                    }
+                }
+            }
+        }
+        .padding()
     }
     
     var body: some View {
@@ -145,11 +239,24 @@ struct SBProductDetailView: View {
                     }
                     .padding(.top,20)
                     HStack {
-                        Text("4.8")
-                            .fontWeight(.semibold)
-                        Text("(320 Review)")
-                            .foregroundColor(.gray)
-                            .font(.caption)
+                        if isLoadingReviews {
+                            ProgressView()
+                                .frame(width: 50)
+                        } else {
+                            Text(String(format: "%.1f", averageRating))
+                                .fontWeight(.semibold)
+                            HStack(spacing: 2) {
+                                ForEach(0..<5, id: \.self) { index in
+                                    Image(systemName: index + 1 <= Int(averageRating) ? "star.fill" : 
+                                          Double(index) + 0.5 <= averageRating ? "star.leadinghalf.filled" : "star")
+                                        .foregroundColor(.yellow)
+                                        .font(.caption)
+                                }
+                            }
+                            Text("(\(productReviews.count) Review\(productReviews.count != 1 ? "s" : ""))")
+                                .foregroundColor(.gray)
+                                .font(.caption)
+                        }
                         Spacer()
                         Text("Available in stock")
                             .foregroundColor(.gray)
@@ -320,42 +427,7 @@ struct SBProductDetailView: View {
                         Text(R.string.localizable.rating)
                             .font(R.font.outfitBold.font(size:14))
                             .padding(.top,10)
-                        VStack(alignment: .leading, spacing: 6) {
-                            ForEach(showAllReviews ? reviews : Array(reviews.prefix(3)), id: \.id) { review in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(review.reviewer)
-                                            .font(R.font.outfitBold.font(size:13))
-                                        Spacer()
-                                        Text(review.date, style: .date)
-                                            .font(R.font.outfitRegular.font(size:12))
-                                            .foregroundColor(.gray)
-                                    }
-                                    HStack(spacing: 2) {
-                                        ForEach(0..<5, id: \.self) { index in
-                                            Image(systemName: index < review.rating ? "star.fill" : "star")
-                                                .foregroundColor(.yellow)
-                                                .font(.caption)
-                                        }
-                                    }
-                                    Text(review.comment)
-                                        .font(R.font.outfitRegular.font(size:13))
-                                        .foregroundColor(.gray)
-                                }
-                                .padding(.vertical, 5)
-                            }
-                            
-                            if reviews.count > 3 {
-                                Button(action: {
-                                    showAllReviews.toggle()
-                                }) {
-                                    Text(showAllReviews ? "Show Less" : "See All Reviews")
-                                        .font(R.font.outfitMedium.font(size: 14))
-                                        .foregroundColor(.main)
-                                }
-                            }
-                        }
-                        .padding()
+                        reviewsSection
                     }
                 }
                 .padding(.horizontal, 16)
@@ -387,6 +459,7 @@ struct SBProductDetailView: View {
             Text("Please select both size and color before adding to cart")
         }
         .onAppear {
+            fetchProductReviews()
             // Update user's last viewed product
             UserRepository.shared.updateLastProduct(productId: product.id) { result in
                 // You can handle success or failure if needed
@@ -410,6 +483,20 @@ struct SBProductDetailView: View {
         .navigationBarBackButtonHidden(true)
     }
     
+    private func fetchProductReviews() {
+        isLoadingReviews = true
+        reviewError = nil
+        
+        ReviewRepository.shared.fetchProductReviews(productId: product.id) { result in
+            isLoadingReviews = false
+            switch result {
+            case .success(let reviews):
+                self.productReviews = reviews
+            case .failure(let error):
+                self.reviewError = error.localizedDescription
+            }
+        }
+    }
 }
 
 struct WrapHStack<Data: RandomAccessCollection, Content: View>: View where Data.Element: Hashable {

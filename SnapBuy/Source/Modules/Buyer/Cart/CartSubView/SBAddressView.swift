@@ -41,7 +41,7 @@ struct SBAddressView: View {
 
             // Custom Location Input
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
+            HStack {
                     TextField("Enter address", text: $customLocation)
                         .textFieldStyle(PlainTextFieldStyle())
                     
@@ -58,12 +58,12 @@ struct SBAddressView: View {
                                 .cornerRadius(12)
                         }
                     }
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+            )
             }
             .padding(.horizontal)
 
@@ -81,7 +81,7 @@ struct SBAddressView: View {
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(12)
                 } else {
-                    VStack(spacing: 12) {
+            VStack(spacing: 12) {
                         if let coordinate = viewModel.coordinate {
                             Map(coordinateRegion: .constant(viewModel.region),
                                 annotationItems: [coordinate]) { location in
@@ -94,7 +94,7 @@ struct SBAddressView: View {
                                 .frame(height: 200)
                                 .overlay(
                                     Text("No location selected")
-                                        .foregroundColor(.gray)
+                                .foregroundColor(.gray)
                                 )
                         }
                         
@@ -137,13 +137,13 @@ struct SBAddressView: View {
                                         .padding(.vertical, 8)
                                         .background(Color.main)
                                         .cornerRadius(12)
-                                }
-                            }
-                            .padding()
-                            .background(
+                        }
+                    }
+                    .padding()
+                    .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                            )
+                    )
                         }
                     }
                 }
