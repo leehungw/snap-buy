@@ -38,3 +38,4 @@ SourcePackages/artifacts/
 /Pods
 Podfile.lock
 R.generated.swift
+SnapBuy/PayPalConfig.plist

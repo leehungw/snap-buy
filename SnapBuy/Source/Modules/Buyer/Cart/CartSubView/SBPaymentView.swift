@@ -1,4 +1,5 @@
 import SwiftUI
+import PayPal
 import Kingfisher
 import MapKit
 
@@ -24,18 +25,30 @@ extension CLLocationCoordinate2D: Identifiable {
 }
 
 struct SBPaymentView: View {
-    
-    @Environment(\.dismiss) var dismiss
+    @SwiftUI.Environment(\.dismiss) var dismiss
     
     let products: [CartItem]
     let totalPrice: Double
     @State private var navigateToAddress = false
     @State private var showMethodSheet = false
-    @State private var showSuccessfullyOrderSheet = false
     @State private var selectedAddress: String = ""
     @State private var selectedCoordinate: CLLocationCoordinate2D?
     @State private var selectedPayment: UUID? = paymentMethods[0].id
     @StateObject private var addressViewModel = SBAddressViewModel()
+    @StateObject private var paymentViewModel = PaymentViewModel()
+    
+    private var selectedPaymentMethod: PaymentMethod? {
+        paymentMethods.first { $0.id == selectedPayment }
+    }
+    
+    private func createOrder() {
+        guard let selectedMethod = selectedPaymentMethod else { return }
+        
+        // Only PayPal platform payments are supported
+        Task {
+            await paymentViewModel.processPayment(products: products, totalAmount: totalPrice + 6)
+        }
+    }
     
     var body: some View {
         SBBaseView {
@@ -195,17 +208,33 @@ struct SBPaymentView: View {
                     }
                 }
                 
-                // Checkout Button
-                Button(action: {
-                    showSuccessfullyOrderSheet = true
-                }) {
-                    Text(R.string.localizable.checkoutNow())
-                        .font(R.font.outfitMedium.font(size: 20))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.main)
-                        .foregroundColor(.white)
-                        .cornerRadius(25)
+                if paymentViewModel.isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        // ... existing scroll view content ...
+                    }
+                    
+                    if let error = paymentViewModel.errorMessage {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .padding(.horizontal)
+                    }
+                    
+                    // Checkout Button
+                    Button(action: createOrder) {
+                        Text(R.string.localizable.checkoutNow())
+                            .font(R.font.outfitMedium.font(size: 20))
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.main)
+                            .foregroundColor(.white)
+                            .cornerRadius(25)
+                    }
+                    .disabled(paymentViewModel.isLoading)
+                    .padding()
                 }
                 
                 Spacer()
@@ -214,21 +243,21 @@ struct SBPaymentView: View {
             .padding(.horizontal,10)
         }
         .sheet(isPresented: $showMethodSheet) {
-                VStack {
-                    SBPaymentMethodView(selectedPayment: $selectedPayment)
-                }
-                .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            VStack {
+                SBPaymentMethodView(selectedPayment: $selectedPayment)
             }
-        .sheet(isPresented: $showSuccessfullyOrderSheet) {
-                VStack {
-                    SBSuccessfulOrderView()
-                }
-                .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
+        .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
+            VStack {
+                SBSuccessfulOrderView()
             }
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
         .onAppear {
             if selectedPayment == nil {
                 selectedPayment = paymentMethods[0].id
@@ -254,26 +283,13 @@ struct SBSuccessfulOrderView: View {
                 .foregroundColor(.gray)
                 .frame(maxWidth: 300, alignment: .center)
             Spacer()
-            Button(action: {
-                
-            }) {
-                Text(R.string.localizable.orderTracking)
-                    .font(R.font.outfitMedium.font(size: 20))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.main)
-                    .foregroundColor(.white)
-                    .cornerRadius(25)
-            }
-            
         }
         .padding()
-        
     }
 }
 
 struct SBPaymentMethodView: View {
-    @Environment(\.dismiss) var dismiss
+    @SwiftUI.Environment(\.dismiss) var dismiss
     @State private var selectedPaymentID: UUID?
     @Binding var selectedPayment: UUID?
     
@@ -338,6 +354,7 @@ struct SBPaymentMethodView: View {
         }
     }
 }
+
 #Preview {
     SBPaymentView(
         products: Array(CartItem.cartitems.prefix(3)),
