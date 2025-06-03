@@ -131,6 +131,7 @@
 		DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F402DD484A400A98432 /* SBProductManagementView.swift */; };
 		DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */; };
 		DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */; };
+		DAE23DF12DEED4520044BAA9 /* SignalRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DF02DEED4520044BAA9 /* SignalRService.swift */; };
 		DAE23DEB2DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */; };
 		DAE23DED2DEDA3C60044BAA9 /* VoucherModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */; };
 		DAE23DEF2DEDA3D20044BAA9 /* SBVoucherRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */; };
@@ -273,6 +274,7 @@
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
 		DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatRepo.swift; sourceTree = "<group>"; };
+		DAE23DF02DEED4520044BAA9 /* SignalRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRService.swift; sourceTree = "<group>"; };
 		DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminVoucherManagement.swift; sourceTree = "<group>"; };
 		DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoucherModels.swift; sourceTree = "<group>"; };
 		DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVoucherRepo.swift; sourceTree = "<group>"; };
@@ -626,6 +628,7 @@
 		0AA7A1082D91CD9D00EB5684 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DAE23DF02DEED4520044BAA9 /* SignalRService.swift */,
 				0AB5CD962DEB3974002E6C97 /* SBPaypalService.swift */,
 				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
 				0A47B13A2DD321B400FBD707 /* SBEmailService.swift */,
@@ -1017,13 +1020,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1153,6 +1152,7 @@
 				DA72B3AE2DEBBAB10080645C /* SBUnreviewedItemsView.swift in Sources */,
 				DA72B3AC2DEBB9820080645C /* SBReviewRepo.swift in Sources */,
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
+				DAE23DF12DEED4520044BAA9 /* SignalRService.swift in Sources */,
 				0A5ECDAE2DE4C6C200E49072 /* UserModeManager.swift in Sources */,
 				DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */,
 				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,

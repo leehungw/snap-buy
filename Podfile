@@ -9,6 +9,7 @@ target 'SnapBuy' do
   pod 'GoogleSignInSwiftSupport'
   pod 'Kingfisher'
   pod 'AppAuth'
+  pod 'SwiftSignalRClient'
   pod 'PayPal/PayPalWebPayments'
   
   post_install do |installer|
