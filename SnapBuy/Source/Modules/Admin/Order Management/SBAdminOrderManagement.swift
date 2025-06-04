@@ -158,13 +158,11 @@ struct SBAdminOrderManagement: View {
         switch status {
         case OrderStatus.pending.rawValue:
             return .orange
-        case OrderStatus.inProgress.rawValue:
+        case OrderStatus.approve.rawValue:
             return .blue
         case OrderStatus.success.rawValue:
             return .green
-        case OrderStatus.delivered.rawValue:
-            return .purple
-        case OrderStatus.cancelled.rawValue:
+        case OrderStatus.failed.rawValue:
             return .red
         default:
             return .gray
