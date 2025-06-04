@@ -4,7 +4,7 @@ final class UserRepository {
     static let shared = UserRepository()
     private init() {}
     
-    var currentUser: UserData? = .init(id: "5624994f-3a1a-4fa0-83ec-529ec3530f91", name: "cc", imageURL: "", userName: "", email: "", isAdmin: false, isPremium: true, isBanned: false, lastProductId: 0)
+    var currentUser: UserData?
     
     func login(request: UserLoginRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
         guard let jsonData = try? JSONEncoder().encode(request) else {
@@ -13,13 +13,17 @@ final class UserRepository {
             return
         }
         
-        SBAPIService.shared.performRequest(endpoint: "api/users/login",
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/login",
                                            method: "POST",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
             switch result {
-            case .success(let response):
-                if let userData = response.data {
+            case .success(var response):
+                if var userData = response.data {
+                    // Convert empty merchant ID to nil
+                    if let merchantId = userData.sellerMerchantId, merchantId.isEmpty {
+                        userData = self.userDataWithNilMerchantId(userData)
+                    }
                     UserRepository.shared.currentUser = userData
                 }
                 completion(.success(response))
@@ -41,8 +45,12 @@ final class UserRepository {
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
             switch result {
-            case .success(let response):
-                if let userData = response.data {
+            case .success(var response):
+                if var userData = response.data {
+                    // Convert empty merchant ID to nil
+                    if let merchantId = userData.sellerMerchantId, merchantId.isEmpty {
+                        userData = self.userDataWithNilMerchantId(userData)
+                    }
                     UserRepository.shared.currentUser = userData
                 }
                 completion(.success(response))
@@ -50,6 +58,22 @@ final class UserRepository {
                 completion(.failure(error))
             }
         }
+    }
+    
+    // Helper function to create a new UserData instance with nil merchantId
+    private func userDataWithNilMerchantId(_ userData: UserData) -> UserData {
+        return UserData(
+            id: userData.id,
+            name: userData.name,
+            imageURL: userData.imageURL,
+            userName: userData.userName,
+            email: userData.email,
+            isAdmin: userData.isAdmin,
+            isPremium: userData.isPremium,
+            isBanned: userData.isBanned,
+            sellerMerchantId: nil,
+            lastProductId: userData.lastProductId
+        )
     }
     
     func signUp(request: SignUpRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
@@ -283,6 +307,42 @@ final class UserRepository {
                     )
                     completion(.failure(err))
                 }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func updateMerchantId(userId: String, merchantId: String, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
+        // Create request body
+        let request = [
+            "id": userId,
+            "selleR_MERCHANT_ID": merchantId
+        ]
+        
+        guard let jsonData = try? JSONEncoder().encode(request) else {
+            let encodingError = NSError(
+                domain: "UserRepository",
+                code: -1008,
+                userInfo: [NSLocalizedDescriptionKey: "Unable to encode merchant ID update request"]
+            )
+            completion(.failure(encodingError))
+            return
+        }
+        
+        SBAPIService.shared.performRequest(
+            endpoint: "user/api/users/updateMerchantId",
+            method: "PUT",
+            body: jsonData,
+            headers: nil
+        ) { (result: Result<UserLoginResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if let userData = response.data {
+                    // Update the current user data with the new merchant ID
+                    UserRepository.shared.currentUser = userData
+                }
+                completion(.success(response))
             case .failure(let error):
                 completion(.failure(error))
             }

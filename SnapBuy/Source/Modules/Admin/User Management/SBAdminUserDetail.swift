@@ -235,19 +235,3 @@ struct SBAdminUserDetailView: View {
         }
     }
 }
-
-#Preview {
-    SBAdminUserDetailView(
-        user: UserData(id: "1", 
-                      name: "Lan Nguyen", 
-                      imageURL: "", 
-                      userName: "lan", 
-                      email: "lan@example.com", 
-                      isAdmin: false, 
-                      isPremium: false, 
-                      isBanned: true, 
-                      lastProductId: 123),
-        onUserUpdated: {}
-    )
-}
-
