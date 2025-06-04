@@ -16,8 +16,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>snapbuy</string>
-				<string>com.googleusercontent.apps.141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b</string>
+				<string>com.ui.se.snapbuy</string>
 			</array>
+			<key>CFBundleURLName</key>
+			<string>com.ui.se.snapbuy</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 		</dict>
 	</array>
 	<key>GIDServerClientID</key>
