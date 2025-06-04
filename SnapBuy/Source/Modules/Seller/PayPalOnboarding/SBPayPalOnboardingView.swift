@@ -126,52 +126,107 @@ class PayPalWebViewController: UIViewController, WKNavigationDelegate {
         if let url = navigationAction.request.url {
             print("Debug - Navigation URL: \(url)")
             
-            // Check if this is a completion URL
-            if url.absoluteString.contains("unifiedonboarding/after-login") {
-                print("Debug - Found completion URL")
-                
-                // Extract merchant ID from the URL if available
-                if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-                   let merchantId = components.queryItems?.first(where: { $0.name == "merchantIdInPayPal" })?.value {
-                    print("Debug - Found merchant ID: \(merchantId)")
-                    
-                    // Create the return URL with the merchant ID
-                    let returnUrl = URL(string: "snapbuy://return?merchantIdInPayPal=\(merchantId)&permissionsGranted=true")!
-                    UserModeManager.shared.handlePayPalReturn(url: returnUrl)
-                    hasCompletedOnboarding = true
-                    onComplete(true)
-                    decisionHandler(.allow)
-                    return
-                }
-                
-                // If we don't have a merchant ID yet, continue loading
+            // Extract merchant ID from any URL parameters
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+               let merchantId = components.queryItems?.first(where: { $0.name == "merchantIdInPayPal" })?.value {
+                print("Debug - Found merchant ID in URL parameters: \(merchantId)")
+                handleMerchantId(merchantId)
                 decisionHandler(.allow)
                 return
             }
             
-            // Check for PayPal's success page indicators
-            if url.absoluteString.contains("returnToMerchant") || 
-               url.absoluteString.contains("setup-complete") {
-                print("Debug - Found success page")
+            // Check various completion URLs
+            let completionIndicators = [
+                "unifiedonboarding/after-login",
+                "returnToMerchant",
+                "setup-complete",
+                "onboarding-status"
+            ]
+            
+            if completionIndicators.contains(where: { url.absoluteString.contains($0) }) {
+                print("Debug - Found completion URL: \(url)")
                 
-                // If we haven't processed a return URL yet, this might be it
-                if !hasCompletedOnboarding {
-                    // Look for merchant ID in the URL
-                    if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-                       let merchantId = components.queryItems?.first(where: { $0.name == "merchantIdInPayPal" })?.value {
-                        print("Debug - Found merchant ID on success page: \(merchantId)")
-                        
-                        let returnUrl = URL(string: "snapbuy://return?merchantIdInPayPal=\(merchantId)&permissionsGranted=true")!
-                        UserModeManager.shared.handlePayPalReturn(url: returnUrl)
-                        hasCompletedOnboarding = true
-                        onComplete(true)
-                        decisionHandler(.cancel)
-                        return
+                // Try to extract merchant ID from the URL path components
+                if let merchantId = extractMerchantId(from: url) {
+                    print("Debug - Extracted merchant ID from URL: \(merchantId)")
+                    handleMerchantId(merchantId)
+                } else {
+                    // If we can't find the merchant ID, try to get it from the page content
+                    webView.evaluateJavaScript("document.body.innerHTML") { result, error in
+                        if let html = result as? String {
+                            print("Debug - Searching page content for merchant ID")
+                            // Look for merchant ID in the HTML content
+                            if let merchantId = self.extractMerchantIdFromHTML(html) {
+                                print("Debug - Found merchant ID in page content: \(merchantId)")
+                                self.handleMerchantId(merchantId)
+                            }
+                        }
                     }
                 }
             }
+            
+            // Always allow navigation unless we've completed onboarding
+            decisionHandler(hasCompletedOnboarding ? .cancel : .allow)
+            return
         }
         
         decisionHandler(.allow)
+    }
+    
+    private func extractMerchantId(from url: URL) -> String? {
+        // Try different URL patterns
+        let patterns = [
+            "merchantId=([A-Z0-9]+)",
+            "merchant_id=([A-Z0-9]+)",
+            "merchantIdInPayPal=([A-Z0-9]+)",
+            "/merchant/([A-Z0-9]+)/"
+        ]
+        
+        let urlString = url.absoluteString
+        
+        for pattern in patterns {
+            if let range = urlString.range(of: pattern, options: .regularExpression),
+               let match = urlString[range].split(separator: "=").last {
+                return String(match)
+            }
+        }
+        
+        return nil
+    }
+    
+    private func extractMerchantIdFromHTML(_ html: String) -> String? {
+        // Try different patterns that might appear in the HTML
+        let patterns = [
+            "merchantId\":\\s*\"([A-Z0-9]+)\"",
+            "merchant_id\":\\s*\"([A-Z0-9]+)\"",
+            "data-merchant-id=\"([A-Z0-9]+)\""
+        ]
+        
+        for pattern in patterns {
+            if let range = html.range(of: pattern, options: .regularExpression),
+               let match = html[range].split(separator: "\"").last {
+                return String(match)
+            }
+        }
+        
+        return nil
+    }
+    
+    private func handleMerchantId(_ merchantId: String) {
+        guard !hasCompletedOnboarding else { return }
+        
+        print("Debug - Processing merchant ID: \(merchantId)")
+        
+        // Try both URL schemes
+        let schemes = ["com.ui.se.snapbuy", "snapbuy"]
+        for scheme in schemes {
+            if let returnUrl = URL(string: "\(scheme)://onboarding-complete?merchantIdInPayPal=\(merchantId)&permissionsGranted=true") {
+                print("Debug - Attempting return URL: \(returnUrl)")
+                UserModeManager.shared.handlePayPalReturn(url: returnUrl)
+                hasCompletedOnboarding = true
+                onComplete(true)
+                break
+            }
+        }
     }
 } 
