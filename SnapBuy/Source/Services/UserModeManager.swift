@@ -55,18 +55,16 @@ final class UserModeManager: ObservableObject {
             isOnboardingPayPal = true
             onboardingError = nil
             
-            // First check if we have a stored merchant ID
-            if let merchantId = merchantId {
-                // Check the status of the existing connection
+            if let merchantId = user.sellerMerchantId {
                 let status = try await SBPaypalService.shared.checkSellerStatus(sellerMerchantId: merchantId)
                 if status.isFullyOnboarded {
                     isPayPalConnected = true
+                    self.merchantId = merchantId
                     isOnboardingPayPal = false
                     return
                 }
             }
             
-            // If not connected, get a new onboarding URL
             let onboardingUrl = try await SBPaypalService.shared.onboardSeller(
                 sellerId: user.id,
                 email: user.email,
@@ -86,21 +84,35 @@ final class UserModeManager: ObservableObject {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let merchantIdParam = components.queryItems?.first(where: { $0.name == "merchantIdInPayPal" })?.value,
               let permissionsGranted = components.queryItems?.first(where: { $0.name == "permissionsGranted" })?.value,
-              permissionsGranted == "true" else {
+              permissionsGranted == "true",
+              let userId = UserRepository.shared.currentUser?.id else {
             onboardingError = "PayPal connection failed"
             return
         }
         
-        // Store the merchant ID
-        merchantId = merchantIdParam
-        
-        // Clear the onboarding URL since we're now connected
-        paypalOnboardingURL = nil
-        isPayPalConnected = true
-        
-        // Verify the connection
-        Task {
-            await checkPayPalOnboarding()
+        // Update the merchant ID in our backend
+        UserRepository.shared.updateMerchantId(userId: userId, merchantId: merchantIdParam) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let response):
+                if response.result == 1 {
+                    // Store the merchant ID locally
+                    self.merchantId = merchantIdParam
+                    // Clear the onboarding URL since we're now connected
+                    self.paypalOnboardingURL = nil
+                    self.isPayPalConnected = true
+                    
+                    // Verify the connection
+                    Task {
+                        await self.checkPayPalOnboarding()
+                    }
+                } else {
+                    self.onboardingError = response.error?.message ?? "Failed to update merchant ID"
+                }
+            case .failure(let error):
+                self.onboardingError = error.localizedDescription
+            }
         }
     }
 } 

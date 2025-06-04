@@ -67,37 +67,37 @@ struct SBLoginView: View {
                 
                 
                 SBButton(title: RLocalizable.signIn(), style: .filled) {
-//                    let loginRequest = UserLoginRequest(email: "ndam8175@gmail.com", password: "123123")
-//                    UserRepository.shared.login(request: loginRequest) { result in
-//                        switch result {
-//                        case .success(let response):
-//                            DispatchQueue.main.async {
-//                                if response.result == 1, let userData = response.data {
-//                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//                                       let keyWindow = windowScene.windows.first {
-//                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
-//                                        keyWindow.makeKeyAndVisible()
-//                                    }
-//                                } else if let errorInfo = response.error {
-//                                    showAlert(message: errorInfo.message)
-//                                } else {
-//                                    showAlert(message: "Unexpected response structure.")
-//                                }
-//                            }
-//                        case .failure(let error):
-//                            DispatchQueue.main.async {
-//                                showAlert(message: error.localizedDescription)
-//                            }
-//                        }
-//                    }
-                    
-                    
-                    
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let keyWindow = windowScene.windows.first {
-                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
-                        keyWindow.makeKeyAndVisible()
+                    let loginRequest = UserLoginRequest(email: email, password: password)
+                    UserRepository.shared.login(request: loginRequest) { result in
+                        switch result {
+                        case .success(let response):
+                            DispatchQueue.main.async {
+                                if response.result == 1, let userData = response.data {
+                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                       let keyWindow = windowScene.windows.first {
+                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                        keyWindow.makeKeyAndVisible()
+                                    }
+                                } else if let errorInfo = response.error {
+                                    showAlert(message: errorInfo.message)
+                                } else {
+                                    showAlert(message: "Unexpected response structure.")
+                                }
+                            }
+                        case .failure(let error):
+                            DispatchQueue.main.async {
+                                showAlert(message: error.localizedDescription)
+                            }
+                        }
                     }
+                    
+                    
+                    
+//                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+//                       let keyWindow = windowScene.windows.first {
+//                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+//                        keyWindow.makeKeyAndVisible()
+//                    }
                 }
                 
                 Text(RLocalizable.orUsingOtherMethod())

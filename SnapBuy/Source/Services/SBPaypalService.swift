@@ -146,7 +146,7 @@ class SBPaypalService {
                 ]]
             ],
             "partner_config_override": [
-                "return_url": "snapbuy://return",
+                "return_url": "https://www.facebook.com/",
                 "partner_logo_url": "https://your-app-logo-url.com/logo.png",
                 "return_url_description": "Return to SnapBuy app"
             ],
