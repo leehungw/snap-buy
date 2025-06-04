@@ -5,58 +5,34 @@ final class ChatRepository {
     static let shared = ChatRepository()
     private init() {}
     
-    private var messageUpdateSubject = PassthroughSubject<[ChatMessage], Never>()
-    private var chatRoomsUpdateSubject = PassthroughSubject<[ChatRoom], Never>()
-    
-    var messageUpdates: AnyPublisher<[ChatMessage], Never> {
-        messageUpdateSubject.eraseToAnyPublisher()
-    }
-    
-    var chatRoomsUpdates: AnyPublisher<[ChatRoom], Never> {
-        chatRoomsUpdateSubject.eraseToAnyPublisher()
-    }
-    
-    // MARK: - SignalR Setup
-    func startRealtimeUpdates(selectedChatId: String?, userId: String) {
-        SignalRService.shared.connectToChat(selectedChatId: selectedChatId, myId: userId) { chatRoomId, userId in
-            // When new message arrives, fetch both messages and chat rooms
-            // This exactly matches the React implementation
-            if let selectedChatId = selectedChatId {
-                self.fetchChatMessages(chatRoomId: selectedChatId) { result in
-                    if case .success(let response) = result, let messages = response.data {
-                        self.messageUpdateSubject.send(messages)
-                    }
-                }
-            }
-            
-            self.fetchChatRooms(userId: userId) { result in
-                if case .success(let response) = result, let rooms = response.data {
-                    self.chatRoomsUpdateSubject.send(rooms)
-                }
-            }
-        }
-    }
-    
-    func stopRealtimeUpdates() {
-        SignalRService.shared.disconnectFromChat()
-    }
-    
     // MARK: - Chat Rooms
     func fetchChatRooms(userId: String, completion: @escaping (Result<ChatRoomsResponse, Error>) -> Void) {
         SBAPIService.shared.performRequest(
             endpoint: "chat/api/chats/\(userId)",
-            method: "GET",
-            completion: completion
-        )
+            method: "GET"
+        ) { (result: Result<ChatRoomsResponse, Error>) in
+            switch result {
+            case .success(let response):
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     // MARK: - Chat Messages
     func fetchChatMessages(chatRoomId: String, completion: @escaping (Result<ChatMessagesResponse, Error>) -> Void) {
         SBAPIService.shared.performRequest(
             endpoint: "chat/api/chats/chatRoom/\(chatRoomId)",
-            method: "GET",
-            completion: completion
-        )
+            method: "GET"
+        ) { (result: Result<ChatMessagesResponse, Error>) in
+            switch result {
+            case .success(let response):
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     // MARK: - Send Messages
@@ -70,9 +46,10 @@ final class ChatRepository {
         SBAPIService.shared.performRequest(
             endpoint: "chat/api/chats/sendText",
             method: "POST",
-            body: jsonData,
-            completion: completion
-        )
+            body: jsonData
+        ) { (result: Result<SendMessageResponse, Error>) in
+            completion(result)
+        }
     }
     
     func sendImage(request: SendImageRequest, completion: @escaping (Result<SendMessageResponse, Error>) -> Void) {
@@ -102,9 +79,10 @@ final class ChatRepository {
             endpoint: "chat/api/chats/sendImage",
             method: "POST",
             body: data,
-            headers: ["Content-Type": "multipart/form-data; boundary=\(boundary)"],
-            completion: completion
-        )
+            headers: ["Content-Type": "multipart/form-data; boundary=\(boundary)"]
+        ) { (result: Result<SendMessageResponse, Error>) in
+            completion(result)
+        }
     }
     
     func sendVideo(request: SendVideoRequest, completion: @escaping (Result<SendMessageResponse, Error>) -> Void) {
@@ -134,9 +112,10 @@ final class ChatRepository {
             endpoint: "chat/api/chats/sendVideo",
             method: "POST",
             body: data,
-            headers: ["Content-Type": "multipart/form-data; boundary=\(boundary)"],
-            completion: completion
-        )
+            headers: ["Content-Type": "multipart/form-data; boundary=\(boundary)"]
+        ) { (result: Result<SendMessageResponse, Error>) in
+            completion(result)
+        }
     }
 }
 

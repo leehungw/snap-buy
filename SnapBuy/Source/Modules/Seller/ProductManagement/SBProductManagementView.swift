@@ -5,14 +5,14 @@ enum ProductStatus: Int, CaseIterable {
     case all = -1
     case pending = 0
     case approved = 1
-    case cancelled = 2
+    case rejected = 2
     
     var title: String {
         switch self {
         case .all: return "All"
         case .pending: return "Pending"
         case .approved: return "Approved"
-        case .cancelled: return "Cancelled"
+        case .rejected: return "Rejected"
         }
     }
     
@@ -21,67 +21,107 @@ enum ProductStatus: Int, CaseIterable {
         case .all: return .gray
         case .pending: return .orange
         case .approved: return .green
-        case .cancelled: return .red
+        case .rejected: return .red
         }
     }
 }
 
 struct SBProductManagementView: View {
     @State private var products: [SBProduct] = []
-    @State private var isAddPressed = false
+    @State private var showAddProduct = false
     @State private var productToEdit: SBProduct? = nil
     @State private var productToDelete: SBProduct? = nil
     @State private var showDeleteConfirmation = false
     @State private var navigateToEdit = false
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
-    @State private var selectedStatus: ProductStatus = .all
+    @State private var searchText = ""
+    @State private var selectedStatus: ProductStatus? = nil
     
     var filteredProducts: [SBProduct] {
-        if selectedStatus == .all {
-            return products
+        products.filter { product in
+            let matchesSearch = searchText.isEmpty || 
+                product.name.localizedCaseInsensitiveContains(searchText)
+            let matchesStatus = selectedStatus == nil || 
+                product.status == selectedStatus?.rawValue
+            return matchesSearch && matchesStatus
         }
-        return products.filter { $0.status == selectedStatus.rawValue }
     }
-    
+
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Spacer()
-                    Text("Product Management")
-                        .font(R.font.outfitMedium.font(size: 24))
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding()
-                .background(Color.main)
+            ZStack {
+                Color(.systemGray6)
+                    .ignoresSafeArea()
                 
-                // Status Filter
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(ProductStatus.allCases, id: \.rawValue) { status in
-                            FilterChip(
-                                title: status.title,
-                                isSelected: selectedStatus == status,
-                                color: status.color
-                            ) {
-                                withAnimation {
-                                    selectedStatus = status
+                VStack(spacing: 0) {
+                    // Header
+                    VStack(spacing: 16) {
+                        HStack {
+                            Text("Products")
+                                .font(R.font.outfitBold.font(size: 28))
+                                .foregroundColor(.main)
+                            Spacer()
+                            Button(action: { showAddProduct = true }) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "plus")
+                                    Text("Add")
                                 }
+                                .font(R.font.outfitMedium.font(size: 16))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.main)
+                                .cornerRadius(12)
                             }
                         }
+                        
+                        // Search bar
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                            TextField("Search products...", text: $searchText)
+                                .font(R.font.outfitRegular.font(size: 16))
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
                     }
-                    .padding(.horizontal)
-                }
-                .padding(.vertical, 8)
-                
-                ZStack {
+                    .padding()
+                    .background(Color.white)
+                    
+                    // Filter buttons
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            FilterButton(
+                                title: "All",
+                                isSelected: selectedStatus == nil,
+                                action: { selectedStatus = nil }
+                            )
+                            
+                            ForEach(ProductStatus.allCases.filter { $0 != .all }, id: \.self) { status in
+                                FilterButton(
+                                    title: status.title,
+                                    isSelected: selectedStatus == status,
+                                    color: status.color,
+                                    action: { selectedStatus = status }
+                                )
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
+                    }
+                    .background(Color.white)
+                    
                     if isLoading {
+                        Spacer()
                         ProgressView()
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        Spacer()
                     } else if let error = errorMessage {
-                        VStack {
+                        Spacer()
+                        VStack(spacing: 16) {
                             Text(error)
                                 .foregroundColor(.red)
                                 .multilineTextAlignment(.center)
@@ -93,84 +133,75 @@ struct SBProductManagementView: View {
                             .foregroundColor(.white)
                             .cornerRadius(8)
                         }
-                        .padding()
-                    } else if products.isEmpty {
-                        Text("No products yet. Tap below to add your first product.")
-                            .font(R.font.outfitRegular.font(size: 14))
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity)
-                            .padding(.top, 40)
-                            .padding()
-                    } else if filteredProducts.isEmpty {
-                        Text("No \(selectedStatus.title.lowercased()) products found.")
-                            .font(R.font.outfitRegular.font(size: 14))
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity)
-                            .padding(.top, 40)
-                            .padding()
-                    } else {
-                        SBSellerListProduct(
-                            products: .constant(filteredProducts),
-                            onRequestDelete: { product in
-                                productToDelete = product
-                                showDeleteConfirmation = true
-                            },
-                            onRequestEdit: { product in
-                                productToEdit = product
-                                navigateToEdit = true
-                            }
-                        )
-                        .padding()
-                    }
-                    
-                    NavigationLink(isActive: $navigateToEdit) {
-                        if let product = productToEdit {
-                            SBEditProductView(product: product, onDismiss: fetchProducts)
-                                .onDisappear {
-                                    navigateToEdit = false
-                                }
-                        } else {
-                            EmptyView()
-                        }
-                    } label: {
-                        EmptyView()
-                    }
-                    
-                    VStack {
                         Spacer()
-                        HStack {
-                            Spacer()
-                            NavigationLink(destination: SBAddProductView(onDismiss: fetchProducts)) {
-                                Image(systemName: isAddPressed ? "plus.circle.fill" : "plus.circle")
-                                    .resizable()
-                                    .frame(width: 60, height: 60)
-                                    .foregroundColor(.main)
-                                    .scaleEffect(isAddPressed ? 1.1 : 1.0)
-                                    .animation(.spring(response: 0.3, dampingFraction: 0.5), value: isAddPressed)
+                    } else if filteredProducts.isEmpty {
+                        Spacer()
+                        VStack(spacing: 16) {
+                            Image(systemName: "cube.box")
+                                .font(.system(size: 50))
+                                .foregroundColor(.gray)
+                            Text(products.isEmpty ? "No products yet. Tap + to add your first product." : "No products found")
+                                .font(R.font.outfitMedium.font(size: 18))
+                                .foregroundColor(.gray)
+                        }
+                        Spacer()
+                    } else {
+                        ScrollView {
+                            LazyVGrid(columns: [
+                                GridItem(.flexible(), spacing: 20),
+                                GridItem(.flexible(), spacing: 20)
+                            ], spacing: 30) {
+                                ForEach(filteredProducts) { product in
+                                    ProductCard(
+                                        product: product,
+                                        onEdit: {
+                                            productToEdit = product
+                                            navigateToEdit = true
+                                        },
+                                        onDelete: {
+                                            productToDelete = product
+                                            showDeleteConfirmation = true
+                                        }
+                                    )
+                                }
                             }
-                            .simultaneousGesture(
-                                DragGesture(minimumDistance: 0)
-                                    .onChanged { _ in isAddPressed = true }
-                                    .onEnded { _ in isAddPressed = false }
-                            )
-                            .padding(.trailing, 30)
-                            .padding(.bottom, 30)
+                            .padding(16)
+                        }
+                        .refreshable {
+                            fetchProducts()
                         }
                     }
                 }
             }
             .navigationBarHidden(true)
-            .onAppear(perform: fetchProducts)
-        }
-        .confirmationDialog("Are you sure you want to delete this product?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
-            Button("Delete", role: .destructive) {
-                if let product = productToDelete {
-                    deleteProduct(product)
-                }
+            .sheet(isPresented: $showAddProduct) {
+                SBAddProductView(onDismiss: fetchProducts)
             }
-            Button("Cancel", role: .cancel) {}
+            .background(
+                NavigationLink(
+                    destination: Group {
+                        if let product = productToEdit {
+                            SBEditProductView(product: product, onDismiss: fetchProducts)
+                        }
+                    },
+                    isActive: $navigateToEdit
+                ) { EmptyView() }
+            )
+            .confirmationDialog(
+                "Are you sure you want to delete this product?",
+                isPresented: $showDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive) {
+                    if let product = productToDelete {
+                        deleteProduct(product)
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            }
+            .onAppear {
+                fetchProducts()
+            }
         }
     }
     
@@ -213,88 +244,77 @@ struct SBProductManagementView: View {
     }
 }
 
-struct FilterChip: View {
-    let title: String
-    let isSelected: Bool
-    let color: Color
-    let action: () -> Void
+struct ProductCard: View {
+    let product: SBProduct
+    let onEdit: () -> Void
+    let onDelete: () -> Void
     
     var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(R.font.outfitMedium.font(size: 14))
-                .foregroundColor(isSelected ? .white : color)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(isSelected ? color : color.opacity(0.1))
-                )
-                .overlay(
-                    Capsule()
-                        .strokeBorder(color, lineWidth: isSelected ? 0 : 1)
-                )
-        }
-    }
-}
-
-struct SBSellerListProduct: View {
-    @Binding var products: [SBProduct]
-    var onRequestDelete: (SBProduct) -> Void
-    var onRequestEdit: (SBProduct) -> Void
-    
-    var body: some View {
-        ScrollView {
-            ForEach(products) { product in
+        VStack(alignment: .leading, spacing: 12) {
+            // Product Image Container
+            ZStack {
+                if let firstImage = product.productImages.first {
+                    KFImage.url(URL(string: firstImage.url))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: UIScreen.main.bounds.width/2 - 50, height: 180)
+                        .clipped()
+                } else {
+                    Color.gray.opacity(0.1)
+                }
+            }
+            .frame(width: UIScreen.main.bounds.width/2 - 50, height: 180)
+            .cornerRadius(12)
+            
+            // Product Info
+            VStack(alignment: .leading, spacing: 8) {
+                Text(product.name)
+                    .font(R.font.outfitSemiBold.font(size: 16))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .foregroundColor(.primary)
+                
                 HStack {
-                    if let firstImage = product.productImages.first {
-                        KFImage.init(URL(string: firstImage.url))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 70, height: 70)
-                            .cornerRadius(8)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text(product.name)
-                                .font(R.font.outfitMedium.font(size: 16))
-                            
-                            // Status Badge
-                            StatusBadge(status: product.status)
-                        }
-                        
-                        Text("$\(product.basePrice, specifier: "%.2f") • Stock: \(product.quantity)")
-                            .font(R.font.outfitRegular.font(size: 14))
-                            .foregroundColor(.gray)
-                    }
+                    Text(String(format: "$%.2f", product.basePrice))
+                        .font(R.font.outfitBold.font(size: 16))
+                        .foregroundColor(.green)
                     
                     Spacer()
                     
                     Menu {
-                        Button("Edit") {
-                            onRequestEdit(product)
+                        Button(action: onEdit) {
+                            Label("Edit", systemImage: "pencil")
                         }
-                        Button("Delete", role: .destructive) {
-                            onRequestDelete(product)
+                        Button(role: .destructive, action: onDelete) {
+                            Label("Delete", systemImage: "trash")
                         }
                     } label: {
                         Image(systemName: "ellipsis")
                             .font(.title3)
                             .foregroundColor(.gray)
+                            .padding(8)
                             .contentShape(Rectangle())
                     }
                 }
-                .padding()
-                .background(Color.white)
-                .cornerRadius(12)
-                .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                
+                HStack {
+                    ProductStatusBadge(status: product.status)
+                    Spacer()
+                    Text("Stock: \(product.quantity)")
+                        .font(R.font.outfitRegular.font(size: 14))
+                        .foregroundColor(.gray)
+                }
             }
         }
+        .frame(width: UIScreen.main.bounds.width/2 - 50)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
-struct StatusBadge: View {
+struct ProductStatusBadge: View {
     let status: Int
     
     var statusInfo: (text: String, color: Color) {
@@ -303,23 +323,49 @@ struct StatusBadge: View {
             return (ProductStatus.pending.title, ProductStatus.pending.color)
         case ProductStatus.approved.rawValue:
             return (ProductStatus.approved.title, ProductStatus.approved.color)
-        case ProductStatus.cancelled.rawValue:
-            return (ProductStatus.cancelled.title, ProductStatus.cancelled.color)
+        case ProductStatus.rejected.rawValue:
+            return (ProductStatus.rejected.title, ProductStatus.rejected.color)
         default:
             return ("Unknown", .gray)
         }
     }
     
     var body: some View {
-        Text(statusInfo.text)
-            .font(R.font.outfitRegular.font(size: 12))
-            .foregroundColor(.white)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(statusInfo.color)
-            .cornerRadius(12)
+        HStack(spacing: 4) {
+            Circle()
+                .fill(statusInfo.color)
+                .frame(width: 6, height: 6)
+            Text(statusInfo.text)
+                .font(R.font.outfitMedium.font(size: 10))
+                .foregroundColor(.gray)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.gray.opacity(0.1))
+        .cornerRadius(8)
     }
 }
+
+//struct FilterButton: View {
+//    let title: String
+//    let isSelected: Bool
+//    var color: Color = .main
+//    let action: () -> Void
+//    
+//    var body: some View {
+//        Button(action: action) {
+//            Text(title)
+//                .font(R.font.outfitMedium.font(size: 14))
+//                .foregroundColor(isSelected ? .white : .gray)
+//                .padding(.horizontal, 16)
+//                .padding(.vertical, 8)
+//                .background(
+//                    RoundedRectangle(cornerRadius: 20)
+//                        .fill(isSelected ? color : Color.gray.opacity(0.1))
+//                )
+//        }
+//    }
+//}
 
 #Preview {
     SBProductManagementView()
