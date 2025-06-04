@@ -5,185 +5,317 @@ enum TimeFilter: String, CaseIterable {
     case week = "Week"
     case month = "Month"
     case year = "Year"
+    
+    var apiType: Int {
+        switch self {
+        case .week: return 1
+        case .month: return 2
+        case .year: return 3
+        }
+    }
 }
 
-struct SalesData: Identifiable {
+struct SalesData: Identifiable, Codable {
     let id = UUID()
     let label: String
     let revenue: Double
 }
 
+struct RevenueResponse: Codable {
+    let result: Int
+    let data: RevenueData?
+    let error: APIErrorResponse?
+}
+
+struct RevenueData: Codable {
+    let totalOrder: Int
+    let itemSold: Int
+    let revenue: Double
+}
+
+class StatisticsViewModel: ObservableObject {
+    @Published var weekData: RevenueData?
+    @Published var monthData: RevenueData?
+    @Published var yearData: RevenueData?
+    @Published var isLoading = false
+    @Published var error: String? = nil
+    
+    func fetchRevenue(for timeFilter: TimeFilter) {
+        guard let sellerId = UserRepository.shared.currentUser?.id else {
+            error = "User not found"
+            return
+        }
+        
+        isLoading = true
+        error = nil
+        
+        let headers = ["Content-Type": "application/json"]
+        print("📊 Fetching revenue for \(timeFilter.rawValue)")
+        print("🔍 Debug - API URL: order/api/orders/seller/revenue/\(sellerId)/\(timeFilter.apiType)")
+        
+        SBAPIService.shared.performRequest(
+            endpoint: "order/api/orders/seller/revenue/\(sellerId)/\(timeFilter.apiType)",
+            method: "GET",
+            body: nil,
+            headers: headers
+        ) { [weak self] (result: Result<RevenueResponse, Error>) in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                case .success(let response):
+                    if let revenueData = response.data {
+                        switch timeFilter {
+                        case .week:
+                            self.weekData = revenueData
+                        case .month:
+                            self.monthData = revenueData
+                        case .year:
+                            self.yearData = revenueData
+                        }
+                    } else if let error = response.error {
+                        self.error = error.message
+                    }
+                    
+                case .failure(let error):
+                    self.error = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    func fetchAllData() {
+        TimeFilter.allCases.forEach { fetchRevenue(for: $0) }
+    }
+}
+
 struct SalesStatisticsView: View {
-    let allWeeklyData: [SalesData]
-    let allMonthlyData: [SalesData]
-    let allYearlyData: [SalesData]
-    let totalOrders: Int
-    let totalItemsSold: Int
-    let totalRevenue: Double
-
+    @StateObject private var viewModel = StatisticsViewModel()
     @State private var selectedFilter: TimeFilter = .month
-
-    var filteredData: [SalesData] {
+    
+    var currentData: RevenueData? {
         switch selectedFilter {
         case .week:
-            return allWeeklyData
+            return viewModel.weekData
         case .month:
-            return allMonthlyData
+            return viewModel.monthData
         case .year:
-            return allYearlyData
+            return viewModel.yearData
         }
     }
 
     var body: some View {
         NavigationView {
-            VStack {
-                HeaderView()
+            ZStack {
+                Color(.systemGray6)
+                    .ignoresSafeArea()
                 
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Sales Overview")
-                        .font(.custom("Outfit", size: 16))
-                        .fontWeight(.semibold)
-                        .padding(.horizontal)
-                    
-                    StatsCardsView(totalOrders: totalOrders, totalItemsSold: totalItemsSold, totalRevenue: totalRevenue)
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        FilterPickerView(selectedFilter: $selectedFilter)
-                        
-                        ChartView(filteredData: filteredData)
+                VStack(spacing: 0) {
+                    // Header
+                    VStack(spacing: 16) {
+                        HStack {
+                            Text("Statistics")
+                                .font(R.font.outfitBold.font(size: 28))
+                                .foregroundColor(.main)
+                            Spacer()
+                        }
                     }
                     .padding()
+                    .background(Color.white)
                     
-                    OrdersListView()
+                    if viewModel.isLoading {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 20) {
+                                // Stats Overview Cards
+                                LazyVGrid(columns: [
+                                    GridItem(.flexible(), spacing: 16),
+                                    GridItem(.flexible(), spacing: 16)
+                                ], spacing: 16) {
+                                    StatCard(
+                                        title: "Total Orders",
+                                        value: "\(currentData?.totalOrder ?? 0)",
+                                        icon: "cart",
+                                        color: .blue
+                                    )
+                                    StatCard(
+                                        title: "Items Sold",
+                                        value: "\(currentData?.itemSold ?? 0)",
+                                        icon: "cube.box",
+                                        color: .purple
+                                    )
+                                    StatCard(
+                                        title: "Revenue",
+                                        value: String(format: "$%.2f", currentData?.revenue ?? 0),
+                                        icon: "dollarsign.circle",
+                                        color: .green
+                                    )
+                                    StatCard(
+                                        title: "Success Rate",
+                                        value: "\(calculateSuccessRate())%",
+                                        icon: "chart.line.uptrend.xyaxis",
+                                        color: .orange
+                                    )
+                                }
+                                .padding(.horizontal)
+                                
+                                // Time Filter
+                                Picker("Time Filter", selection: $selectedFilter) {
+                                    ForEach(TimeFilter.allCases, id: \.self) { filter in
+                                        Text(filter.rawValue)
+                                            .tag(filter)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .padding(.horizontal)
+                                
+                                if let error = viewModel.error {
+                                    Text(error)
+                                        .font(R.font.outfitRegular.font(size: 14))
+                                        .foregroundColor(.red)
+                                        .padding()
+                                }
+                            }
+                            .padding(.vertical)
+                        }
+                        .refreshable {
+                            viewModel.fetchAllData()
+                        }
+                    }
                 }
-                .padding(.top)
+            }
+            .navigationBarHidden(true)
+            .onAppear {
+                viewModel.fetchAllData()
+            }
+            .onChange(of: selectedFilter) { newValue in
+                viewModel.fetchRevenue(for: newValue)
             }
         }
     }
-}
-
-// MARK: - Subviews
-
-struct HeaderView: View {
-    var body: some View {
-        HStack {
-            Spacer()
-            Text("Sales Statistics")
-                .font(R.font.outfitMedium.font(size: 24))
-                .foregroundColor(.white)
-            Spacer()
-        }
-        .padding()
-        .background(Color.main)
-    }
-}
-
-struct StatsCardsView: View {
-    let totalOrders: Int
-    let totalItemsSold: Int
-    let totalRevenue: Double
-
-    var body: some View {
-        HStack(spacing: 10) {
-            StatCard(title: "Total Orders", value: "\(totalOrders)")
-            StatCard(title: "Items Sold", value: "\(totalItemsSold)")
-            StatCard(title: "Revenue", value: String(format: "$%.1f", totalRevenue))
-        }
-        .padding(.horizontal)
+    
+    private func calculateSuccessRate() -> Int {
+        guard let data = currentData, data.totalOrder > 0 else { return 0 }
+        return Int((Double(data.itemSold) / Double(data.totalOrder)) * 100)
     }
 }
 
 struct StatCard: View {
     let title: String
     let value: String
+    let icon: String
+    let color: Color
 
     var body: some View {
-        VStack(spacing: 4) {
-            Text(title)
-                .font(.custom("Outfit", size: 12))
-                .foregroundColor(.secondary)
-            Text(value)
-                .font(.custom("Outfit", size: 20))
-                .fontWeight(.semibold)
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-    }
-}
-
-struct FilterPickerView: View {
-    @Binding var selectedFilter: TimeFilter
-
-    var body: some View {
-        HStack {
-            Text("Revenue by \(selectedFilter.rawValue)")
-                .font(.custom("Outfit", size: 16))
-                .fontWeight(.semibold)
-            Spacer()
-            Picker("", selection: $selectedFilter) {
-                ForEach(TimeFilter.allCases, id: \.self) { filter in
-                    Text(filter.rawValue)
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(color)
+                Text(title)
+                    .font(R.font.outfitMedium.font(size: 14))
+                    .foregroundColor(.gray)
             }
-            .pickerStyle(.segmented)
-            .frame(width: 200)
+            
+            Text(value)
+                .font(R.font.outfitBold.font(size: 24))
+                .foregroundColor(.primary)
         }
-        .padding(.bottom, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
 struct ChartView: View {
-    let filteredData: [SalesData]
-
+    let data: [SalesData]
+    
     var body: some View {
-        Chart(filteredData) { data in
-            BarMark(
-                x: .value("Label", data.label),
-                y: .value("Revenue", data.revenue)
-            )
-            .foregroundStyle(Color.main)
-            .cornerRadius(6)
+        VStack(alignment: .leading, spacing: 8) {
+            Chart(data) { item in
+                BarMark(
+                    x: .value("Period", item.label),
+                    y: .value("Revenue", item.revenue)
+                )
+                .foregroundStyle(Color.main.gradient)
+                .cornerRadius(8)
+            }
+            .frame(height: 220)
+            .chartYAxis {
+                AxisMarks(position: .leading)
+            }
+            
+            // Legend
+            HStack {
+                Circle()
+                    .fill(Color.main)
+                    .frame(width: 8, height: 8)
+                Text("Revenue")
+                    .font(R.font.outfitRegular.font(size: 12))
+                    .foregroundColor(.gray)
+            }
         }
-        .frame(height: 220)
     }
 }
 
-struct OrdersListView: View {
+struct RecentOrdersList: View {
     var body: some View {
-        
-        VStack(alignment: .leading, spacing: 12) {
-//            Text("Orders")
-//                .font(.custom("Outfit", size: 16))
-//                .fontWeight(.semibold)
-//                .padding(.horizontal)
-//
-//            ScrollView {
-//                VStack(spacing: 10) {
-//                    ForEach(sellerOrder.sample) { order in
-//                        NavigationLink(destination: OrderDetailView(order: order)) {
-//                            HStack {
-//                                Text("Order #\(order.id.uuidString.prefix(6))")
-//                                    .font(.custom("Outfit-Medium", size: 14))
-//                                    .foregroundColor(.black)
-//                                Spacer()
-//                                Text(order.status.rawValue)
-//                                    .font(.custom("Outfit-Regular", size: 12))
-//                                    .foregroundColor(.gray)
-//                                Text("\(order.totalQuantity) item\(order.totalQuantity > 1 ? "s" : "")")
-//                                    .font(.custom("Outfit-Regular", size: 12))
-//                                    .foregroundColor(.gray)
-//                            }
-//                            .padding()
-//                            .background(Color(.systemGray6))
-//                            .cornerRadius(10)
-//                            .padding(.horizontal)
-//                        }
-//                    }
-//                }
-//            }
-//            .frame(maxHeight: 250)
+        VStack(spacing: 12) {
+            ForEach(0..<3) { index in
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Order #\(index + 1)")
+                            .font(R.font.outfitMedium.font(size: 16))
+                        Text("2 items • $99.99")
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Spacer()
+                    
+                    OrderStatusBadge(status: "Pending")
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(12)
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
+struct OrderStatusBadge: View {
+    let status: String
+    
+    var body: some View {
+        Text(status)
+            .font(R.font.outfitMedium.font(size: 12))
+            .foregroundColor(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(statusColor(status))
+            .cornerRadius(12)
+    }
+    
+    private func statusColor(_ status: String) -> Color {
+        switch status {
+        case OrderStatus.pending.rawValue:
+            return .orange
+        case OrderStatus.approve.rawValue:
+            return .blue
+        case OrderStatus.success.rawValue:
+            return .green
+        case OrderStatus.failed.rawValue:
+            return .red
+        default:
+            return .gray
         }
     }
 }
