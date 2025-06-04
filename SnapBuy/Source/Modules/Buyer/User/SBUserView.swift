@@ -373,6 +373,7 @@ struct UnreviewedOrderCardView: View {
         sellerId: "seller1",
         totalAmount: 100.00,
         shippingAddress: "123 Test Street, Test City, Test Country",
+        phoneNumber: "0123456789",
         orderItems: orderItems,
         status: "Delivered"
     )

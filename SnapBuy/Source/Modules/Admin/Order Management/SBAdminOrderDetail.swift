@@ -22,6 +22,10 @@ struct SBAdminOrderDetail: View {
                             Text("Status: \(order.status)")
                                 .font(R.font.outfitRegular.font(size: 14))
                                 .foregroundColor(colorForStatus(order.status))
+                            Text("Address: \(order.shippingAddress)")
+                                .font(R.font.outfitRegular.font(size: 14))
+                            Text("Phone: \(order.phoneNumber)")
+                                .font(R.font.outfitRegular.font(size: 14))
                         }
                         
                         Section(header: Text("Buyer Information").font(R.font.outfitMedium.font(size: 16))) {
@@ -47,8 +51,6 @@ struct SBAdminOrderDetail: View {
                                 }
                                 .padding(.vertical, 4)
                             }
-                            Text("Address: \(order.shippingAddress)")
-                                .font(R.font.outfitRegular.font(size: 14))
                         }
                         
                         Section(header: Text("Seller Information").font(R.font.outfitMedium.font(size: 16))) {
@@ -206,6 +208,7 @@ struct SBAdminOrderDetail: View {
         sellerId: "SELLER-123",
         totalAmount: 99.99,
         shippingAddress: "123 Main St",
+        phoneNumber: "0123456789",
         orderItems: [],
         status: "Pending"
     ))

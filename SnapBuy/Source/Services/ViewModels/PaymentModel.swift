@@ -93,7 +93,7 @@ class PaymentViewModel: ObservableObject {
         }
     }
     
-    func createOrder(products: [CartItem], totalAmount: Double, shippingAddress: String, status: String = "Pending", completion: @escaping (Bool, String?) -> Void) {
+    func createOrder(products: [CartItem], totalAmount: Double, shippingAddress: String, phoneNumber: String, status: String = "Pending", completion: @escaping (Bool, String?) -> Void) {
         guard let buyerId = UserRepository.shared.currentUser?.id,
               let firstProduct = products.first else {
             completion(false, "User or product info missing")
@@ -121,6 +121,7 @@ class PaymentViewModel: ObservableObject {
             sellerId: sellerId,
             totalAmount: totalAmount,
             shippingAddress: shippingAddress,
+            phoneNumber: phoneNumber,
             items: items,
             status: status
         ) { result in
