@@ -1,74 +1,26 @@
 import Foundation
 import SwiftSignalRClient
-import Combine
 
-final class SignalRService: ObservableObject {
-    static let shared = SignalRService()
-    private var connection: HubConnection?
-    @Published private(set) var isConnected = false
+class SignalRService: ObservableObject {
+     var connection: HubConnection!
+    @Published var receivedMessages: [String] = []
 
-    // Closure to handle chat room updates
-    var onChatRoomUpdate: ((_ chatRoomId: String, _ userId: String) -> Void)?
 
-    private init() {}
-
-    func setupConnection(selectedChatId: String?, myId: String) {
-        guard let url = URL(string: "https://localhost:32681/chatHub") else { return }
+    func startSignalR() {
+        // Replace with your backend URL
+        let url = URL(string: "https://localhost:32681/chatHub")!
 
         connection = HubConnectionBuilder(url: url)
-            .withAutoReconnect()
-            .withHttpConnectionOptions { options in
-                options.headers = [
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                ]
-                options.skipNegotiation = true
-            }
+            .withLogging(minLogLevel: .debug)
             .build()
 
-        connection?.on(method: "NewMessage") { [weak self] _ in
-            guard let self = self,
-                  let selectedChatId = selectedChatId else { return }
+        // Lắng nghe message từ server
+        connection.on(method: "NewMessage", callback: { (user: String, message: String) in
+            print("Received from \(user): \(message)")
+        })
 
-            DispatchQueue.main.async {
-                self.onChatRoomUpdate?(selectedChatId, myId)
-            }
-        }
+        // Kết nối
+        connection.start()
 
-        startConnection()
-    }
-
-    func startConnection() {
-        do {
-            try connection?.start()
-            print("Connected to SignalR hub")
-        } catch {
-            print("Error connecting to SignalR hub:", error)
-        }
-    }
-
-    func stopConnection() {
-        connection?.stop()
-        print("Disconnected from SignalR hub")
-    }
-
-    deinit {
-        stopConnection()
-    }
-}
-
-// MARK: - Usage Example in View
-extension SignalRService {
-    func connectToChat(selectedChatId: String?, myId: String, onUpdate: @escaping (_ chatRoomId: String, _ userId: String) -> Void) {
-        // Store the update handler
-        self.onChatRoomUpdate = onUpdate
-
-        // Setup and start connection
-        setupConnection(selectedChatId: selectedChatId, myId: myId)
-    }
-
-    func disconnectFromChat() {
-        stopConnection()
-        onChatRoomUpdate = nil
     }
 }

@@ -1,27 +1,39 @@
 import Foundation
+import SwiftUI
 
 enum OrderStatus: String, Identifiable {
     case pending = "Pending"
-    case inProgress = "In Progress"
+    case approve = "Approved"
     case success = "Success"
-    case delivered = "Delivered"
-    case cancelled = "Cancelled"
+    case failed = "Failed"
     
     var id: String { self.rawValue }
     
     static var allCases: [OrderStatus] {
-        return [.pending, .inProgress, .success, .delivered, .cancelled]
+        return [.pending, .approve, .success, .failed]
     }
-    
     
     static func fromString(_ value: String) -> OrderStatus? {
         return OrderStatus.allCases.first {
-            $0.rawValue.capitalized == value.lowercased()
+            $0.rawValue.lowercased() == value.lowercased()
         }
     }
     
     static var allValues: [String] {
         return allCases.map { $0.rawValue }
+    }
+    
+    var color: Color {
+        switch self {
+        case .pending:
+            return .orange
+        case .approve:
+            return .blue
+        case .success:
+            return .green
+        case .failed:
+            return .red
+        }
     }
 }
 

@@ -27,13 +27,42 @@ struct ChatRoom: Codable, Identifiable {
     let avatar: String
     let lastMessage: String?
     let lastMessageTime: Date
+    let type: MessageType
+    
+    var chatRoomId: String { String(id) }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, userId, name, avatar, lastMessage, lastMessageTime, type
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        userId = try container.decode(String.self, forKey: .userId)
+        name = try container.decode(String.self, forKey: .name)
+        avatar = try container.decode(String.self, forKey: .avatar)
+        lastMessage = try container.decodeIfPresent(String.self, forKey: .lastMessage)
+        type = try container.decodeIfPresent(MessageType.self, forKey: .type) ?? .text
+        
+        // Custom date decoding
+        let dateString = try container.decode(String.self, forKey: .lastMessageTime)
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: dateString) {
+            lastMessageTime = date
+        } else {
+            throw DecodingError.dataCorruptedError(forKey: .lastMessageTime,
+                                                  in: container,
+                                                  debugDescription: "Date string does not match expected format")
+        }
+    }
 }
 
 struct ChatMessage: Codable, Identifiable, Equatable {
     let id: Int
     let userSendId: String
-    let avatar: String
-    let message: String
+    let avatar: String?
+    let message: String?
     let mediaLink: String?
     let sendDate: Date
     let type: MessageType
@@ -46,13 +75,40 @@ struct ChatMessage: Codable, Identifiable, Equatable {
         DateFormatter.localizedString(from: sendDate, dateStyle: .none, timeStyle: .short)
     }
     
-    static func == (lhs: ChatMessage, rhs: ChatMessage) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.userSendId == rhs.userSendId &&
-        lhs.message == rhs.message &&
-        lhs.mediaLink == rhs.mediaLink &&
-        lhs.sendDate == rhs.sendDate &&
-        lhs.type == rhs.type
+    enum CodingKeys: String, CodingKey {
+        case id, userSendId, avatar, message, mediaLink, sendDate, type
+    }
+    
+    init(id: Int, userSendId: String, avatar: String?, message: String?, mediaLink: String?, sendDate: Date, type: MessageType) {
+        self.id = id
+        self.userSendId = userSendId
+        self.avatar = avatar
+        self.message = message
+        self.mediaLink = mediaLink
+        self.sendDate = sendDate
+        self.type = type
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        userSendId = try container.decode(String.self, forKey: .userSendId)
+        avatar = try container.decodeIfPresent(String.self, forKey: .avatar)
+        message = try container.decodeIfPresent(String.self, forKey: .message)
+        mediaLink = try container.decodeIfPresent(String.self, forKey: .mediaLink)
+        type = try container.decode(MessageType.self, forKey: .type)
+        
+        // Custom date decoding
+        let dateString = try container.decode(String.self, forKey: .sendDate)
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: dateString) {
+            sendDate = date
+        } else {
+            throw DecodingError.dataCorruptedError(forKey: .sendDate,
+                                                  in: container,
+                                                  debugDescription: "Date string does not match expected format")
+        }
     }
 }
 
