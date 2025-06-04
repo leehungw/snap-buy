@@ -94,6 +94,11 @@ struct SBAdminOrderManagement: View {
                                 Text(order.shippingAddress)
                                     .font(R.font.outfitRegular.font(size: 14))
                                     .foregroundColor(.gray)
+                                if !order.phoneNumber.isEmpty {
+                                    Text(order.phoneNumber)
+                                        .font(R.font.outfitRegular.font(size: 14))
+                                        .foregroundColor(.gray)
+                                }
                                 
                                 Text("\(order.orderItems.count) items • $\(String(format: "%.2f", order.totalAmount))")
                                     .font(R.font.outfitRegular.font(size: 14))

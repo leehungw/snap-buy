@@ -89,6 +89,7 @@ struct OrderDetailView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 buyerInfoRow(label: "ID", value: order.buyerId)
                                 buyerInfoRow(label: "Address", value: order.shippingAddress, multiline: true)
+                                buyerInfoRow(label: "Phone", value: order.phoneNumber)
                             }
                             .padding()
                             .background(Color(.systemGray6))

@@ -36,24 +36,32 @@ struct SBPaymentView: View {
     @State private var selectedPayment: UUID? = paymentMethods[0].id
     @StateObject private var addressViewModel = SBAddressViewModel()
     @StateObject private var paymentViewModel = PaymentViewModel()
+    @State private var phoneNumber: String = ""
+    @State private var showPhoneAlert = false
+    @State private var sellerMerchantId: String? = nil
+    @State private var availablePaymentMethods: [PaymentMethod] = paymentMethods
     
     private var selectedPaymentMethod: PaymentMethod? {
         paymentMethods.first { $0.id == selectedPayment }
     }
     
     private func handleCheckout() {
+        if phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            showPhoneAlert = true
+            return
+        }
         guard let selectedMethod = selectedPaymentMethod else { return }
         let shippingAddress = selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress
         let total = totalPrice + 6
         if selectedMethod.name == "COD" {
-            paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress) { success, error in
+            paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress, phoneNumber: phoneNumber) { success, error in
                 // Error handling is already in view model
             }
         } else if selectedMethod.name == "PayPal" {
             Task {
                 await paymentViewModel.processPayment(products: products, totalAmount: total)
                 if paymentViewModel.errorMessage == nil {
-                    paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress) { success, error in
+                    paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress, phoneNumber: phoneNumber) { success, error in
                         // Error handling is already in view model
                     }
                 }
@@ -109,6 +117,15 @@ struct SBPaymentView: View {
                             .foregroundColor(.gray)
                             .padding(.top, 8)
                     }
+                    // Phone number input
+                    HStack {
+                        Text("Phone Number")
+                            .font(R.font.outfitRegular.font(size: 16))
+                        TextField("Enter your phone number", text: $phoneNumber)
+                            .keyboardType(.phonePad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    }
+                    .padding(.top, 8)
                 }
                 NavigationLink(
                     destination: SBAddressView(
@@ -174,7 +191,7 @@ struct SBPaymentView: View {
                     Text(R.string.localizable.paymentMethod)
                         .font(R.font.outfitBold.font(size: 20))
                     
-                    if let selected = paymentMethods.first(where: { $0.id == selectedPayment }) {
+                    if let selected = availablePaymentMethods.first(where: { $0.id == selectedPayment }) {
                         HStack {
                             Image(selected.imageName)
                                 .resizable()
@@ -255,7 +272,7 @@ struct SBPaymentView: View {
         }
         .sheet(isPresented: $showMethodSheet) {
             VStack {
-                SBPaymentMethodView(selectedPayment: $selectedPayment)
+                SBPaymentMethodView(selectedPayment: $selectedPayment, paymentMethods: availablePaymentMethods)
             }
             .presentationDetents([.fraction(0.6)])
             .presentationDragIndicator(.visible)
@@ -274,8 +291,38 @@ struct SBPaymentView: View {
                 selectedPayment = paymentMethods[0].id
             }
             addressViewModel.requestLocation()
+            // Fetch seller merchant id
+            if let sellerId = products.first?.sellerId {
+                UserRepository.shared.fetchUserById(userId: sellerId) { result in
+                    switch result {
+                    case .success(let user):
+                        sellerMerchantId = user.sellerMerchantId
+                        if let merchantId = user.sellerMerchantId, !merchantId.isEmpty {
+                            availablePaymentMethods = paymentMethods
+                        } else {
+                            availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
+                            // If current selection is not COD, reset
+                            if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
+                                selectedPayment = availablePaymentMethods.first?.id
+                            }
+                        }
+                    case .failure:
+                        availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
+                        if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
+                            selectedPayment = availablePaymentMethods.first?.id
+                        }
+                    }
+                }
+            }
         }
         .navigationBarBackButtonHidden(true)
+        .alert(isPresented: $showPhoneAlert) {
+            Alert(
+                title: Text("Phone Number Required"),
+                message: Text("Please enter your phone number before checking out."),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 }
 
@@ -303,6 +350,7 @@ struct SBPaymentMethodView: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
     @State private var selectedPaymentID: UUID?
     @Binding var selectedPayment: UUID?
+    let paymentMethods: [PaymentMethod]
     
     var body: some View {
         VStack(alignment: .leading) {
