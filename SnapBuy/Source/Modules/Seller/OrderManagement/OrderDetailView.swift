@@ -49,122 +49,138 @@ struct OrderDetailView: View {
     @State private var showErrorAlert = false
 
     var body: some View {
-        VStack {
-            Header(title: "Order #\(orderId)", dismiss: dismiss)
+        ZStack {
+            Color(.systemGray6)
+                .ignoresSafeArea()
             
-            if viewModel.isLoading {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if let order = viewModel.order {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        // Order Status Section
-                        VStack(alignment: .leading, spacing: 16) {
-                            HStack {
-                                sectionTitle("Order Status")
-                                Spacer()
-                                Menu {
-                                    ForEach(OrderStatus.allCases, id: \.self) { status in
-                                        Button(status.rawValue) {
-                                            viewModel.updateOrderStatus(status: status.rawValue)
-                                        }
+            VStack(spacing: 0) {
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.main)
+                    }
+                    
+                    Text("Order Details")
+                        .font(R.font.outfitBold.font(size: 20))
+                        .foregroundColor(.main)
+                    
+                    Spacer()
+                }
+                .padding()
+                .background(Color.white)
+                
+                if viewModel.isLoading {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                } else if let order = viewModel.order {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            // Status Card
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Order Status")
+                                    .font(R.font.outfitBold.font(size: 18))
+                                
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("#\(order.id)")
+                                            .font(R.font.outfitMedium.font(size: 14))
+                                            .foregroundColor(.gray)
+                                        Text(formatDate(from: order.id))
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
                                     }
-                                } label: {
-                                    Text(order.status)
-                                        .font(R.font.outfitMedium.font(size: 16))
-                                        .foregroundColor(colorForStatus(order.status))
+                                    
+                                    Spacer()
+                                    
+                                    Menu {
+                                        ForEach(OrderStatus.allCases, id: \.self) { status in
+                                            Button(status.rawValue) {
+                                                viewModel.updateOrderStatus(status: status.rawValue)
+                                            }
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Circle()
+                                                .fill(colorForStatus(order.status))
+                                                .frame(width: 8, height: 8)
+                                            Text(order.status)
+                                                .font(R.font.outfitMedium.font(size: 14))
+                                            Image(systemName: "chevron.down")
+                                                .font(.system(size: 12))
+                                        }
                                         .padding(.horizontal, 12)
                                         .padding(.vertical, 6)
-                                        .background(colorForStatus(order.status).opacity(0.2))
+                                        .background(colorForStatus(order.status).opacity(0.1))
                                         .cornerRadius(12)
+                                    }
                                 }
                             }
-                            .padding(.horizontal)
-                        }
-                        
-                        // Buyer Information Section
-                        VStack(alignment: .leading, spacing: 16) {
-                            sectionTitle("Buyer Information")
-                                .padding(.horizontal)
-                            VStack(alignment: .leading, spacing: 12) {
-                                buyerInfoRow(label: "ID", value: order.buyerId)
-                                buyerInfoRow(label: "Address", value: order.shippingAddress, multiline: true)
-                                buyerInfoRow(label: "Phone", value: order.phoneNumber)
+                            // Buyer Information
+                            InfoCard(title: "Buyer Information") {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    InfoRow(icon: "person.circle", title: "ID", value: order.buyerId)
+                                    InfoRow(icon: "location", title: "Address", value: order.shippingAddress)
+                                    InfoRow(icon: "phone", title: "Phone", value: order.phoneNumber)
+                                }
                             }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(12)
-                            .padding(.horizontal)
-                        }
-                        
-                        // Order Items Section
-                        VStack(alignment: .leading, spacing: 16) {
-                            sectionTitle("Order Items")
-                                .padding(.horizontal)
                             
-                            let displayedItems = showAllItems ? order.orderItems : Array(order.orderItems.prefix(2))
-                            
-                            ForEach(displayedItems, id: \.id) { item in
-                                OrderItemRow(item: item)
+                            // Order Items
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Order Items")
+                                    .font(R.font.outfitBold.font(size: 18))
                                     .padding(.horizontal)
+                                
+                                let displayedItems = showAllItems ? order.orderItems : Array(order.orderItems.prefix(2))
+                                
+                                ForEach(displayedItems) { item in
+                                    OrderItemCard(item: item)
+                                }
+                                
+                                if order.orderItems.count > 2 && !showAllItems {
+                                    Button(action: { showAllItems = true }) {
+                                        HStack {
+                                            Text("Show More Items")
+                                                .font(R.font.outfitMedium.font(size: 14))
+                                            Image(systemName: "chevron.down")
+                                        }
+                                        .foregroundColor(.main)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.white)
+                                        .cornerRadius(12)
+                                    }
+                                }
                             }
                             
-                            if order.orderItems.count > 2 {
-                                Button(action: {
-                                    withAnimation {
-                                        showAllItems.toggle()
-                                    }
-                                }) {
-                                    HStack {
-                                        Text(showAllItems ? "Show Less" : "Show More")
-                                            .font(R.font.outfitMedium.font(size: 16))
-                                        Image(systemName: showAllItems ? "chevron.up" : "chevron.down")
-                                    }
-                                    .foregroundColor(.blue)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 8)
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                        
-                        // Summary Section
-                        VStack(alignment: .leading, spacing: 16) {
-                            sectionTitle("Summary")
-                                .padding(.horizontal)
-                            VStack(spacing: 12) {
-                                HStack {
-                                    Label("Total Items", systemImage: "cart")
-                                        .font(R.font.outfitMedium.font(size: 16))
-                                    Spacer()
-                                    Text("\(order.orderItems.count)")
-                                        .font(R.font.outfitBold.font(size: 20))
-                                }
-                                
-                                Divider()
-                                
-                                HStack {
-                                    Label("Total Amount", systemImage: "dollarsign.circle")
-                                        .font(R.font.outfitMedium.font(size: 16))
-                                    Spacer()
-                                    Text(String(format: "$%.2f", order.totalAmount))
-                                        .font(R.font.outfitBold.font(size: 20))
-                                        .foregroundColor(.green)
+                            // Order Summary
+                            InfoCard(title: "Order Summary") {
+                                VStack(spacing: 16) {
+                                    InfoRow(
+                                        icon: "cart",
+                                        title: "Total Items",
+                                        value: "\(order.orderItems.count)",
+                                        valueColor: .primary
+                                    )
+                                    
+                                    Divider()
+                                    
+                                    InfoRow(
+                                        icon: "dollarsign.circle",
+                                        title: "Total Amount",
+                                        value: String(format: "$%.2f", order.totalAmount),
+                                        valueColor: .green
+                                    )
                                 }
                             }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(12)
-                            .padding(.horizontal)
                         }
-                        
-                        Spacer()
+                        .padding()
                     }
-                    .padding(.top)
                 }
             }
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
         .alert("Error", isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) { }
         } message: {
@@ -177,83 +193,109 @@ struct OrderDetailView: View {
             viewModel.fetchOrderDetail(orderId: orderId)
         }
     }
-
-    // MARK: - Helper Views
-    @ViewBuilder
-    private func sectionTitle(_ text: String) -> some View {
-        Text(text)
-            .font(R.font.outfitBold.font(size: 18))
+    
+    private func formatDate(from orderId: String) -> String {
+        // Implement date formatting based on your orderId format
+        return "Today at 10:30 AM" // Placeholder
     }
+}
 
-    private func buyerInfoRow(label: String, value: String, multiline: Bool = false) -> some View {
-        HStack(alignment: multiline ? .top : .center) {
-            Text(label)
-                .font(R.font.outfitMedium.font(size: 16))
+struct InfoCard<Content: View>: View {
+    let title: String
+    let content: () -> Content
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(title)
+                .font(R.font.outfitBold.font(size: 18))
+            content()
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
+    }
+}
+
+struct InfoRow: View {
+    let icon: String
+    let title: String
+    let value: String
+    var valueColor: Color = .gray
+    
+    var body: some View {
+        HStack {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .foregroundColor(.gray)
+                Text(title)
+                    .font(R.font.outfitMedium.font(size: 14))
+            }
             Spacer()
             Text(value)
-                .font(R.font.outfitRegular.font(size: 16))
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.trailing)
+                .font(R.font.outfitMedium.font(size: 14))
+                .foregroundColor(valueColor)
         }
     }
 }
 
-struct OrderItemRow: View {
+struct OrderItemCard: View {
     let item: SBOrderItemModel
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 16) {
                 AsyncImage(url: URL(string: item.productImageUrl)) { image in
                     image
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                 } placeholder: {
-                    Color.gray.opacity(0.2)
+                    Color.gray.opacity(0.1)
                 }
-                .frame(width: 100, height: 100)
+                .frame(width: 80, height: 80)
                 .cornerRadius(12)
-
-                VStack(alignment: .leading, spacing: 10) {
+                
+                VStack(alignment: .leading, spacing: 8) {
                     Text(item.productName)
                         .font(R.font.outfitSemiBold.font(size: 16))
                         .lineLimit(2)
-
-                    VStack(spacing: 8) {
-                        if !item.productNote.isEmpty {
-                            itemInfoRow(label: "Note", value: item.productNote)
-                        }
-                        itemInfoRow(label: "Quantity", value: "\(item.quantity)")
-                        itemInfoRow(label: "Price", value: String(format: "$%.2f", item.unitPrice))
-
-                        Divider()
-
-                        HStack {
-                            Text("Subtotal")
-                                .font(R.font.outfitMedium.font(size: 16))
-                            Spacer()
-                            Text(String(format: "$%.2f", item.unitPrice * Double(item.quantity)))
-                                .font(R.font.outfitBold.font(size: 16))
-                                .foregroundColor(.green)
-                        }
+                    
+                    if !item.productNote.isEmpty {
+                        Text(item.productNote)
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .foregroundColor(.gray)
+                            .lineLimit(2)
+                    }
+                    
+                    HStack {
+                        Text("Qty: \(item.quantity)")
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .foregroundColor(.gray)
+                        
+                        Spacer()
+                        
+                        Text(String(format: "$%.2f", item.unitPrice))
+                            .font(R.font.outfitMedium.font(size: 14))
+                            .foregroundColor(.green)
                     }
                 }
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
+            
+            if !item.productNote.isEmpty {
+                Divider()
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Note:")
+                        .font(R.font.outfitMedium.font(size: 14))
+                        .foregroundColor(.gray)
+                    Text(item.productNote)
+                        .font(R.font.outfitRegular.font(size: 14))
+                        .foregroundColor(.gray)
+                }
+            }
         }
-    }
-    
-    private func itemInfoRow(label: String, value: String) -> some View {
-        HStack {
-            Text(label)
-                .font(R.font.outfitRegular.font(size: 14))
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(value)
-                .font(R.font.outfitMedium.font(size: 14))
-        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
     }
 }
 
