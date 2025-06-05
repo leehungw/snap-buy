@@ -265,6 +265,12 @@ struct OrderRowView: View {
                             .foregroundColor(.green)
                     }
                 }
+                if !order.phoneNumber.isEmpty {
+                    Label(order.phoneNumber, systemImage: "phone")
+                        .font(R.font.outfitRegular.font(size: 14))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
             }
         }
         .padding()

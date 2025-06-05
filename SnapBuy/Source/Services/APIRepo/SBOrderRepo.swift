@@ -10,6 +10,7 @@ final class OrderRepository {
         sellerId: String,
         totalAmount: Double,
         shippingAddress: String,
+        phoneNumber: String,
         items: [SBOrderItemModel],
         status: String,
         completion: @escaping SBValueAction<Result<SBOrderModel, Error>>
@@ -22,6 +23,7 @@ final class OrderRepository {
             sellerId: sellerId,
             totalAmount: totalAmount,
             shippingAddress: shippingAddress,
+            phoneNumber: phoneNumber,
             orderItems: items.map { item in
                 var newItem = item
                 newItem.id = 0

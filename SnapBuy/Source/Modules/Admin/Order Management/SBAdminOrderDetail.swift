@@ -15,13 +15,13 @@ struct SBAdminOrderDetail: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
+
                     ScrollView {
                         VStack(alignment: .leading, spacing: 20) {
                             // Order Status Section
                             VStack(alignment: .leading, spacing: 10) {
                                 Text("Order Status")
                                     .font(R.font.outfitBold.font(size: 18))
-                                
                                 HStack {
                                     Image(systemName: statusIcon(order.status))
                                     Text(order.status)
@@ -244,6 +244,7 @@ struct SBAdminOrderDetail: View {
         sellerId: "SELLER-123",
         totalAmount: 99.99,
         shippingAddress: "123 Main St",
+        phoneNumber: "0123456789",
         orderItems: [],
         status: "Pending"
     ))
