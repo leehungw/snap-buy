@@ -6,6 +6,9 @@ class PaymentViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var showSuccessfullyOrderSheet = false
     @Published var sellerStatus: SellerStatus?
+    @Published var availableVouchers: [VoucherModel] = []
+    @Published var selectedVoucher: VoucherModel?
+    @Published var showVoucherSheet = false
     
     func processPayment(products: [CartItem], totalAmount: Double) async {
         guard let firstProduct = products.first else { return }
@@ -137,6 +140,52 @@ class PaymentViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    func fetchAvailableVouchers(userId: String, orderTotal: Double) {
+        isLoading = true
+        errorMessage = nil
+        
+        VoucherRepository.shared.getAvailableVouchers(userId: userId, orderTotal: orderTotal) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                
+                switch result {
+                case .success(let vouchers):
+                    self?.availableVouchers = vouchers
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    func recordVoucherUsage(code: String, userId: String, orderId: String) {
+        VoucherRepository.shared.recordVoucherUsage(code: code, userId: userId, orderId: orderId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    print("✅ Voucher usage recorded successfully")
+                case .failure(let error):
+                    self?.errorMessage = "Failed to record voucher usage: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+    
+    var discountedTotal: (total: Double, discount: Double) {
+        guard let voucher = selectedVoucher else {
+            return (total: 0, discount: 0)
+        }
+        
+        let discount: Double
+        if voucher.type == VoucherType.percentage.rawValue {
+            discount = voucher.value / 100.0
+        } else {
+            discount = voucher.value
+        }
+        
+        return (total: -discount, discount: discount)
     }
 }
 

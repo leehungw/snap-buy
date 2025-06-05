@@ -125,4 +125,10 @@ struct VoucherListResponse: Codable {
     let result: Int
     let data: [VoucherModel]?
     let error: APIErrorResponse?
-} 
+}
+
+struct DeleteVoucherResponse: Codable {
+    let result: Int
+    let data: Int?  // Server returns number for delete operation
+    let error: APIErrorResponse?
+}

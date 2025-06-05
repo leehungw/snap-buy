@@ -127,12 +127,14 @@
 		DA958F3C2DD47B5400A98432 /* SBDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3B2DD47B4A00A98432 /* SBDashboard.swift */; };
 		DA958F3E2DD47C0200A98432 /* SBAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */; };
 		DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F402DD484A400A98432 /* SBProductManagementView.swift */; };
+		DA9BD5C12DF0B71400C3B1A4 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA9BD5C02DF0B71400C3B1A4 /* PayPalConfig.plist */; };
 		DA9BD5BF2DF0A85B00C3B1A4 /* SignalRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9BD5BE2DF0A84D00C3B1A4 /* SignalRService.swift */; };
 		DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */; };
 		DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */; };
 		DAE23DEB2DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */; };
 		DAE23DED2DEDA3C60044BAA9 /* VoucherModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */; };
 		DAE23DEF2DEDA3D20044BAA9 /* SBVoucherRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */; };
+		DAE23DF12DEED4520044BAA9 /* SignalRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DF02DEED4520044BAA9 /* SignalRService.swift */; };
 		DAE23DF32DEFECE20044BAA9 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAE23DF22DEFECE20044BAA9 /* PayPalConfig.plist */; };
 		DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */; };
 		DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */; };
@@ -269,12 +271,14 @@
 		DA958F3B2DD47B4A00A98432 /* SBDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBDashboard.swift; sourceTree = "<group>"; };
 		DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAddProduct.swift; sourceTree = "<group>"; };
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
+		DA9BD5C02DF0B71400C3B1A4 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		DA9BD5BE2DF0A84D00C3B1A4 /* SignalRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRService.swift; sourceTree = "<group>"; };
 		DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatRepo.swift; sourceTree = "<group>"; };
 		DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminVoucherManagement.swift; sourceTree = "<group>"; };
 		DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoucherModels.swift; sourceTree = "<group>"; };
 		DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVoucherRepo.swift; sourceTree = "<group>"; };
+		DAE23DF02DEED4520044BAA9 /* SignalRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRService.swift; sourceTree = "<group>"; };
 		DAE23DF22DEFECE20044BAA9 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminDashboard.swift; sourceTree = "<group>"; };
 		DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserManagement.swift; sourceTree = "<group>"; };
@@ -968,6 +972,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA9BD5C12DF0B71400C3B1A4 /* PayPalConfig.plist in Resources */,
 				0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */,
 				0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */,
 				0AA7A10E2D91CD9D00EB5684 /* Inter-SemiBold.ttf in Resources */,
