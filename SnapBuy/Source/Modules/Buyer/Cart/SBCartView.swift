@@ -5,12 +5,13 @@ struct SBCartView: View {
     @State private var quantities: [Int: Int] = [:]
     @State private var selectedItems: Set<Int> = []
     @State private var navigateToPayment = false
-    @State private var promoText = ""
+    @State private var showVoucherSheet = false
     @State private var cartProducts: [SBProduct] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
     @State private var showDeleteConfirmation = false
     @State private var productToDelete: SBProduct?
+    @State private var selectedVoucher: VoucherModel?
     @Environment(\.dismiss) var dismiss
     
     enum CartViewStyle {
@@ -83,22 +84,61 @@ struct SBCartView: View {
                     
                     if !selectedItems.isEmpty {
                         VStack(spacing: 20) {
-                            HStack {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .foregroundColor(.gray.opacity(0.7))
-                                    .font(.title2)
-                                TextField(R.string.localizable.enterYourPromoCode(), text: $promoText)
-                                    .foregroundColor(.black)
-                                    .autocorrectionDisabled()
-                                    .textInputAutocapitalization(.never)
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray.opacity(0.7))
-                                    .font(.title3)
+                            // Voucher Selection
+                            if let selectedVoucher = selectedVoucher {
+                                HStack {
+                                    Image(systemName: "ticket.fill")
+                                        .foregroundColor(.orange)
+                                    
+                                    VStack(alignment: .leading) {
+                                        Text(selectedVoucher.code)
+                                            .font(R.font.outfitMedium.font(size: 16))
+                                        Text(selectedVoucher.type == "percentage" ? "\(Int(selectedVoucher.value))% off" : "$\(String(format: "%.1f", selectedVoucher.value)) off")
+                                            .font(R.font.outfitRegular.font(size: 14))
+                                            .foregroundColor(.gray)
+                                        Text("Min. Order: $\(String(format: "%.1f", selectedVoucher.minOrderValue))")
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Button(action: {
+                                        self.selectedVoucher = nil
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                .padding(.horizontal)
+                                .padding(.vertical, 15)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .stroke(Color.orange.opacity(0.5))
+                                )
+                            } else {
+                                Button(action: {
+                                    if let userId = UserRepository.shared.currentUser?.id {
+                                        showVoucherSheet = true
+                                    }
+                                }) {
+                                    HStack {
+                                        Image(systemName: "ticket")
+                                            .foregroundColor(.gray.opacity(0.7))
+                                            .font(.title2)
+                                        Text("Select Voucher")
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray.opacity(0.7))
+                                            .font(.title3)
+                                    }
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 15)
+                                    .background(.gray.opacity(0.1))
+                                    .cornerRadius(15)
+                                }
                             }
-                            .padding(.horizontal)
-                            .padding(.vertical, 15)
-                            .background(.gray.opacity(0.1))
-                            .cornerRadius(15)
                             
                             VStack(spacing: 12) {
                                 HStack {
@@ -109,7 +149,7 @@ struct SBCartView: View {
                                     HStack(alignment: .top) {
                                         Text("$")
                                             .font(R.font.outfitBold.font(size: 15))
-                                        Text(String(format: "%.2f", totalPrice()))
+                                        Text(String(format: "%.1f", totalPrice()))
                                             .font(R.font.outfitBold.font(size: 20))
                                     }
                                 }
@@ -127,6 +167,18 @@ struct SBCartView: View {
                                     }
                                 }
                                 
+                                if let voucher = selectedVoucher {
+                                    HStack {
+                                        Text("Discount")
+                                            .font(R.font.outfitMedium.font(size: 16))
+                                            .foregroundColor(.gray)
+                                        Spacer()
+                                        Text(String(format: "-$%.2f", calculateDiscount()))
+                                            .font(R.font.outfitMedium.font(size: 16))
+                                            .foregroundColor(.green)
+                                    }
+                                }
+                                
                                 Rectangle()
                                     .stroke(style: StrokeStyle(lineWidth: 1, dash: [2]))
                                     .frame(height: 1)
@@ -140,14 +192,14 @@ struct SBCartView: View {
                                     HStack(alignment: .top) {
                                         Text("$")
                                             .font(R.font.outfitBold.font(size: 15))
-                                        Text(String(format: "%.2f", totalPrice() + 6))
+                                        Text(String(format: "%.1f", finalTotal()))
                                             .font(R.font.outfitBold.font(size: 20))
                                     }
                                 }
                                 
                                 NavigationLink(destination: SBPaymentView(
                                     products: convertToCartItems(selectedCartProducts()),
-                                    totalPrice: totalPrice()
+                                    totalPrice: finalTotal()
                                 )) {
                                     Text("Checkout")
                                         .frame(maxWidth: .infinity)
@@ -162,10 +214,15 @@ struct SBCartView: View {
                         .padding()
                         .background(Color.white)
                         .frame(maxWidth: .infinity)
-                        .shadow(radius: 2)
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showVoucherSheet) {
+            VoucherSelectionView(selectedVoucher: $selectedVoucher, orderTotal: totalPrice())
+                .presentationDetents([.fraction(0.6)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(50)
         }
         .alert("Remove from Cart", isPresented: $showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {
@@ -437,6 +494,21 @@ struct SBCartView: View {
             )
         }
     }
+
+    // Add helper functions for voucher calculations
+    private func calculateDiscount() -> Double {
+        guard let voucher = selectedVoucher else { return 0 }
+        
+        if voucher.type == VoucherType.percentage.rawValue {
+            return totalPrice() * (voucher.value / 100.0)
+        } else {
+            return voucher.value
+        }
+    }
+    
+    private func finalTotal() -> Double {
+        return totalPrice() + 6.0 - calculateDiscount()
+    }
 }
 
 // MARK: - Checkbox Style
@@ -453,6 +525,108 @@ struct CheckboxToggleStyle: ToggleStyle {
     }
 }
 
+// Add VoucherSelectionView
+struct VoucherSelectionView: View {
+    @SwiftUI.Environment(\.dismiss) var dismiss
+    @Binding var selectedVoucher: VoucherModel?
+    let orderTotal: Double
+    @State private var availableVouchers: [VoucherModel] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Available Vouchers")
+                .font(R.font.outfitBold.font(size: 20))
+                .padding()
+            
+            if isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if availableVouchers.isEmpty {
+                Text("No vouchers available")
+                    .font(R.font.outfitRegular.font(size: 16))
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(availableVouchers, id: \.id) { voucher in
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    Image(systemName: "ticket.fill")
+                                        .foregroundColor(.orange)
+                                    
+                                    VStack(alignment: .leading) {
+                                        
+                                        Text(voucher.type == "percentage" ? "\(Int(voucher.value))% off" : "$\(String(format: "%.1f", voucher.value)) off")
+                                            .font(R.font.outfitMedium.font(size: 16))
+                                        Text(voucher.code)
+                                            .font(R.font.outfitRegular.font(size: 14))
+                                            .foregroundColor(.gray)
+                                        Text("For order at least: $\(String(format: "%.1f", voucher.minOrderValue))")
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Button(action: {
+                                        selectedVoucher = voucher
+                                        dismiss()
+                                    }) {
+                                        Text("Use")
+                                            .font(R.font.outfitMedium.font(size: 14))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 20)
+                                            .padding(.vertical, 8)
+                                            .background(Color.main)
+                                            .cornerRadius(15)
+                                    }
+                                }
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.orange.opacity(0.5))
+                            )
+                        }
+                    }
+                    .padding()
+                }
+            }
+            
+            if let error = errorMessage {
+                Text(error)
+                    .font(R.font.outfitRegular.font(size: 14))
+                    .foregroundColor(.red)
+                    .padding()
+            }
+        }
+        .onAppear {
+            loadVouchers()
+        }
+    }
+    
+    private func loadVouchers() {
+        isLoading = true
+        errorMessage = nil
+        
+        if let userId = UserRepository.shared.currentUser?.id {
+            VoucherRepository.shared.getAvailableVouchers(userId: userId, orderTotal: orderTotal) { result in
+                DispatchQueue.main.async {
+                    isLoading = false
+                    switch result {
+                    case .success(let vouchers):
+                        self.availableVouchers = vouchers
+                    case .failure(let error):
+                        self.errorMessage = error.localizedDescription
+                    }
+                }
+            }
+        }
+    }
+}
 
 // MARK: - Preview
 #Preview {
