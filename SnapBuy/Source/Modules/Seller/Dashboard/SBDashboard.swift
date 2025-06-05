@@ -9,7 +9,7 @@ struct DashboardStats {
 
 struct SBSellerDashboardView: View {
     @StateObject private var userModeManager = UserModeManager.shared
-    @State private var showPayPalOnboarding = false
+    @State private var showSellerProfile = false
     @State private var stats = DashboardStats()
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
@@ -34,7 +34,7 @@ struct SBSellerDashboardView: View {
                     }
                     Spacer()
                     Button(action: {
-                        showPayPalOnboarding = true
+                        showSellerProfile = true
                     }) {
                         ZStack {
                             Image(systemName: "person.crop.circle")
@@ -120,8 +120,8 @@ struct SBSellerDashboardView: View {
             .refreshable {
                 loadDashboardData()
             }
-            .sheet(isPresented: $showPayPalOnboarding) {
-                SBPayPalOnboardingView()
+            .sheet(isPresented: $showSellerProfile) {
+                SBSellerProfileView()
             }
         }
     }
