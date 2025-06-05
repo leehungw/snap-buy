@@ -113,8 +113,8 @@ struct SBPaymentView: View {
                     
                     if !addressViewModel.currentAddress.isEmpty || !selectedAddress.isEmpty {
                         Text(selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress)
-                            .font(R.font.outfitRegular.font(size: 16))
-                            .foregroundColor(.gray)
+                                .font(R.font.outfitRegular.font(size: 16))
+                                .foregroundColor(.gray)
                             .padding(.top, 8)
                     }
                     // Phone number input
@@ -132,7 +132,7 @@ struct SBPaymentView: View {
                         selectedAddress: $selectedAddress,
                         selectedCoordinate: $selectedCoordinate
                     ),
-                    isActive: $navigateToAddress
+                                    isActive: $navigateToAddress
                 ) {
                     EmptyView()
                 }
@@ -150,10 +150,10 @@ struct SBPaymentView: View {
                                     .frame(width: 60, height: 60)
                                     .cornerRadius(10)
                             } else {
-                                Image(product.imageName)
-                                    .resizable()
-                                    .frame(width: 60, height: 60)
-                                    .cornerRadius(10)
+                            Image(product.imageName)
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                                .cornerRadius(10)
                             }
                             
                             VStack(alignment: .leading, spacing: 4) {
@@ -174,8 +174,8 @@ struct SBPaymentView: View {
                                         .font(R.font.outfitRegular.font(size: 13))
                                         .foregroundColor(.gray)
                                     Text("Qty: \(product.quantity)")
-                                        .font(R.font.outfitRegular.font(size: 13))
-                                        .foregroundColor(.gray)
+                                    .font(R.font.outfitRegular.font(size: 13))
+                                    .foregroundColor(.gray)
                                 }
                             }
                             
@@ -249,17 +249,17 @@ struct SBPaymentView: View {
                             .foregroundColor(.red)
                             .font(R.font.outfitRegular.font(size: 14))
                             .padding(.horizontal)
-                    }
-                    
-                    // Checkout Button
+                }
+                
+                // Checkout Button
                     Button(action: handleCheckout) {
-                        Text(R.string.localizable.checkoutNow())
-                            .font(R.font.outfitMedium.font(size: 20))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.main)
-                            .foregroundColor(.white)
-                            .cornerRadius(25)
+                    Text(R.string.localizable.checkoutNow())
+                        .font(R.font.outfitMedium.font(size: 20))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.main)
+                        .foregroundColor(.white)
+                        .cornerRadius(25)
                     }
                     .disabled(paymentViewModel.isLoading)
                     .padding()
@@ -271,21 +271,21 @@ struct SBPaymentView: View {
             .padding(.horizontal,10)
         }
         .sheet(isPresented: $showMethodSheet) {
-            VStack {
+                VStack {
                 SBPaymentMethodView(selectedPayment: $selectedPayment, paymentMethods: availablePaymentMethods)
+                }
+                .presentationDetents([.fraction(0.6)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(50)
             }
-            .presentationDetents([.fraction(0.6)])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(50)
-        }
         .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
-            VStack {
-                SBSuccessfulOrderView()
+                VStack {
+                    SBSuccessfulOrderView()
+                }
+                .presentationDetents([.fraction(0.6)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(50)
             }
-            .presentationDetents([.fraction(0.6)])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(50)
-        }
         .onAppear {
             if selectedPayment == nil {
                 selectedPayment = paymentMethods[0].id

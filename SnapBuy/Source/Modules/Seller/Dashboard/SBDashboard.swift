@@ -24,9 +24,9 @@ struct SBSellerDashboardView: View {
                                 .font(R.font.outfitSemiBold.font(size: 20))
                                 .foregroundColor(.white)
                         } else {
-                            Text("Welcome back, Seller!")
-                                .font(R.font.outfitSemiBold.font(size: 20))
-                                .foregroundColor(.white)
+                        Text("Welcome back, Seller!")
+                            .font(R.font.outfitSemiBold.font(size: 20))
+                            .foregroundColor(.white)
                         }
                         Text("Here's your business overview")
                             .font(R.font.outfitRegular.font(size: 14))
@@ -37,9 +37,9 @@ struct SBSellerDashboardView: View {
                         showSellerProfile = true
                     }) {
                         ZStack {
-                            Image(systemName: "person.crop.circle")
-                                .font(.title)
-                                .foregroundColor(.white)
+                        Image(systemName: "person.crop.circle")
+                            .font(.title)
+                            .foregroundColor(.white)
                             
                             // Show a red dot indicator if PayPal is not connected
                             if userModeManager.paypalOnboardingURL != nil {
@@ -76,9 +76,9 @@ struct SBSellerDashboardView: View {
                     .padding()
                     Spacer()
                 } else {
-                    VStack(alignment: .leading, spacing: 20) {
-                        VStack(alignment: .leading) {
-                            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 16) {
                                 DashboardCard(
                                     title: "Today Revenue",
                                     value: formatCurrency(stats.todayRevenue),
@@ -89,8 +89,8 @@ struct SBSellerDashboardView: View {
                                     value: "\(stats.pendingOrders)",
                                     systemImage: "clock.badge.exclamationmark"
                                 )
-                            }
-                            HStack(spacing: 16) {
+                        }
+                        HStack(spacing: 16) {
                                 DashboardCard(
                                     title: "Completed",
                                     value: "\(stats.completedOrders)",
@@ -101,16 +101,16 @@ struct SBSellerDashboardView: View {
                                     value: "\(stats.approvedProducts)",
                                     systemImage: "cube.box"
                                 )
-                            }
                         }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(10)
-                        
-                        Text("Recent Orders")
-                            .font(R.font.outfitBold.font(size: 18))
-                            .padding(.horizontal)
-                        ListRecentView()
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(10)
+                    
+                    Text("Recent Orders")
+                        .font(R.font.outfitBold.font(size: 18))
+                        .padding(.horizontal)
+                    ListRecentView()
                     }
                 }
             }

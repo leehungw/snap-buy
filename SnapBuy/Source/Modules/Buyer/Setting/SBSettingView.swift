@@ -4,10 +4,31 @@ struct SBSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @State private var showLogoutAlert = false
     @State private var navigateToLogin = false
+    @State private var showUpgradeSheet = false
     
     var body: some View {
         NavigationView {
             VStack {
+                if let user = UserRepository.shared.currentUser, !user.isPremium {
+                    Button(action: { showUpgradeSheet = true }) {
+                        HStack {
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
+                            Text("Upgrade to Premium Seller")
+                                .font(R.font.outfitBold.font(size: 18))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.main)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.main.opacity(0.2), radius: 8, x: 0, y: 4)
+                    }
+                    .padding([.horizontal, .top])
+                    .sheet(isPresented: $showUpgradeSheet) {
+                        SBUpgradeAccountView()
+                    }
+                }
                 HStack {
                     Button(action: {
                         dismiss()
