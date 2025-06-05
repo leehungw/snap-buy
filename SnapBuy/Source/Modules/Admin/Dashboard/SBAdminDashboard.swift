@@ -2,9 +2,9 @@ import SwiftUI
 
 class SBAdminDashboardViewModel: ObservableObject {
     @Published var totalUsers: Int = 0
-    @Published var totalShops: Int = 0
     @Published var totalProducts: Int = 0
     @Published var totalOrders: Int = 0
+    @Published var totalVouchers: Int = 0
     
     func fetchDashboardData() {
         UserRepository.shared.fetchAllUsers { [weak self] result in
@@ -30,16 +30,6 @@ class SBAdminDashboardViewModel: ObservableObject {
             }
         }
         
-        UserRepository.shared.fetchAllUsers { [weak self] result in
-            switch result {
-            case .success(let response):
-                DispatchQueue.main.async {
-                    self?.totalShops = response.data.filter { $0.isPremium}.count ?? 0
-                }
-            case .failure:
-                break
-            }
-        }
         
         // Fetch total orders
         OrderRepository.shared.fetchAllOrders { [weak self] result in
@@ -47,6 +37,16 @@ class SBAdminDashboardViewModel: ObservableObject {
             case .success(let orders):
                 DispatchQueue.main.async {
                     self?.totalOrders = orders.count
+                }
+            case .failure:
+                break
+            }
+        }
+        VoucherRepository.shared.fetchAllVouchers { [weak self] result in
+            switch result {
+            case .success(let vouchers):
+                DispatchQueue.main.async {
+                    self?.totalVouchers = vouchers.count
                 }
             case .failure:
                 break
@@ -90,7 +90,7 @@ struct SBAdminDashboardView: View {
                 }
                 
                 NavigationLink(destination: SBAdminVoucherManagement()) {
-                    GridBoxView(title: "Total Vouchers", value: "0", color: .pink, systemImage: "ticket.fill")
+                    GridBoxView(title: "Total Vouchers", value: "\(viewModel.totalVouchers)", color: .pink, systemImage: "ticket.fill")
                 }
                 
                 Spacer()

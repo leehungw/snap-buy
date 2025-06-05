@@ -28,7 +28,7 @@ struct SBPaymentView: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
     
     let products: [CartItem]
-    let totalPrice: Double
+    let totalPrice: Double // This is now the final price including shipping and discount
     @State private var navigateToAddress = false
     @State private var showMethodSheet = false
     @State private var selectedAddress: String = ""
@@ -46,7 +46,7 @@ struct SBPaymentView: View {
         
         // Only PayPal platform payments are supported
         Task {
-            await paymentViewModel.processPayment(products: products, totalAmount: totalPrice + 6)
+            await paymentViewModel.processPayment(products: products, totalAmount: totalPrice)
         }
     }
     
@@ -70,174 +70,213 @@ struct SBPaymentView: View {
                 .padding(.bottom, 10)
                 
                 // Address Section
-                VStack {
-                    HStack {
-                        Text(R.string.localizable.address)
+                ScrollView {
+                    VStack {
+                        HStack {
+                            Text(R.string.localizable.address)
+                                .font(R.font.outfitBold.font(size: 20))
+                            Spacer()
+                            Button(action: {
+                                navigateToAddress = true
+                            }) {
+                                Text(R.string.localizable.edit)
+                                    .font(R.font.outfitRegular.font(size: 13))
+                                    .foregroundColor(Color.main)
+                            }
+                        }
+                        
+                        if addressViewModel.isLoadingLocation {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 150)
+                        } else if let coordinate = selectedCoordinate ?? addressViewModel.coordinate {
+                            LocationMapView(coordinate: coordinate)
+                        }
+                        
+                        if !addressViewModel.currentAddress.isEmpty || !selectedAddress.isEmpty {
+                            Text(selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress)
+                                .font(R.font.outfitRegular.font(size: 16))
+                                .foregroundColor(.gray)
+                                .padding(.top, 8)
+                        }
+                    }
+                    NavigationLink(
+                        destination: SBAddressView(
+                            selectedAddress: $selectedAddress,
+                            selectedCoordinate: $selectedCoordinate
+                        ),
+                        isActive: $navigateToAddress
+                    ) {
+                        EmptyView()
+                    }
+                    
+                    // Products Section
+                    VStack(alignment: .leading) {
+                        Text(String(R.string.localizable.countProductFormat(products.count)))
                             .font(R.font.outfitBold.font(size: 20))
-                        Spacer()
-                        Button(action: {
-                            navigateToAddress = true
-                        }) {
-                            Text(R.string.localizable.edit)
-                                .font(R.font.outfitRegular.font(size: 13))
-                                .foregroundColor(Color.main)
+                        
+                        ForEach(products) { product in
+                            HStack(spacing: 12) {
+                                if let url = URL(string: product.imageName) {
+                                    KFImage(url)
+                                        .resizable()
+                                        .frame(width: 60, height: 60)
+                                        .cornerRadius(10)
+                                } else {
+                                    Image(product.imageName)
+                                        .resizable()
+                                        .frame(width: 60, height: 60)
+                                        .cornerRadius(10)
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(product.title)
+                                        .font(R.font.outfitMedium.font(size: 18))
+                                    HStack(spacing: 8) {
+                                        Text("Color:")
+                                            .font(R.font.outfitRegular.font(size: 13))
+                                            .foregroundColor(.gray)
+                                        Circle()
+                                            .fill(Color(hex: product.color) ?? .gray)
+                                            .frame(width: 16, height: 16)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.gray, lineWidth: 0.5)
+                                            )
+                                        Text("Size: \(product.size)")
+                                            .font(R.font.outfitRegular.font(size: 13))
+                                            .foregroundColor(.gray)
+                                        Text("Qty: \(product.quantity)")
+                                            .font(R.font.outfitRegular.font(size: 13))
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                
+                                Spacer()
+                                Text(String(format: "$ %.2f", product.price * Double(product.quantity)))
+                                    .font(R.font.outfitBold.font(size: 15))
+                            }
                         }
                     }
                     
-                    if addressViewModel.isLoadingLocation {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 150)
-                    } else if let coordinate = selectedCoordinate ?? addressViewModel.coordinate {
-                        LocationMapView(coordinate: coordinate)
-                    }
-                    
-                    if !addressViewModel.currentAddress.isEmpty || !selectedAddress.isEmpty {
-                        Text(selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress)
-                            .font(R.font.outfitRegular.font(size: 16))
-                            .foregroundColor(.gray)
-                            .padding(.top, 8)
-                    }
-                }
-                NavigationLink(
-                    destination: SBAddressView(
-                        selectedAddress: $selectedAddress,
-                        selectedCoordinate: $selectedCoordinate
-                    ),
-                    isActive: $navigateToAddress
-                ) {
-                    EmptyView()
-                }
-                
-                // Products Section
-                VStack(alignment: .leading) {
-                    Text(String(R.string.localizable.countProductFormat(products.count)))
-                        .font(R.font.outfitBold.font(size: 20))
-                    
-                    ForEach(products) { product in
-                        HStack(spacing: 12) {
-                            if let url = URL(string: product.imageName) {
-                                KFImage(url)
+                    // Payment Method
+                    VStack(alignment: .leading) {
+                        Text(R.string.localizable.paymentMethod)
+                            .font(R.font.outfitBold.font(size: 20))
+                        
+                        if let selected = paymentMethods.first(where: { $0.id == selectedPayment }) {
+                            HStack {
+                                Image(selected.imageName)
                                     .resizable()
-                                    .frame(width: 60, height: 60)
-                                    .cornerRadius(10)
-                            } else {
-                                Image(product.imageName)
-                                    .resizable()
-                                    .frame(width: 60, height: 60)
-                                    .cornerRadius(10)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(product.title)
-                                    .font(R.font.outfitMedium.font(size: 18))
-                                HStack(spacing: 8) {
-                                    Text("Color:")
-                                        .font(R.font.outfitRegular.font(size: 13))
-                                        .foregroundColor(.gray)
-                                    Circle()
-                                        .fill(Color(hex: product.color) ?? .gray)
-                                        .frame(width: 16, height: 16)
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color.gray, lineWidth: 0.5)
-                                        )
-                                    Text("Size: \(product.size)")
-                                        .font(R.font.outfitRegular.font(size: 13))
-                                        .foregroundColor(.gray)
-                                    Text("Qty: \(product.quantity)")
-                                        .font(R.font.outfitRegular.font(size: 13))
+                                    .frame(width: 40, height: 30)
+                                
+                                VStack(alignment: .leading) {
+                                    Text(selected.name)
+                                        .font(R.font.outfitMedium.font(size: 16))
+                                    Text(selected.subtitle)
+                                        .font(R.font.outfitRegular.font(size: 14))
                                         .foregroundColor(.gray)
                                 }
-                            }
-                            
-                            Spacer()
-                            Text(String(format: "$ %.2f", product.price * Double(product.quantity)))
-                                .font(R.font.outfitBold.font(size: 15))
-                        }
-                    }
-                }
-                
-                // Payment Method
-                VStack(alignment: .leading) {
-                    Text(R.string.localizable.paymentMethod)
-                        .font(R.font.outfitBold.font(size: 20))
-                    
-                    if let selected = paymentMethods.first(where: { $0.id == selectedPayment }) {
-                        HStack {
-                            Image(selected.imageName)
-                                .resizable()
-                                .frame(width: 40, height: 30)
-
-                            VStack(alignment: .leading) {
-                                Text(selected.name)
-                                    .font(R.font.outfitMedium.font(size: 16))
-                                Text(selected.subtitle)
-                                    .font(R.font.outfitRegular.font(size: 14))
+                                
+                                Spacer()
+                                Image(systemName: "chevron.right")
                                     .foregroundColor(.gray)
                             }
-
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
-                        }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color.gray.opacity(0.3))
-                        )
-                        .onTapGesture {
-                            showMethodSheet = true
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.gray.opacity(0.3))
+                            )
+                            .onTapGesture {
+                                showMethodSheet = true
+                            }
                         }
                     }
-                }
-                
-                // Total
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(R.string.localizable.totalAmount())
-                            .font(R.font.outfitMedium.font(size: 16))
-                            .foregroundColor(.gray)
-                        Spacer()
-                        HStack(alignment: .top) {
-                            Text("$")
-                                .font(R.font.outfitBold.font(size: 15))
-                            Text(String(format: "%.2f", totalPrice + 6))
+                    
+                    // Total Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Order Summary")
+                            .font(R.font.outfitBold.font(size: 20))
+                            .padding(.bottom, 5)
+                        
+                        // Subtotal
+                        HStack {
+                            Text("Subtotal")
+                                .font(R.font.outfitMedium.font(size: 16))
+                                .foregroundColor(.gray)
+                            Spacer()
+                            Text(String(format: "$%.1f", products.reduce(0) { $0 + $1.price * Double($1.quantity) }))
+                                .font(R.font.outfitMedium.font(size: 16))
+                        }
+                        
+                        // Shipping Fee
+                        HStack {
+                            Text("Shipping Fee")
+                                .font(R.font.outfitMedium.font(size: 16))
+                                .foregroundColor(.gray)
+                            Spacer()
+                            Text("$6.0")
+                                .font(R.font.outfitMedium.font(size: 16))
+                        }
+                        
+                        // Discount (if any)
+                        let subtotal = products.reduce(0) { $0 + $1.price * Double($1.quantity) }
+                        if totalPrice < subtotal + 6.0 {
+                            HStack {
+                                Text("Discount")
+                                    .font(R.font.outfitMedium.font(size: 16))
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(String(format: "-$%.1f", (subtotal + 6.0) - totalPrice))
+                                    .font(R.font.outfitMedium.font(size: 16))
+                                    .foregroundColor(.green)
+                            }
+                        }
+                        
+                        Divider()
+                            .padding(.vertical, 5)
+                        
+                        // Total
+                        HStack {
+                            Text("Total Amount")
+                                .font(R.font.outfitMedium.font(size: 16))
+                                .foregroundColor(.gray)
+                            Spacer()
+                            Text(String(format: "$%.1f", totalPrice))
                                 .font(R.font.outfitBold.font(size: 20))
                         }
                     }
-                }
-                
-                if paymentViewModel.isLoading {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    ScrollView {
-                        // ... existing scroll view content ...
+                    .background(Color.white)
+                    .cornerRadius(15)
+//                    .shadow(color: .gray.opacity(0.1), radius: 5)
+                    
+                    if paymentViewModel.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        if let error = paymentViewModel.errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(R.font.outfitRegular.font(size: 14))
+                                .padding(.horizontal)
+                        }
+                        
+                        // Checkout Button
+                        Button(action: createOrder) {
+                            Text(R.string.localizable.checkoutNow())
+                                .font(R.font.outfitMedium.font(size: 20))
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.main)
+                                .foregroundColor(.white)
+                                .cornerRadius(25)
+                        }
+                        .disabled(paymentViewModel.isLoading)
+                        .padding()
                     }
                     
-                    if let error = paymentViewModel.errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(R.font.outfitRegular.font(size: 14))
-                            .padding(.horizontal)
-                    }
-                    
-                    // Checkout Button
-                    Button(action: createOrder) {
-                        Text(R.string.localizable.checkoutNow())
-                            .font(R.font.outfitMedium.font(size: 20))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.main)
-                            .foregroundColor(.white)
-                            .cornerRadius(25)
-                    }
-                    .disabled(paymentViewModel.isLoading)
-                    .padding()
+                    Spacer()
                 }
-                
-                Spacer()
             }
             .padding()
             .padding(.horizontal,10)
