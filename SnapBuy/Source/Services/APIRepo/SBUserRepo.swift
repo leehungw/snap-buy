@@ -4,7 +4,8 @@ final class UserRepository {
     static let shared = UserRepository()
     private init() {}
     
-    var currentUser: UserData?
+    var currentUser: UserData? = .init(id: "5624994f-3a1a-4fa0-83ec-529ec3530f91", name: "cc", imageURL: "", userName: "", email: "", isAdmin: false, isPremium: false, isBanned: false, lastProductId: 0)
+
     
     func login(request: UserLoginRequest, completion: @escaping SBValueAction<Result<UserLoginResponse, Error>>) {
         guard let jsonData = try? JSONEncoder().encode(request) else {
