@@ -117,15 +117,12 @@ struct OrderDetailView: View {
                                     }
                                 }
                             }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(16)
-                            
                             // Buyer Information
                             InfoCard(title: "Buyer Information") {
                                 VStack(alignment: .leading, spacing: 12) {
                                     InfoRow(icon: "person.circle", title: "ID", value: order.buyerId)
                                     InfoRow(icon: "location", title: "Address", value: order.shippingAddress)
+                                    InfoRow(icon: "phone", title: "Phone", value: order.phoneNumber)
                                 }
                             }
                             

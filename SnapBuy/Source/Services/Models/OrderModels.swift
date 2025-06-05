@@ -43,6 +43,7 @@ struct SBOrderModel: Codable, Identifiable {
     var sellerId: String
     var totalAmount: Double
     var shippingAddress: String
+    var phoneNumber: String
     var orderItems: [SBOrderItemModel]
     var status: String
 }

@@ -115,6 +115,9 @@ struct SBOrderDetailSheet: View {
                         Text(order.shippingAddress)
                             .font(R.font.outfitRegular.font(size: 14))
                             .foregroundColor(.gray)
+                        Text("Phone: \(order.phoneNumber)")
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .foregroundColor(.gray)
                     }
                     .padding(.horizontal)
                     
