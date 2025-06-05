@@ -150,29 +150,13 @@ struct SBSellerDashboardView: View {
         
         // Fetch pending orders
         group.enter()
-        OrderRepository.shared.fetchOrdersByStatus(status: OrderStatus.pending.rawValue) { result in
-            switch result {
-            case .success(let orders):
-                tempStats.pendingOrders = orders.filter { $0.sellerId == sellerId }.count
-            case .failure(let error):
-                loadError = error
-            }
-            group.leave()
-        }
+        fetchPendingOrders()
+        group.leave()
         
         // Fetch completed orders and calculate revenue
         group.enter()
-        OrderRepository.shared.fetchListSellerOrders(sellerId: sellerId) { result in
-            switch result {
-            case .success(let orders):
-                let successOrders = orders.filter { $0.status == OrderStatus.success.rawValue }
-                tempStats.completedOrders = successOrders.count
-                tempStats.todayRevenue = successOrders.reduce(0) { $0 + $1.totalAmount }
-            case .failure(let error):
-                loadError = error
-            }
-            group.leave()
-        }
+        calculateSuccessRate()
+        group.leave()
         
         group.notify(queue: .main) {
             isLoading = false
@@ -180,6 +164,39 @@ struct SBSellerDashboardView: View {
                 errorMessage = error.localizedDescription
             } else {
                 stats = tempStats
+            }
+        }
+    }
+    
+    private func fetchPendingOrders() {
+        guard let sellerId = UserRepository.shared.currentUser?.id else { return }
+        
+        OrderRepository.shared.fetchOrdersByStatus(status: OrderStatus.pending.rawValue) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let orders):
+                    self.stats.pendingOrders = orders.filter { $0.sellerId == sellerId }.count
+                case .failure(let error):
+                    print("Error fetching pending orders: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func calculateSuccessRate() {
+        guard let sellerId = UserRepository.shared.currentUser?.id else { return }
+        
+        OrderRepository.shared.fetchAllOrders { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let orders):
+                    let sellerOrders = orders.filter { $0.sellerId == sellerId }
+                    let successOrders = sellerOrders.filter { $0.status == OrderStatus.success.rawValue }
+                    self.stats.completedOrders = successOrders.count
+                    self.stats.todayRevenue = successOrders.reduce(0) { $0 + $1.totalAmount }
+                case .failure(let error):
+                    print("Error calculating success rate: \(error)")
+                }
             }
         }
     }

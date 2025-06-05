@@ -90,7 +90,6 @@
 		0AA7A1362D923C0600EB5684 /* RSwiftExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A1352D923BFF00EB5684 /* RSwiftExtension.swift */; };
 		0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7A1392D92FA6A00EB5684 /* SBComponentProvider.swift */; };
 		0AB5CD972DEB3989002E6C97 /* SBPaypalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB5CD962DEB3974002E6C97 /* SBPaypalService.swift */; };
-		0AB5CD9D2DEB400B002E6C97 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0AB5CD9C2DEB400B002E6C97 /* PayPalConfig.plist */; };
 		0AB5CDA22DEC726B002E6C97 /* SBPayPalOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB5CDA02DEC726B002E6C97 /* SBPayPalOnboardingView.swift */; };
 		0AB9B0652DBFC56700E54E28 /* CartItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0602DBFC56700E54E28 /* CartItemModel.swift */; };
 		0AB9B0662DBFC56700E54E28 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0612DBFC56700E54E28 /* ColorModel.swift */; };
@@ -103,7 +102,6 @@
 		0AF9F5A72DE2294A000B9B6D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A62DE2294A000B9B6D /* SearchViewModel.swift */; };
 		1136D81B7CB8C1798433F2A6 /* Pods_SnapBuy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68E662488D45EFC313A2A406 /* Pods_SnapBuy.framework */; };
 		DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5045702DC0AD9400DCE3EA /* MessageModel.swift */; };
-		DA6BBB662DE61CFC005BF7E7 /* SBOrderRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */; };
 		DA6BBB682DE61D05005BF7E7 /* OrderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */; };
 		DA72B3A52DEAA4160080645C /* SBOrderDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA72B3A42DEAA4150080645C /* SBOrderDetailSheet.swift */; };
 		DA72B3AA2DEBB9670080645C /* ReviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA72B3A92DEBB9670080645C /* ReviewModels.swift */; };
@@ -130,12 +128,14 @@
 		DA958F3E2DD47C0200A98432 /* SBAddProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */; };
 		DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F402DD484A400A98432 /* SBProductManagementView.swift */; };
 		DA9BD5C12DF0B71400C3B1A4 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA9BD5C02DF0B71400C3B1A4 /* PayPalConfig.plist */; };
+		DA9BD5BF2DF0A85B00C3B1A4 /* SignalRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9BD5BE2DF0A84D00C3B1A4 /* SignalRService.swift */; };
 		DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */; };
 		DADEB30D2DE3649700DED0A1 /* SBChatRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */; };
 		DAE23DEB2DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */; };
 		DAE23DED2DEDA3C60044BAA9 /* VoucherModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */; };
 		DAE23DEF2DEDA3D20044BAA9 /* SBVoucherRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */; };
 		DAE23DF12DEED4520044BAA9 /* SignalRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DF02DEED4520044BAA9 /* SignalRService.swift */; };
+		DAE23DF32DEFECE20044BAA9 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAE23DF22DEFECE20044BAA9 /* PayPalConfig.plist */; };
 		DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */; };
 		DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */; };
 		DAF3BC4B2DDDB4AF0099DBE7 /* SBAdminUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */; };
@@ -231,7 +231,6 @@
 		0AA7A1352D923BFF00EB5684 /* RSwiftExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSwiftExtension.swift; sourceTree = "<group>"; };
 		0AA7A1392D92FA6A00EB5684 /* SBComponentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBComponentProvider.swift; sourceTree = "<group>"; };
 		0AB5CD962DEB3974002E6C97 /* SBPaypalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaypalService.swift; sourceTree = "<group>"; };
-		0AB5CD9C2DEB400B002E6C97 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		0AB5CDA02DEC726B002E6C97 /* SBPayPalOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayPalOnboardingView.swift; sourceTree = "<group>"; };
 		0AB9B05F2DBFC56700E54E28 /* AddressModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressModel.swift; sourceTree = "<group>"; };
 		0AB9B0602DBFC56700E54E28 /* CartItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemModel.swift; sourceTree = "<group>"; };
@@ -247,7 +246,6 @@
 		8BDE79FAB67DEB8843E5A04A /* Pods-SnapBuy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.release.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.release.xcconfig"; sourceTree = "<group>"; };
 		DA5045702DC0AD9400DCE3EA /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		DA6A84AB2D809E7700454EEF /* SnapBuy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnapBuy.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOrderRepo.swift; sourceTree = "<group>"; };
 		DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModels.swift; sourceTree = "<group>"; };
 		DA72B3A42DEAA4150080645C /* SBOrderDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOrderDetailSheet.swift; sourceTree = "<group>"; };
 		DA72B3A92DEBB9670080645C /* ReviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModels.swift; sourceTree = "<group>"; };
@@ -274,12 +272,14 @@
 		DA958F3D2DD47C0000A98432 /* SBAddProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAddProduct.swift; sourceTree = "<group>"; };
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
 		DA9BD5C02DF0B71400C3B1A4 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
+		DA9BD5BE2DF0A84D00C3B1A4 /* SignalRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRService.swift; sourceTree = "<group>"; };
 		DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatRepo.swift; sourceTree = "<group>"; };
 		DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminVoucherManagement.swift; sourceTree = "<group>"; };
 		DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoucherModels.swift; sourceTree = "<group>"; };
 		DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVoucherRepo.swift; sourceTree = "<group>"; };
 		DAE23DF02DEED4520044BAA9 /* SignalRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRService.swift; sourceTree = "<group>"; };
+		DAE23DF22DEFECE20044BAA9 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminDashboard.swift; sourceTree = "<group>"; };
 		DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserManagement.swift; sourceTree = "<group>"; };
 		DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserDetail.swift; sourceTree = "<group>"; };
@@ -529,7 +529,6 @@
 			children = (
 				0AA4788F2DEA08EC00FF4C10 /* SBOrderRepo.swift */,
 				DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */,
-				DA6BBB652DE61CF3005BF7E7 /* SBOrderRepo.swift */,
 				0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */,
 				DA72B3AB2DEBB9820080645C /* SBReviewRepo.swift */,
 				0A4E667D2DDAD6910082C57D /* SPProductRepo.swift */,
@@ -630,7 +629,7 @@
 		0AA7A1082D91CD9D00EB5684 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				DAE23DF02DEED4520044BAA9 /* SignalRService.swift */,
+				DA9BD5BE2DF0A84D00C3B1A4 /* SignalRService.swift */,
 				0AB5CD962DEB3974002E6C97 /* SBPaypalService.swift */,
 				0AA7A1062D91CD9D00EB5684 /* SBAppConstants.swift */,
 				0A47B13A2DD321B400FBD707 /* SBEmailService.swift */,
@@ -658,8 +657,7 @@
 		0AA7A10B2D91CD9D00EB5684 /* SnapBuy */ = {
 			isa = PBXGroup;
 			children = (
-				0AB5CD9C2DEB400B002E6C97 /* PayPalConfig.plist */,
-				DA9BD5C02DF0B71400C3B1A4 /* PayPalConfig.plist */,
+				DAE23DF22DEFECE20044BAA9 /* PayPalConfig.plist */,
 				0AA7A10A2D91CD9D00EB5684 /* Info.plist */,
 				0ABB7D1F2DC4B29600AD897B /* credentials.plist */,
 				0AA7A0ED2D91CD9D00EB5684 /* Resource */,
@@ -984,11 +982,11 @@
 				0AA7A1122D91CD9D00EB5684 /* Outfit-ExtraLight.ttf in Resources */,
 				0ABB7D202DC4B29600AD897B /* credentials.plist in Resources */,
 				0AA7A1132D91CD9D00EB5684 /* Outfit-Light.ttf in Resources */,
+				DAE23DF32DEFECE20044BAA9 /* PayPalConfig.plist in Resources */,
 				0AA7A1142D91CD9D00EB5684 /* Outfit-Medium.ttf in Resources */,
 				0AA7A1152D91CD9D00EB5684 /* Outfit-Regular.ttf in Resources */,
 				0AA7A1162D91CD9D00EB5684 /* Outfit-SemiBold.ttf in Resources */,
 				0AA7A1172D91CD9D00EB5684 /* Outfit-Thin.ttf in Resources */,
-				0AB5CD9D2DEB400B002E6C97 /* PayPalConfig.plist in Resources */,
 				0AA7A1182D91CD9D00EB5684 /* Assets.xcassets in Resources */,
 				0AA7A1192D91CD9D00EB5684 /* Localizable.strings in Resources */,
 			);
@@ -1136,7 +1134,6 @@
 				0A26C70D2DDCCE590088EFAE /* SBCategoryView.swift in Sources */,
 				0A26C70E2DDCCE590088EFAE /* SBRangeSlider.swift in Sources */,
 				0AF9F5A72DE2294A000B9B6D /* SearchViewModel.swift in Sources */,
-				DA6BBB662DE61CFC005BF7E7 /* SBOrderRepo.swift in Sources */,
 				0A26C70F2DDCCE590088EFAE /* SBTextInput.swift in Sources */,
 				0A26C7102DDCCE590088EFAE /* SBButton.swift in Sources */,
 				0A26C7112DDCCE590088EFAE /* SBChatView.swift in Sources */,
@@ -1150,13 +1147,13 @@
 				0AF9F5A52DE1FDBD000B9B6D /* TagModels.swift in Sources */,
 				0A26C7192DDCCE590088EFAE /* SBAddressView.swift in Sources */,
 				0AA7A13A2D92FA7200EB5684 /* SBComponentProvider.swift in Sources */,
+				DA9BD5BF2DF0A85B00C3B1A4 /* SignalRService.swift in Sources */,
 				0A47C4D92D94F8F60091E2D4 /* BezierCurvePath.swift in Sources */,
 				DA8B42512DD9C5CE00A543DD /* OrderDetailView.swift in Sources */,
 				0A47C4DA2D94F8F60091E2D4 /* CustomTabBar.swift in Sources */,
 				DA72B3AE2DEBBAB10080645C /* SBUnreviewedItemsView.swift in Sources */,
 				DA72B3AC2DEBB9820080645C /* SBReviewRepo.swift in Sources */,
 				DA958F2D2DD32E8B00A98432 /* SBSettingBaseView.swift in Sources */,
-				DAE23DF12DEED4520044BAA9 /* SignalRService.swift in Sources */,
 				0A5ECDAE2DE4C6C200E49072 /* UserModeManager.swift in Sources */,
 				DADEB30B2DE363EF00DED0A1 /* ChatModels.swift in Sources */,
 				DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */,
@@ -1343,7 +1340,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Preview Content\"";
-				DEVELOPMENT_TEAM = 7SS5ZMN85B;
+				DEVELOPMENT_TEAM = JB8Z9HTB6G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SnapBuy/Info.plist;
@@ -1374,7 +1371,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Preview Content\"";
-				DEVELOPMENT_TEAM = 7SS5ZMN85B;
+				DEVELOPMENT_TEAM = JB8Z9HTB6G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SnapBuy/Info.plist;

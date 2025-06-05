@@ -34,7 +34,7 @@ struct SBHomeTabbarView: View {
                 SBOrderManagementView()
                     .tag(3)
                 
-                SalesStatisticsView(allWeeklyData: [], allMonthlyData: [], allYearlyData: [], totalOrders: 0, totalItemsSold: 0, totalRevenue: 0)
+                SalesStatisticsView()
                     .tag(4)
             }
         }
