@@ -3,21 +3,117 @@ import SwiftUI
 struct SBSellerProfileView: View {
     @StateObject private var userModeManager = UserModeManager.shared
     @State private var showPayPalOnboarding = false
+    @State private var user: UserData? = nil
+    @State private var isLoading = false
+    @State private var errorMessage: String? = nil
     
     var body: some View {
-        VStack {
-            // Show PayPal onboarding sheet if URL is available
+        NavigationView{
+            VStack(spacing: 20) {
+                HStack {
+                    Spacer()
+                    Text("Profile")
+                        .font(R.font.outfitMedium.font(size: 20))
+                        .foregroundColor(.white)
+                        .padding(.leading,20)
+                    Spacer()
+                    NavigationLink(destination: SBSellerSettingsView()) {
+                        Image(systemName: "gearshape")
+                            .font(.title2)
+                            .foregroundColor(Color.white)
+                    }
+                }
+                .padding()
+                .background(Color.main)
+                if isLoading {
+                    ProgressView()
+                        .padding()
+                } else if let error = errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .padding()
+                } else if let user = user {
+                    if let imageURL = URL(string: user.imageURL) {
+                        AsyncImage(url: imageURL) { image in
+                            image.resizable()
+                        } placeholder: {
+                            Image(systemName: "person.crop.circle.fill")
+                                .resizable()
+                                .foregroundColor(.gray)
+                        }
+                        .frame(width: 120, height: 120)
+                        .clipShape(Circle())
+                        .shadow(radius: 5)
+                    }
+                    Text(user.name)
+                        .font(.custom("Outfit-Medium", size: 24))
+                        .fontWeight(.bold)
+                    Text("@\(user.userName)")
+                        .font(.custom("Outfit-Regular", size: 16))
+                        .foregroundColor(.secondary)
+                    Text(user.email)
+                        .font(.custom("Outfit-Regular", size: 16))
+                        .foregroundColor(.secondary)
+                    // PayPal Onboarding Button
+                    if user.sellerMerchantId == nil || user.sellerMerchantId?.isEmpty == true {
+                        Button(action: {
+                            showPayPalOnboarding = true
+                        }) {
+                            HStack {
+                                Image("img_paypal")
+                                    .resizable()
+                                    .frame(width: 32, height: 24)
+                                Text("Setup PayPal Onboarding")
+                                    .font(R.font.outfitBold.font(size: 16))
+                            }
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.main)
+                            .cornerRadius(20)
+                        }
+                    }
+                }
+                Spacer()
+                Button(role: .destructive) {
+                    print("User logged out")
+                } label: {
+                    Text("Log Out")
+                        .font(R.font.outfitBold.font(size: 16))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.red.opacity(0.1))
+                        .foregroundColor(.red)
+                        .cornerRadius(12)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 32)
+            }
             .sheet(isPresented: $showPayPalOnboarding) {
                 SBPayPalOnboardingView()
             }
-        }
-        .onAppear {
-            // Show PayPal onboarding if we have a URL and user is premium
-            if userModeManager.paypalOnboardingURL != nil,
-               let user = UserRepository.shared.currentUser,
-               user.isPremium {
-                showPayPalOnboarding = true
+            .onAppear {
+                fetchUser()
             }
         }
     }
-} 
+    
+    private func fetchUser() {
+        guard let userId = UserRepository.shared.currentUser?.id else {
+            self.errorMessage = "User not logged in"
+            return
+        }
+        isLoading = true
+        errorMessage = nil
+        UserRepository.shared.fetchUserById(userId: userId) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let userData):
+                    self.user = userData
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+}

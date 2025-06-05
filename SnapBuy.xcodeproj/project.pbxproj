@@ -32,6 +32,7 @@
 		0A26C7182DDCCE590088EFAE /* SBWrapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26C6FC2DDCCE590088EFAE /* SBWrapLayout.swift */; };
 		0A26C7192DDCCE590088EFAE /* SBAddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26C6E12DDCCE590088EFAE /* SBAddressView.swift */; };
 		0A26C71B2DDCE2AC0088EFAE /* SBProductByCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26C71A2DDCE29C0088EFAE /* SBProductByCategoryView.swift */; };
+		0A3AB3902DF0CC3B00869FA3 /* SBSellerProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3AB38F2DF0CC3B00869FA3 /* SBSellerProfileView.swift */; };
 		0A47B1352DD23C0D00FBD707 /* SwiftSMTP in Frameworks */ = {isa = PBXBuildFile; productRef = 0A47B1342DD23C0D00FBD707 /* SwiftSMTP */; };
 		0A47B13B2DD321B800FBD707 /* SBEmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B13A2DD321B400FBD707 /* SBEmailService.swift */; };
 		0A47B1412DD3272D00FBD707 /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A47B1402DD3272900FBD707 /* UserModels.swift */; };
@@ -113,7 +114,6 @@
 		DA8B42512DD9C5CE00A543DD /* OrderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B42502DD9C5C900A543DD /* OrderDetailView.swift */; };
 		DA8B42542DD9CF4E00A543DD /* SBStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B42532DD9CF4A00A543DD /* SBStatisticView.swift */; };
 		DA8B42572DD9D93400A543DD /* SBSellerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B42562DD9D92700A543DD /* SBSellerSettingView.swift */; };
-		DA8B42592DD9D99000A543DD /* SBSellerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B42582DD9D98700A543DD /* SBSellerProfile.swift */; };
 		DA958F1B2DD1F8EE00A98432 /* ReviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F1A2DD1F8E300A98432 /* ReviewModel.swift */; };
 		DA958F202DD1FFC600A98432 /* SBSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F1F2DD1FFC100A98432 /* SBSetting.swift */; };
 		DA958F232DD2016200A98432 /* SBEditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F222DD2015400A98432 /* SBEditProfileView.swift */; };
@@ -171,6 +171,7 @@
 		0A26C7002DDCCE590088EFAE /* SBStoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBStoreView.swift; sourceTree = "<group>"; };
 		0A26C7022DDCCE590088EFAE /* SBUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserView.swift; sourceTree = "<group>"; };
 		0A26C71A2DDCE29C0088EFAE /* SBProductByCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductByCategoryView.swift; sourceTree = "<group>"; };
+		0A3AB38F2DF0CC3B00869FA3 /* SBSellerProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSellerProfileView.swift; sourceTree = "<group>"; };
 		0A47B13A2DD321B400FBD707 /* SBEmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEmailService.swift; sourceTree = "<group>"; };
 		0A47B1402DD3272900FBD707 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
 		0A47B1422DD3274400FBD707 /* CategoryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModels.swift; sourceTree = "<group>"; };
@@ -255,7 +256,6 @@
 		DA8B42502DD9C5C900A543DD /* OrderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailView.swift; sourceTree = "<group>"; };
 		DA8B42532DD9CF4A00A543DD /* SBStatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBStatisticView.swift; sourceTree = "<group>"; };
 		DA8B42562DD9D92700A543DD /* SBSellerSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSellerSettingView.swift; sourceTree = "<group>"; };
-		DA8B42582DD9D98700A543DD /* SBSellerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSellerProfile.swift; sourceTree = "<group>"; };
 		DA958F1A2DD1F8E300A98432 /* ReviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModel.swift; sourceTree = "<group>"; };
 		DA958F1F2DD1FFC100A98432 /* SBSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSetting.swift; sourceTree = "<group>"; };
 		DA958F222DD2015400A98432 /* SBEditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEditProfileView.swift; sourceTree = "<group>"; };
@@ -738,13 +738,13 @@
 			path = Statistic;
 			sourceTree = "<group>";
 		};
-		DA8B42552DD9D92200A543DD /* Setting */ = {
+		DA8B42552DD9D92200A543DD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 				DA8B42562DD9D92700A543DD /* SBSellerSettingView.swift */,
-				DA8B42582DD9D98700A543DD /* SBSellerProfile.swift */,
+				0A3AB38F2DF0CC3B00869FA3 /* SBSellerProfileView.swift */,
 			);
-			path = Setting;
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		DA958F1E2DD1FFB800A98432 /* Setting */ = {
@@ -807,7 +807,7 @@
 		DA958F392DD4745C00A98432 /* Seller */ = {
 			isa = PBXGroup;
 			children = (
-				DA8B42552DD9D92200A543DD /* Setting */,
+				DA8B42552DD9D92200A543DD /* Profile */,
 				DA8B42522DD9CF3F00A543DD /* Statistic */,
 				DA8B424D2DD9BDF000A543DD /* OrderManagement */,
 				DA958F3F2DD47C0400A98432 /* ProductManagement */,
@@ -1017,9 +1017,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1095,6 +1099,7 @@
 				0AA7A11D2D91CD9D00EB5684 /* SBBaseView.swift in Sources */,
 				0A47C4E82D94FD620091E2D4 /* SBUserDefaultService.swift in Sources */,
 				0A47C4B52D94F6AB0091E2D4 /* SBHomeTabbarView.swift in Sources */,
+				0A3AB3902DF0CC3B00869FA3 /* SBSellerProfileView.swift in Sources */,
 				DA958F3C2DD47B5400A98432 /* SBDashboard.swift in Sources */,
 				DA958F282DD201AB00A98432 /* SBSecurityView.swift in Sources */,
 				0AA7A11E2D91CD9D00EB5684 /* SheetBase.swift in Sources */,
@@ -1167,7 +1172,6 @@
 				0AA478902DEA08EC00FF4C10 /* SBOrderRepo.swift in Sources */,
 				DAF3BC502DDDBBC30099DBE7 /* AdminHeader.swift in Sources */,
 				0A47C4C42D94F72E0091E2D4 /* SBProductDetailView.swift in Sources */,
-				DA8B42592DD9D99000A543DD /* SBSellerProfile.swift in Sources */,
 				DA958F412DD484AF00A98432 /* SBProductManagementView.swift in Sources */,
 				0A47C4E02D94F90F0091E2D4 /* TabModel.swift in Sources */,
 				0A47C4E12D94F90F0091E2D4 /* CategoryModel.swift in Sources */,
