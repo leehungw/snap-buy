@@ -41,12 +41,26 @@ struct SBPaymentView: View {
         paymentMethods.first { $0.id == selectedPayment }
     }
     
-    private func createOrder() {
+    private func handleCheckout() {
         guard let selectedMethod = selectedPaymentMethod else { return }
-        
         // Only PayPal platform payments are supported
         Task {
             await paymentViewModel.processPayment(products: products, totalAmount: totalPrice)
+//         let shippingAddress = selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress
+//         let total = totalPrice + 6
+//         if selectedMethod.name == "COD" {
+//             paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress) { success, error in
+//                 // Error handling is already in view model
+//             }
+//         } else if selectedMethod.name == "PayPal" {
+//             Task {
+//                 await paymentViewModel.processPayment(products: products, totalAmount: total)
+//                 if paymentViewModel.errorMessage == nil {
+//                     paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress) { success, error in
+//                         // Error handling is already in view model
+//                     }
+//                 }
+//             }
         }
     }
     
@@ -276,6 +290,7 @@ struct SBPaymentView: View {
                     }
                     
                     Spacer()
+
                 }
             }
             .padding()
@@ -392,11 +407,4 @@ struct SBPaymentMethodView: View {
             selectedPaymentID = selectedPayment
         }
     }
-}
-
-#Preview {
-    SBPaymentView(
-        products: Array(CartItem.cartitems.prefix(3)),
-        totalPrice: 59.98
-    )
 }

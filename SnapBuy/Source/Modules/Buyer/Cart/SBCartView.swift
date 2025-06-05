@@ -40,26 +40,26 @@ struct SBCartView: View {
     var body: some View {
         SBBaseView {
             VStack(spacing: 0) {
+        HStack {
+            Button(action: {
+                toggleSelectAll()
+            }) {
                 HStack {
-                    Button(action: {
-                        toggleSelectAll()
-                    }) {
-                        HStack {
-                            Image(systemName: allItemsSelected() ? "checkmark.square.fill" : "square")
-                            Text(allItemsSelected() ? "Unselect All" : "Select All")
-                                .font(R.font.outfitMedium.font(size: 14))
-                        }
-                        .foregroundColor(canSelectAnyProduct() ? .main : .gray)
-                        .frame(width: 105)
-                    }
-
-                    Spacer()
-
-                    Text(R.string.localizable.myCart())
-                        .font(R.font.outfitRegular.font(size: 16))
+                    Image(systemName: allItemsSelected() ? "checkmark.square.fill" : "square")
+                    Text(allItemsSelected() ? "Unselect All" : "Select All")
+                        .font(R.font.outfitMedium.font(size: 14))
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 10)
+                        .foregroundColor(canSelectAnyProduct() ? .main : .gray)
+                .frame(width: 105)
+            }
+
+            Spacer()
+
+            Text(R.string.localizable.myCart())
+                .font(R.font.outfitRegular.font(size: 16))
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 10)
                 
                 if isLoading {
                     ProgressView()
@@ -72,12 +72,12 @@ struct SBCartView: View {
                     Text("Your cart is empty")
                         .font(R.font.outfitMedium.font(size: 16))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
+        } else {
                     ScrollView(showsIndicators: false) {
                         ForEach(cartProducts) { product in
                             fullCartItemView(product: product)
                                 .opacity(canSelectProduct(product) ? 1.0 : 0.5)
-                        }
+        }
                         .padding(.horizontal, 20)
                         .padding(.bottom, 200) // Add padding at bottom for footer
                     }
@@ -154,19 +154,19 @@ struct SBCartView: View {
                                     }
                                 }
                                 
-                                HStack {
-                                    Text(R.string.localizable.shipping)
-                                        .font(R.font.outfitMedium.font(size: 16))
-                                        .foregroundColor(.gray)
-                                    Spacer()
-                                    HStack(alignment: .top) {
-                                        Text("$")
-                                            .font(R.font.outfitBold.font(size: 15))
-                                        Text(String(format: "%.2f", 6.00))
-                                            .font(R.font.outfitBold.font(size: 20))
-                                    }
-                                }
-                                
+                    HStack {
+                        Text(R.string.localizable.shipping)
+                            .font(R.font.outfitMedium.font(size: 16))
+                            .foregroundColor(.gray)
+                        Spacer()
+                        HStack(alignment: .top) {
+                            Text("$")
+                                .font(R.font.outfitBold.font(size: 15))
+                            Text(String(format: "%.2f", 6.00))
+                                .font(R.font.outfitBold.font(size: 20))
+                        }
+                    }
+                               
                                 if let voucher = selectedVoucher {
                                     HStack {
                                         Text("Discount")
@@ -196,18 +196,19 @@ struct SBCartView: View {
                                             .font(R.font.outfitBold.font(size: 20))
                                     }
                                 }
+
                                 
                                 NavigationLink(destination: SBPaymentView(
                                     products: convertToCartItems(selectedCartProducts()),
                                     totalPrice: finalTotal()
                                 )) {
-                                    Text("Checkout")
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .font(R.font.outfitMedium.font(size: 20))
-                                        .background(Color.main)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(50)
+                    Text("Checkout")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .font(R.font.outfitMedium.font(size: 20))
+                        .background(Color.main)
+                        .foregroundColor(.white)
+                        .cornerRadius(50)
                                 }
                             }
                         }
@@ -223,6 +224,7 @@ struct SBCartView: View {
                 .presentationDetents([.fraction(0.6)])
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(50)
+
         }
         .alert("Remove from Cart", isPresented: $showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {
@@ -265,8 +267,8 @@ struct SBCartView: View {
                     errorMessage = error.localizedDescription
                 }
                 group.leave()
-            }
         }
+    }
         
         group.notify(queue: .main) {
             self.cartProducts = loadedProducts
@@ -284,7 +286,7 @@ struct SBCartView: View {
         quantities.removeValue(forKey: product.id)
         selectedItems.remove(product.id)
     }
-    
+
     // MARK: - Full View
     @ViewBuilder
     func fullCartItemView(product: SBProduct) -> some View {
@@ -332,10 +334,10 @@ struct SBCartView: View {
                 HStack(spacing: 12) {
                     if let imageUrl = product.productImages.first?.url {
                         KFImage(URL(string: imageUrl))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 100)
-                            .cornerRadius(15)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 100)
+                        .cornerRadius(15)
                     }
                     
                     VStack(alignment: .leading, spacing: 5) {
@@ -350,8 +352,8 @@ struct SBCartView: View {
                                     .fill(Color(hex: variant.color) ?? .gray)
                                     .frame(width: 16, height: 16)
                                 Text("Size: \(variant.size)")
-                                    .font(R.font.outfitRegular.font(size: 13))
-                                    .foregroundColor(.gray)
+                            .font(R.font.outfitRegular.font(size: 13))
+                            .foregroundColor(.gray)
                             }
                         }
                         Spacer()
@@ -459,7 +461,7 @@ struct SBCartView: View {
                 cartProducts.forEach { product in
                     if product.sellerId == selectedShopId {
                         selectedItems.insert(product.id)
-                    }
+                }
                 }
             } else {
                 // If no shop is selected yet, select all products from the first product's shop

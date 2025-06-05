@@ -25,7 +25,21 @@ struct UserData: Codable {
     let isAdmin: Bool
     let isPremium: Bool
     let isBanned: Bool
+    let sellerMerchantId: String?
     let lastProductId: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case imageURL
+        case userName
+        case email
+        case isAdmin
+        case isPremium
+        case isBanned
+        case sellerMerchantId = "selleR_MERCHANT_ID"
+        case lastProductId
+    }
 }
 
 struct APIErrorResponse: Codable {

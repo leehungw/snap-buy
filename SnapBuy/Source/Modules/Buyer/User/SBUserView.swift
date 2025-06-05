@@ -26,8 +26,10 @@ struct SBUserView: View {
                         .font(R.font.outfitRegular.font(size: 16))
                         .padding(.leading,30)
                     Spacer()
-                    Image(systemName: "bag")
-                        .padding(.trailing)
+                    NavigationLink(destination: SBMessageView()) {
+                        Image(systemName: "ellipsis.message")
+                            .padding(.trailing)
+                    }
                 }
                 .padding()
                 

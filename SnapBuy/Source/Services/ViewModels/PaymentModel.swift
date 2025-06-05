@@ -12,16 +12,38 @@ class PaymentViewModel: ObservableObject {
     
     func processPayment(products: [CartItem], totalAmount: Double) async {
         guard let firstProduct = products.first else { return }
-        
         isLoading = true
         errorMessage = nil
+        
+        // Fetch seller merchant id from backend
+        let sellerId = firstProduct.sellerId
+        var sellerMerchantId: String? = nil
+        let semaphore = DispatchSemaphore(value: 0)
+        UserRepository.shared.fetchUserById(userId: sellerId) { result in
+            switch result {
+            case .success(let userData):
+                sellerMerchantId = userData.sellerMerchantId
+            case .failure(let error):
+                self.errorMessage = "Failed to fetch seller info: \(error.localizedDescription)"
+            }
+            semaphore.signal()
+        }
+        semaphore.wait()
+        
+        guard let merchantId = sellerMerchantId, !merchantId.isEmpty else {
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.errorMessage = "Seller has not connected PayPal."
+            }
+            return
+        }
         
         do {
             // Create platform order
             let orderId = try await SBPaypalService.shared.createPlatformOrder(
                 amount: totalAmount,
-                sellerId: firstProduct.sellerId,
-                sellerPaypalMerchantId: "CZK98ESTY2PL2" // Get this from your database
+                sellerId: sellerId,
+                sellerPaypalMerchantId: merchantId
             )
             
             // Start PayPal checkout
@@ -74,19 +96,48 @@ class PaymentViewModel: ObservableObject {
         }
     }
     
-    func checkSellerStatus(merchantId: String) async {
+    func createOrder(products: [CartItem], totalAmount: Double, shippingAddress: String, status: String = "Pending", completion: @escaping (Bool, String?) -> Void) {
+        guard let buyerId = UserRepository.shared.currentUser?.id,
+              let firstProduct = products.first else {
+            completion(false, "User or product info missing")
+            return
+        }
+        let sellerId = firstProduct.sellerId
+        let items: [SBOrderItemModel] = products.map { cartItem in
+            SBOrderItemModel(
+                id: 0,
+                orderId: "string",
+                productId: cartItem.productId,
+                productName: cartItem.title,
+                productImageUrl: cartItem.imageName,
+                productNote: "",
+                productVariantId: cartItem.variantId,
+                quantity: cartItem.quantity,
+                unitPrice: cartItem.price,
+                isReviewed: false
+            )
+        }
         isLoading = true
-        
-        do {
-            let status = try await SBPaypalService.shared.checkSellerStatus(sellerMerchantId: merchantId)
+        errorMessage = nil
+        OrderRepository.shared.createOrder(
+            buyerId: buyerId,
+            sellerId: sellerId,
+            totalAmount: totalAmount,
+            shippingAddress: shippingAddress,
+            items: items,
+            status: status
+        ) { result in
             DispatchQueue.main.async {
-                self.sellerStatus = status
                 self.isLoading = false
-            }
-        } catch {
-            DispatchQueue.main.async {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
+                switch result {
+                case .success(_):
+                    self.showSuccessfullyOrderSheet = true
+                    SBUserDefaultService.instance.clearCart()
+                    completion(true, nil)
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                    completion(false, error.localizedDescription)
+                }
             }
         }
     }
@@ -147,5 +198,6 @@ struct PaymentMethod: Identifiable {
 }
 
 let paymentMethods: [PaymentMethod] = [
-    PaymentMethod(name: "PayPal", subtitle: "Platform Payment", color: .orange, imageName: "img_paypal")
+    PaymentMethod(name: "PayPal", subtitle: "Platform Payment", color: .orange, imageName: "img_paypal"),
+    PaymentMethod(name: "COD", subtitle: "Cash On Delivery", color: .green, imageName: "img_COD")
 ]
