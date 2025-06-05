@@ -126,7 +126,13 @@ struct SBUpgradeAccountView: View {
                     Button("Done") {
                         showSuccessSheet = false
                         if let userId = UserRepository.shared.currentUser?.id {
-                            UserRepository.shared.fetchUserById(userId: userId) { _ in
+                            UserRepository.shared.fetchUserById(userId: userId) { result in
+                                switch result {
+                                case .success(let userData):
+                                    UserRepository.shared.currentUser = userData
+                                case .failure:
+                                    break
+                                }
                                 dismiss()
                             }
                         } else {

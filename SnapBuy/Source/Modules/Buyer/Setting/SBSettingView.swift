@@ -9,24 +9,26 @@ struct SBSettingsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                if let user = UserRepository.shared.currentUser, !user.isPremium {
-                    Button(action: { showUpgradeSheet = true }) {
-                        HStack {
-                            Image(systemName: "star.fill")
-                                .foregroundColor(.yellow)
-                            Text("Upgrade to Premium Seller")
-                                .font(R.font.outfitBold.font(size: 18))
+                if let user = UserRepository.shared.currentUser {
+                    if !user.isPremium {
+                        Button(action: { showUpgradeSheet = true }) {
+                            HStack {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.yellow)
+                                Text("Upgrade to Premium Seller")
+                                    .font(R.font.outfitBold.font(size: 18))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.main)
+                            .foregroundColor(.white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.main.opacity(0.2), radius: 8, x: 0, y: 4)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.main)
-                        .foregroundColor(.white)
-                        .cornerRadius(16)
-                        .shadow(color: Color.main.opacity(0.2), radius: 8, x: 0, y: 4)
-                    }
-                    .padding([.horizontal, .top])
-                    .sheet(isPresented: $showUpgradeSheet) {
-                        SBUpgradeAccountView()
+                        .padding([.horizontal, .top])
+                        .sheet(isPresented: $showUpgradeSheet) {
+                            SBUpgradeAccountView()
+                        }
                     }
                 }
                 HStack {
@@ -46,6 +48,20 @@ struct SBSettingsView: View {
                 .padding()
                 List {
                     Section(header: Text("General")) {
+                        if let user = UserRepository.shared.currentUser, user.isPremium {
+                            Button(action: {
+                                UserModeManager.shared.switchMode()
+                            }) {
+                                HStack {
+                                    Image(systemName: "arrow.left.arrow.right")
+                                        .foregroundColor(.main)
+                                    Text("Switch to Seller Mode")
+                                        .font(R.font.outfitBold.font(size: 16))
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 8)
+                            }
+                        }
                         NavigationLink(destination: SBEditProfileView()) {
                             SettingsRow(icon: "person", title: "Edit Profile")
                         }
