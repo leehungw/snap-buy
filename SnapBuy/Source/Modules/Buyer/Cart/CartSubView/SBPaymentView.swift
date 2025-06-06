@@ -28,7 +28,7 @@ struct SBPaymentView: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
     
     let products: [CartItem]
-    let totalPrice: Double // This is now the final price including shipping and discount
+    let totalPrice: Double 
     @State private var navigateToAddress = false
     @State private var showMethodSheet = false
     @State private var selectedAddress: String = ""
@@ -90,7 +90,7 @@ struct SBPaymentView: View {
                 .padding(.bottom, 10)
                 
                 // Address Section
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack {
                         HStack {
                             Text(R.string.localizable.address)
@@ -129,48 +129,6 @@ struct SBPaymentView: View {
                     ) {
                         EmptyView()
                     }
-                    
-                    //<<<<<<< HEAD
-                    //                    // Products Section
-
-                    //
-                    //                                VStack(alignment: .leading, spacing: 4) {
-                    //                                    Text(product.title)
-                    //                                        .font(R.font.outfitMedium.font(size: 18))
-                    //                                    HStack(spacing: 8) {
-                    //                                        Text("Color:")
-                    //                                            .font(R.font.outfitRegular.font(size: 13))
-                    //                                            .foregroundColor(.gray)
-                    //                                        Circle()
-                    //                                            .fill(Color(hex: product.color) ?? .gray)
-                    //                                            .frame(width: 16, height: 16)
-                    //                                            .overlay(
-                    //                                                Circle()
-                    //                                                    .stroke(Color.gray, lineWidth: 0.5)
-                    //                                            )
-                    //                                        Text("Size: \(product.size)")
-                    //                                            .font(R.font.outfitRegular.font(size: 13))
-                    //                                            .foregroundColor(.gray)
-                    //                                        Text("Qty: \(product.quantity)")
-                    //                                            .font(R.font.outfitRegular.font(size: 13))
-                    //                                            .foregroundColor(.gray)
-                    //                                    }
-                    //                                }
-                    //
-                    //                                Spacer()
-                    //                                Text(String(format: "$ %.2f", product.price * Double(product.quantity)))
-                    //                                    .font(R.font.outfitBold.font(size: 15))
-                    //                            }
-                    //                        }
-                    //=======
-                    if !addressViewModel.currentAddress.isEmpty || !selectedAddress.isEmpty {
-                        Text(selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress)
-                            .font(R.font.outfitRegular.font(size: 16))
-                            .foregroundColor(.gray)
-                            .padding(.top, 8)
-                        
-                    }
-                    
                     // Phone number input
                     HStack {
                         Text("Phone Number")
@@ -180,17 +138,74 @@ struct SBPaymentView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                     .padding(.top, 8)
-                }
-                NavigationLink(
-                    destination: SBAddressView(
-                        selectedAddress: $selectedAddress,
-                        selectedCoordinate: $selectedCoordinate
-                    ),
-                    isActive: $navigateToAddress
-                ) {
-                    EmptyView()
-                }
-                
+                    
+                    // Products Section
+                    VStack(alignment: .leading) {
+                        Text(String(R.string.localizable.countProductFormat(products.count)))
+                            .font(R.font.outfitBold.font(size: 20))
+                            .padding(.vertical, 8)
+                        
+                        ForEach(products) { product in
+                            HStack(spacing: 12) {
+                                if let url = URL(string: product.imageName) {
+                                    KFImage(url)
+                                        .resizable()
+                                        .frame(width: 60, height: 60)
+                                        .cornerRadius(10)
+                                } else {
+                                    Image(product.imageName)
+                                        .resizable()
+                                        .frame(width: 60, height: 60)
+                                        .cornerRadius(10)
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(product.title)
+                                        .font(R.font.outfitMedium.font(size: 18))
+                                    HStack(spacing: 8) {
+                                        Text("Color:")
+                                            .font(R.font.outfitRegular.font(size: 13))
+                                            .foregroundColor(.gray)
+                                        Circle()
+                                            .fill(Color(hex: product.color) ?? .gray)
+                                            .frame(width: 16, height: 16)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.gray, lineWidth: 0.5)
+                                            )
+                                        Text("Size: \(product.size)")
+                                            .font(R.font.outfitRegular.font(size: 13))
+                                            .foregroundColor(.gray)
+                                        Text("Qty: \(product.quantity)")
+                                            .font(R.font.outfitRegular.font(size: 13))
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                
+                                Spacer()
+                                Text(String(format: "$%.2f", product.price * Double(product.quantity)))
+                                    .font(R.font.outfitBold.font(size: 15))
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.gray.opacity(0.3))
+                            )
+                        }
+                    }
+                    .padding(.vertical, 8)
+                    
+                    
+                    
+                    NavigationLink(
+                        destination: SBAddressView(
+                            selectedAddress: $selectedAddress,
+                            selectedCoordinate: $selectedCoordinate
+                        ),
+                        isActive: $navigateToAddress
+                    ) {
+                        EmptyView()
+                    }
                     
                     // Payment Method
                     VStack(alignment: .leading) {
@@ -201,59 +216,13 @@ struct SBPaymentView: View {
                             HStack {
                                 Image(selected.imageName)
                                     .resizable()
-                                    .frame(width: 60, height: 60)
-                                    .cornerRadius(10)
+                                    .frame(width: 40, height: 30)
+                                
                                 VStack(alignment: .leading) {
                                     Text(selected.name)
                                         .font(R.font.outfitMedium.font(size: 16))
                                     Text(selected.subtitle)
                                         .font(R.font.outfitRegular.font(size: 14))
-                                        .foregroundColor(.gray)
-                                }
-                            }
-                        }
-                        VStack(alignment: .leading) {
-                            Text(String(R.string.localizable.countProductFormat(products.count)))
-                                .font(R.font.outfitBold.font(size: 20))
-    
-                            ForEach(products) { product in
-                                HStack(spacing: 12) {
-                                    if let url = URL(string: product.imageName) {
-                                        KFImage(url)
-                                            .resizable()
-                                            .frame(width: 60, height: 60)
-                                            .cornerRadius(10)
-                                    } else {
-                                        Image(product.imageName)
-                                            .resizable()
-                                            .frame(width: 60, height: 60)
-                                            .cornerRadius(10)
-                                    }
-                                Image(product.imageName)
-                                    .resizable()
-                                    .frame(width: 60, height: 60)
-                                    .cornerRadius(10)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(product.title)
-                                    .font(R.font.outfitMedium.font(size: 18))
-                                HStack(spacing: 8) {
-                                    Text("Color:")
-                                        .font(R.font.outfitRegular.font(size: 13))
-                                        .foregroundColor(.gray)
-                                    Circle()
-                                        .fill(Color(hex: product.color) ?? .gray)
-                                        .frame(width: 16, height: 16)
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color.gray, lineWidth: 0.5)
-                                        )
-                                    Text("Size: \(product.size)")
-                                        .font(R.font.outfitRegular.font(size: 13))
-                                        .foregroundColor(.gray)
-                                    Text("Qty: \(product.quantity)")
-                                        .font(R.font.outfitRegular.font(size: 13))
                                         .foregroundColor(.gray)
                                 }
                                 
@@ -271,6 +240,7 @@ struct SBPaymentView: View {
                             }
                         }
                     }
+                    .padding(.vertical, 8)
                     
                     // Total Section
                     VStack(alignment: .leading, spacing: 12) {
@@ -357,62 +327,62 @@ struct SBPaymentView: View {
                         .padding()
                     }
                 }
-                .padding()
-                .padding(.horizontal,10)
             }
-            .sheet(isPresented: $showMethodSheet) {
-                VStack {
-                    SBPaymentMethodView(selectedPayment: $selectedPayment, paymentMethods: availablePaymentMethods)
-                }
-                .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            .padding()
+            .padding(.horizontal,10)
+        }
+        .sheet(isPresented: $showMethodSheet) {
+            VStack {
+                SBPaymentMethodView(selectedPayment: $selectedPayment, paymentMethods: availablePaymentMethods)
             }
-            .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
-                VStack {
-                    SBSuccessfulOrderView()
-                }
-                .presentationDetents([.fraction(0.6)])
-                .presentationDragIndicator(.visible)
-                .presentationCornerRadius(50)
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
+        .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
+            VStack {
+                SBSuccessfulOrderView()
             }
-            .onAppear {
-                if selectedPayment == nil {
-                    selectedPayment = paymentMethods[0].id
-                }
-                addressViewModel.requestLocation()
-                // Fetch seller merchant id
-                if let sellerId = products.first?.sellerId {
-                    UserRepository.shared.fetchUserById(userId: sellerId) { result in
-                        switch result {
-                        case .success(let user):
-                            sellerMerchantId = user.sellerMerchantId
-                            if let merchantId = user.sellerMerchantId, !merchantId.isEmpty {
-                                availablePaymentMethods = paymentMethods
-                            } else {
-                                availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
-                                // If current selection is not COD, reset
-                                if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
-                                    selectedPayment = availablePaymentMethods.first?.id
-                                }
-                            }
-                        case .failure:
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(50)
+        }
+        .onAppear {
+            if selectedPayment == nil {
+                selectedPayment = paymentMethods[0].id
+            }
+            addressViewModel.requestLocation()
+            // Fetch seller merchant id
+            if let sellerId = products.first?.sellerId {
+                UserRepository.shared.fetchUserById(userId: sellerId) { result in
+                    switch result {
+                    case .success(let user):
+                        sellerMerchantId = user.sellerMerchantId
+                        if let merchantId = user.sellerMerchantId, !merchantId.isEmpty {
+                            availablePaymentMethods = paymentMethods
+                        } else {
                             availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
+                            // If current selection is not COD, reset
                             if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
                                 selectedPayment = availablePaymentMethods.first?.id
                             }
                         }
+                    case .failure:
+                        availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
+                        if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
+                            selectedPayment = availablePaymentMethods.first?.id
+                        }
                     }
                 }
             }
-            .navigationBarBackButtonHidden(true)
-            .alert(isPresented: $showPhoneAlert) {
-                Alert(
-                    title: Text("Phone Number Required"),
-                    message: Text("Please enter your phone number before checking out."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .alert(isPresented: $showPhoneAlert) {
+            Alert(
+                title: Text("Phone Number Required"),
+                message: Text("Please enter your phone number before checking out."),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 }
@@ -499,8 +469,25 @@ struct SBPaymentMethodView: View {
         }
         .padding()
         .onAppear {
-            // Initialize with the current selection from the parent view
             selectedPaymentID = selectedPayment
         }
     }
+}
+#Preview {
+    SBPaymentView(
+        products: [
+            CartItem(
+                productId: 1,
+                variantId: 1,
+                sellerId: "seller1",
+                imageName: "product_1",
+                title: "Sample Product",
+                color: "FF0000",
+                size: "M",
+                price: 29.99,
+                quantity: 2
+            )
+        ],
+        totalPrice: 59.98
+    )
 }

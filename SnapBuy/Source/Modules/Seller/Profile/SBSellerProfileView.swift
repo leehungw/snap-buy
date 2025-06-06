@@ -54,6 +54,25 @@ struct SBSellerProfileView: View {
                     Text(user.email)
                         .font(.custom("Outfit-Regular", size: 16))
                         .foregroundColor(.secondary)
+                    
+                    // Switch to Buyer Mode Button
+                    Button(action: {
+                        UserModeManager.shared.switchMode()
+                    }) {
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text("Switch to Buyer Mode")
+                                .font(R.font.outfitBold.font(size: 16))
+                        }
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(20)
+                    }
+                    .padding(.vertical, 8)
+
                     // PayPal Onboarding Button
                     if user.sellerMerchantId == nil || user.sellerMerchantId?.isEmpty == true {
                         Button(action: {
