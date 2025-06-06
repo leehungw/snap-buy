@@ -49,10 +49,13 @@ struct SBHomeTabbarView: View {
                 }
         }
         .overlay(alignment: .bottom) {
-            CustomTabBar(
-                tabSelection: $tabSelection,
-                animation: namespace
-            )
+            if (userModeManager.currentMode == .buyer && tabSelection >= 1 && tabSelection <= 5) ||
+               (userModeManager.currentMode == .seller && tabSelection >= 1 && tabSelection <= 4) {
+                CustomTabBar(
+                    tabSelection: $tabSelection,
+                    animation: namespace
+                )
+            }
         }
         .ignoresSafeArea()
         .onChange(of: userModeManager.currentMode) { _ in

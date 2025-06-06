@@ -1,6 +1,18 @@
 import SwiftUI
 import Kingfisher
 
+extension ChatRoom {
+    init(chatRoomId: String, userId: String, name: String, avatar: String) {
+        self.id = Int(chatRoomId.replacingOccurrences(of: "-", with: "")) ?? 0
+        self.userId = userId
+        self.name = name
+        self.avatar = avatar
+        self.lastMessage = nil
+        self.lastMessageTime = Date()
+        self.type = .text
+    }
+}
+
 //enum StoreTab: String, CaseIterable {
 //    case main = "Mainpage"
 //
@@ -17,7 +29,19 @@ struct SBStoreView: View {
     @State private var products: [SBProduct] = []
     @State private var isLoadingProducts = true
     @State private var productsError: String?
+    @State private var showChat = false
+    @State private var isInitializingChat = false
     let sellerId: String
+    
+    private func createChatRoom(with user: UserData) -> ChatRoom {
+        let chatRoomId = "\(UserRepository.shared.currentUser?.id ?? "")_\(sellerId)"
+        return ChatRoom(
+            chatRoomId: chatRoomId,
+            userId: sellerId,
+            name: user.name,
+            avatar: user.imageURL
+        )
+    }
     
     var body: some View {
         SBBaseView {
@@ -78,15 +102,17 @@ struct SBStoreView: View {
                         
                         Spacer()
                         
-//                        Button(action: {}) {
-//                            Text(R.string.localizable.follow())
-//                                .font(R.font.outfitSemiBold.font(size: 14))
-//                                .padding(.horizontal, 16)
-//                                .padding(.vertical, 8)
-//                                .background(Color.main)
-//                                .foregroundColor(.white)
-//                                .cornerRadius(20)
-//                        }
+                        if isInitializingChat {
+                            ProgressView()
+                        } else {
+                            NavigationLink(destination: SBChatView(chatRoom: createChatRoom(with: user)), isActive: $showChat) {
+                                Button(action: {
+                                    initializeChat(with: user)
+                                }) {
+                                    Image(systemName: "ellipsis.message")
+                                }
+                            }
+                        }
                     }
                     .padding(.horizontal, 30)
                     .padding(.bottom, 20)
@@ -131,6 +157,66 @@ struct SBStoreView: View {
         .onAppear {
             fetchUserData()
             fetchProducts()
+        }
+    }
+    
+    private func initializeChat(with user: UserData) {
+        guard let currentUserId = UserRepository.shared.currentUser?.id else { return }
+        
+        isInitializingChat = true
+        
+        // First check if chat exists
+        let chatRoomId = "\(currentUserId)_\(sellerId)"
+        
+        ChatRepository.shared.fetchChatMessages(chatRoomId: chatRoomId) { result in
+            switch result {
+            case .success(let response):
+                if let messages = response.data, !messages.isEmpty {
+                    // Chat exists, just navigate
+                    DispatchQueue.main.async {
+                        isInitializingChat = false
+                        showChat = true
+                    }
+                } else {
+                    // Chat doesn't exist, send greeting
+                    let request = SendTextRequest(
+                        userSendId: currentUserId,
+                        userReceiveId: sellerId,
+                        message: "👋"
+                    )
+                    
+                    ChatRepository.shared.sendText(request: request) { result in
+                        DispatchQueue.main.async {
+                            isInitializingChat = false
+                            switch result {
+                            case .success(_):
+                                showChat = true
+                            case .failure(let error):
+                                errorMessage = error.localizedDescription
+                            }
+                        }
+                    }
+                }
+            case .failure(_):
+                // If error fetching messages, try to create new chat anyway
+                let request = SendTextRequest(
+                    userSendId: currentUserId,
+                    userReceiveId: sellerId,
+                    message: "👋"
+                )
+                
+                ChatRepository.shared.sendText(request: request) { result in
+                    DispatchQueue.main.async {
+                        isInitializingChat = false
+                        switch result {
+                        case .success(_):
+                            showChat = true
+                        case .failure(let error):
+                            errorMessage = error.localizedDescription
+                        }
+                    }
+                }
+            }
         }
     }
     
