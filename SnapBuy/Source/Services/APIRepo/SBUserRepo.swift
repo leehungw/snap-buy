@@ -41,7 +41,7 @@ final class UserRepository {
             return
         }
         
-        SBAPIService.shared.performRequest(endpoint: "api/users/loginWithGoogle",
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/loginWithGoogle",
                                            method: "POST",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
