@@ -203,13 +203,105 @@ struct SBSellerDashboardView: View {
 }
 
 struct ListRecentView: View {
+    @State private var recentOrders: [SBOrderModel] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String? = nil
+    
     var body: some View {
         ScrollView {
-            VStack(spacing: 12) {
-                // TODO: Implement recent orders list
+            if isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            } else if let error = errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+                    .padding()
+            } else if recentOrders.isEmpty {
+                Text("No recent orders")
+                    .foregroundColor(.gray)
+                    .padding()
+            } else {
+                LazyVStack(spacing: 12) {
+                    ForEach(recentOrders) { order in
+                        OrderItemView(order: order)
+                    }
+                }
             }
         }
         .padding(.horizontal)
+        .onAppear {
+            loadRecentOrders()
+        }
+    }
+    
+    private func loadRecentOrders() {
+        guard let sellerId = UserRepository.shared.currentUser?.id else { return }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        OrderRepository.shared.fetchListSellerOrders(sellerId: sellerId) { result in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                case .success(let orders):
+                    let sortedOrders = orders.sorted { $0.id > $1.id }
+                    if sortedOrders.count > 3 {
+                        self.recentOrders = Array(sortedOrders[0...2])
+                    } else {
+                        self.recentOrders = sortedOrders
+                    }
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+}
+
+struct OrderItemView: View {
+    let order: SBOrderModel
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Order #\(order.id)")
+                    .font(R.font.outfitMedium.font(size: 16))
+                Text(order.shippingAddress)
+                    .font(R.font.outfitRegular.font(size: 14))
+                    .foregroundColor(.gray)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+            Spacer()
+            
+            VStack(alignment: .trailing, spacing: 4) {
+                Text("$\(String(format: "%.2f", order.totalAmount))")
+                    .font(R.font.outfitBold.font(size: 16))
+                Text(order.status.capitalized)
+                    .font(R.font.outfitRegular.font(size: 14))
+                    .foregroundColor(getStatusColor(order.status))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(getStatusColor(order.status).opacity(0.1))
+                    .cornerRadius(8)
+            }
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+    
+    private func getStatusColor(_ status: String) -> Color {
+        if let orderStatus = OrderStatus.fromString(status) {
+            return orderStatus.color
+        }
+        return .gray
     }
 }
 

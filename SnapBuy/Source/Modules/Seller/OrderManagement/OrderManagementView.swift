@@ -235,18 +235,7 @@ struct OrderRowView: View {
             Divider()
             
             // Order details
-            VStack(spacing: 12) {
-                HStack {
-                    Label(
-                        title: { Text("\(order.orderItems.count) items") },
-                        icon: { Image(systemName: "cart").foregroundColor(.gray) }
-                    )
-                    .font(R.font.outfitMedium.font(size: 14))
-                    
-                    Spacer()
-                    
-                   
-                }
+            VStack(alignment: .leading, spacing: 12) {
                 
                 if !order.shippingAddress.isEmpty {
                     HStack(alignment: .bottom) {
@@ -257,20 +246,26 @@ struct OrderRowView: View {
                         Text(order.shippingAddress)
                             .font(R.font.outfitRegular.font(size: 14))
                             .foregroundColor(.gray)
-                            .lineLimit(2)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Spacer()
-                        Text(String(format: "$%.2f", order.totalAmount))
-                            .font(R.font.outfitBold.font(size:20))
-                            .foregroundColor(.green)
+                        
                     }
                 }
-                if !order.phoneNumber.isEmpty {
-                    Label(order.phoneNumber, systemImage: "phone")
-                        .font(R.font.outfitRegular.font(size: 14))
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                HStack (alignment: .bottom) {
+                    if !order.phoneNumber.isEmpty {
+                        Label(order.phoneNumber, systemImage: "phone")
+                            .font(R.font.outfitRegular.font(size: 14))
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                    Text(String(format: "$%.2f", order.totalAmount))
+                        .font(R.font.outfitBold.font(size:20))
+                        .foregroundColor(.green)
                 }
+                
             }
         }
         .padding()
