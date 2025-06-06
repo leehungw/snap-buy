@@ -21,6 +21,12 @@ struct SBUserView: View {
         SBBaseView {
             VStack(spacing: 16) {
                 HStack {
+                    NavigationLink(destination: SBSettingsView()) {
+                        Image(systemName: "gearshape")
+                            .font(.title2)
+                            .foregroundColor(.black)
+                            .padding(.leading)
+                    }
                     Spacer()
                     Text(R.string.localizable.myOrder)
                         .font(R.font.outfitRegular.font(size: 16))

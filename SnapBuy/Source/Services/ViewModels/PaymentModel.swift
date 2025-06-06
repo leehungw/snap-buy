@@ -201,4 +201,4 @@ struct PaymentMethod: Identifiable {
 let paymentMethods: [PaymentMethod] = [
     PaymentMethod(name: "PayPal", subtitle: "Platform Payment", color: .orange, imageName: "img_paypal"),
     PaymentMethod(name: "COD", subtitle: "Cash On Delivery", color: .green, imageName: "img_COD")
-]
+    ]

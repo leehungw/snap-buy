@@ -46,6 +46,32 @@ private struct PayPalConfig {
         fatalError("PayPal partner ID not configured. Please add PayPalConfig.plist")
         #endif
     }
+    
+    static var adminClientId: String {
+        if let path = Bundle.main.path(forResource: "PayPalConfig", ofType: "plist"),
+           let config = NSDictionary(contentsOfFile: path),
+           let clientId = config["AdminPaypalClientId"] as? String {
+            return clientId
+        }
+        #if DEBUG
+        return "YOUR_ADMIN_CLIENT_ID"
+        #else
+        fatalError("Admin PayPal client ID not configured. Please add PayPalConfig.plist")
+        #endif
+    }
+    
+    static var adminSecret: String {
+        if let path = Bundle.main.path(forResource: "PayPalConfig", ofType: "plist"),
+           let config = NSDictionary(contentsOfFile: path),
+           let secret = config["AdminPaypalSecret"] as? String {
+            return secret
+        }
+        #if DEBUG
+        return "YOUR_ADMIN_SECRET"
+        #else
+        fatalError("Admin PayPal secret not configured. Please add PayPalConfig.plist")
+        #endif
+    }
 }
 
 class SBPaypalService {
@@ -255,18 +281,30 @@ class SBPaypalService {
     /// Capture a platform order after buyer approval
     func captureOrder(orderId: String) async throws {
         let accessToken = try await getAccessToken()
-        
         let url = URL(string: "https://api-m.sandbox.paypal.com/v2/checkout/orders/\(orderId)/capture")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
         let (_, response) = try await URLSession.shared.data(for: request)
-        
         guard let httpResponse = response as? HTTPURLResponse,
               httpResponse.statusCode == 201 else {
             throw NSError(domain: "PayPal", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to capture PayPal order"])
+        }
+    }
+    
+    /// Capture an admin order after buyer approval (uses admin access token)
+    func captureAdminOrder(orderId: String) async throws {
+        let accessToken = try await getAdminAccessToken()
+        let url = URL(string: "https://api-m.sandbox.paypal.com/v2/checkout/orders/\(orderId)/capture")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        let (_, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 201 else {
+            throw NSError(domain: "PayPal", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to capture admin PayPal order"])
         }
     }
     
@@ -327,6 +365,57 @@ class SBPaypalService {
             paymentsReceivable: json["payments_receivable"] as? Bool ?? false,
             primaryEmailConfirmed: json["primary_email_confirmed"] as? Bool ?? false
         )
+    }
+    
+    // MARK: - Admin Upgrade Payment
+    private func getAdminAccessToken() async throws -> String {
+        let url = URL(string: "https://api-m.sandbox.paypal.com/v1/oauth2/token")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        let credentials = "\(PayPalConfig.adminClientId):\(PayPalConfig.adminSecret)"
+        if let credentialsData = credentials.data(using: .utf8) {
+            let base64Credentials = credentialsData.base64EncodedString()
+            request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpBody = "grant_type=client_credentials".data(using: .utf8)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw NSError(domain: "PayPal", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get admin access token"])
+        }
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let accessToken = json["access_token"] as? String else {
+            throw NSError(domain: "PayPal", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid admin token response"])
+        }
+        return accessToken
+    }
+    
+    /// Create a PayPal order for admin (for account upgrade)
+    func createAdminUpgradeOrder(amount: Double) async throws -> String {
+        let accessToken = try await getAdminAccessToken()
+        let amountUSD = amount // Already in USD
+        let url = URL(string: "https://api-m.sandbox.paypal.com/v2/checkout/orders")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        let orderRequest: [String: Any] = [
+            "intent": "CAPTURE",
+            "purchase_units": [[
+                "amount": [
+                    "currency_code": "USD",
+                    "value": String(format: "%.2f", amountUSD)
+                ]
+            ]]
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: orderRequest)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+            throw NSError(domain: "PayPal", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create admin PayPal order"])
+        }
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let orderId = json["id"] as? String else {
+            throw NSError(domain: "PayPal", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid admin PayPal response"])
+        }
+        return orderId
     }
 }
 

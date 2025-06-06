@@ -51,9 +51,7 @@ struct SBPaymentView: View {
             return
         }
         guard let selectedMethod = selectedPaymentMethod else { return }
-        // Only PayPal platform payments are supported
-        Task {
-//             await paymentViewModel.processPayment(products: products, totalAmount: totalPrice)
+        
         let shippingAddress = selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress
         let total = totalPrice + 6
         if selectedMethod.name == "COD" {
@@ -132,55 +130,47 @@ struct SBPaymentView: View {
                         EmptyView()
                     }
                     
-                    // Products Section
-                    VStack(alignment: .leading) {
-                        Text(String(R.string.localizable.countProductFormat(products.count)))
-                            .font(R.font.outfitBold.font(size: 20))
-                        
-                        ForEach(products) { product in
-                            HStack(spacing: 12) {
-                                if let url = URL(string: product.imageName) {
-                                    KFImage(url)
-                                        .resizable()
-                                        .frame(width: 60, height: 60)
-                                        .cornerRadius(10)
-                                } else {
-                                    Image(product.imageName)
-                                        .resizable()
-                                        .frame(width: 60, height: 60)
-                                        .cornerRadius(10)
-                                }
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(product.title)
-                                        .font(R.font.outfitMedium.font(size: 18))
-                                    HStack(spacing: 8) {
-                                        Text("Color:")
-                                            .font(R.font.outfitRegular.font(size: 13))
-                                            .foregroundColor(.gray)
-                                        Circle()
-                                            .fill(Color(hex: product.color) ?? .gray)
-                                            .frame(width: 16, height: 16)
-                                            .overlay(
-                                                Circle()
-                                                    .stroke(Color.gray, lineWidth: 0.5)
-                                            )
-                                        Text("Size: \(product.size)")
-                                            .font(R.font.outfitRegular.font(size: 13))
-                                            .foregroundColor(.gray)
-                                        Text("Qty: \(product.quantity)")
-                                            .font(R.font.outfitRegular.font(size: 13))
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-                                
-                                Spacer()
-                                Text(String(format: "$ %.2f", product.price * Double(product.quantity)))
-                                    .font(R.font.outfitBold.font(size: 15))
-                            }
-                        }
-                    }
+                    //<<<<<<< HEAD
+                    //                    // Products Section
 
+                    //
+                    //                                VStack(alignment: .leading, spacing: 4) {
+                    //                                    Text(product.title)
+                    //                                        .font(R.font.outfitMedium.font(size: 18))
+                    //                                    HStack(spacing: 8) {
+                    //                                        Text("Color:")
+                    //                                            .font(R.font.outfitRegular.font(size: 13))
+                    //                                            .foregroundColor(.gray)
+                    //                                        Circle()
+                    //                                            .fill(Color(hex: product.color) ?? .gray)
+                    //                                            .frame(width: 16, height: 16)
+                    //                                            .overlay(
+                    //                                                Circle()
+                    //                                                    .stroke(Color.gray, lineWidth: 0.5)
+                    //                                            )
+                    //                                        Text("Size: \(product.size)")
+                    //                                            .font(R.font.outfitRegular.font(size: 13))
+                    //                                            .foregroundColor(.gray)
+                    //                                        Text("Qty: \(product.quantity)")
+                    //                                            .font(R.font.outfitRegular.font(size: 13))
+                    //                                            .foregroundColor(.gray)
+                    //                                    }
+                    //                                }
+                    //
+                    //                                Spacer()
+                    //                                Text(String(format: "$ %.2f", product.price * Double(product.quantity)))
+                    //                                    .font(R.font.outfitBold.font(size: 15))
+                    //                            }
+                    //                        }
+                    //=======
+                    if !addressViewModel.currentAddress.isEmpty || !selectedAddress.isEmpty {
+                        Text(selectedAddress.isEmpty ? addressViewModel.currentAddress : selectedAddress)
+                            .font(R.font.outfitRegular.font(size: 16))
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
+                        
+                    }
+                    
                     // Phone number input
                     HStack {
                         Text("Phone Number")
@@ -201,10 +191,6 @@ struct SBPaymentView: View {
                     EmptyView()
                 }
                 
-                // Products Section
-                VStack(alignment: .leading) {
-                    Text(String(R.string.localizable.countProductFormat(products.count)))
-                        .font(R.font.outfitBold.font(size: 20))
                     
                     // Payment Method
                     VStack(alignment: .leading) {
@@ -215,13 +201,59 @@ struct SBPaymentView: View {
                             HStack {
                                 Image(selected.imageName)
                                     .resizable()
-                                    .frame(width: 40, height: 30)
-                                
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(10)
                                 VStack(alignment: .leading) {
                                     Text(selected.name)
                                         .font(R.font.outfitMedium.font(size: 16))
                                     Text(selected.subtitle)
                                         .font(R.font.outfitRegular.font(size: 14))
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                        }
+                        VStack(alignment: .leading) {
+                            Text(String(R.string.localizable.countProductFormat(products.count)))
+                                .font(R.font.outfitBold.font(size: 20))
+    
+                            ForEach(products) { product in
+                                HStack(spacing: 12) {
+                                    if let url = URL(string: product.imageName) {
+                                        KFImage(url)
+                                            .resizable()
+                                            .frame(width: 60, height: 60)
+                                            .cornerRadius(10)
+                                    } else {
+                                        Image(product.imageName)
+                                            .resizable()
+                                            .frame(width: 60, height: 60)
+                                            .cornerRadius(10)
+                                    }
+                                Image(product.imageName)
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(10)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(product.title)
+                                    .font(R.font.outfitMedium.font(size: 18))
+                                HStack(spacing: 8) {
+                                    Text("Color:")
+                                        .font(R.font.outfitRegular.font(size: 13))
+                                        .foregroundColor(.gray)
+                                    Circle()
+                                        .fill(Color(hex: product.color) ?? .gray)
+                                        .frame(width: 16, height: 16)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.gray, lineWidth: 0.5)
+                                        )
+                                    Text("Size: \(product.size)")
+                                        .font(R.font.outfitRegular.font(size: 13))
+                                        .foregroundColor(.gray)
+                                    Text("Qty: \(product.quantity)")
+                                        .font(R.font.outfitRegular.font(size: 13))
                                         .foregroundColor(.gray)
                                 }
                                 
@@ -247,61 +279,63 @@ struct SBPaymentView: View {
                             .padding(.bottom, 5)
                         
                         // Subtotal
-                    if let selected = availablePaymentMethods.first(where: { $0.id == selectedPayment }) {
-                        HStack {
-                            Text("Subtotal")
-                                .font(R.font.outfitMedium.font(size: 16))
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text(String(format: "$%.1f", products.reduce(0) { $0 + $1.price * Double($1.quantity) }))
-                                .font(R.font.outfitMedium.font(size: 16))
-                        }
-                        
-                        // Shipping Fee
-                        HStack {
-                            Text("Shipping Fee")
-                                .font(R.font.outfitMedium.font(size: 16))
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text("$6.0")
-                                .font(R.font.outfitMedium.font(size: 16))
-                        }
-                        
-                        // Discount (if any)
-                        let subtotal = products.reduce(0) { $0 + $1.price * Double($1.quantity) }
-                        if totalPrice < subtotal + 6.0 {
+                        if let selected = availablePaymentMethods.first(where: { $0.id == selectedPayment }) {
                             HStack {
-                                Text("Discount")
+                                Text("Subtotal")
                                     .font(R.font.outfitMedium.font(size: 16))
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text(String(format: "-$%.1f", (subtotal + 6.0) - totalPrice))
+                                Text(String(format: "$%.1f", products.reduce(0) { $0 + $1.price * Double($1.quantity) }))
                                     .font(R.font.outfitMedium.font(size: 16))
-                                    .foregroundColor(.green)
                             }
-                        }
-                        
-                        Divider()
-                            .padding(.vertical, 5)
-                        
-                        // Total
-                        HStack {
-                            Text("Total Amount")
-                                .font(R.font.outfitMedium.font(size: 16))
-                                .foregroundColor(.gray)
-                            Spacer()
-                            Text(String(format: "$%.1f", totalPrice))
-                                .font(R.font.outfitBold.font(size: 20))
+                            
+                            // Shipping Fee
+                            HStack {
+                                Text("Shipping Fee")
+                                    .font(R.font.outfitMedium.font(size: 16))
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text("$6.0")
+                                    .font(R.font.outfitMedium.font(size: 16))
+                            }
+                            
+                            // Discount (if any)
+                            let subtotal = products.reduce(0) { $0 + $1.price * Double($1.quantity) }
+                            if totalPrice < subtotal + 6.0 {
+                                HStack {
+                                    Text("Discount")
+                                        .font(R.font.outfitMedium.font(size: 16))
+                                        .foregroundColor(.gray)
+                                    Spacer()
+                                    Text(String(format: "-$%.1f", (subtotal + 6.0) - totalPrice))
+                                        .font(R.font.outfitMedium.font(size: 16))
+                                        .foregroundColor(.green)
+                                }
+                            }
+                            
+                            Divider()
+                                .padding(.vertical, 5)
+                            
+                            // Total
+                            HStack {
+                                Text("Total Amount")
+                                    .font(R.font.outfitMedium.font(size: 16))
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(String(format: "$%.1f", totalPrice))
+                                    .font(R.font.outfitBold.font(size: 20))
+                            }
                         }
                     }
                     .background(Color.white)
                     .cornerRadius(15)
-//                    .shadow(color: .gray.opacity(0.1), radius: 5)
+                    //                    .shadow(color: .gray.opacity(0.1), radius: 5)
                     
                     if paymentViewModel.isLoading {
                         ProgressView()
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else {
+                        
                         if let error = paymentViewModel.errorMessage {
                             Text(error)
                                 .foregroundColor(.red)
@@ -310,7 +344,7 @@ struct SBPaymentView: View {
                         }
                         
                         // Checkout Button
-                        Button(action: createOrder) {
+                        Button(action: handleCheckout) {
                             Text(R.string.localizable.checkoutNow())
                                 .font(R.font.outfitMedium.font(size: 20))
                                 .frame(maxWidth: .infinity)
@@ -322,66 +356,63 @@ struct SBPaymentView: View {
                         .disabled(paymentViewModel.isLoading)
                         .padding()
                     }
-                    
-                    Spacer()
-
                 }
+                .padding()
+                .padding(.horizontal,10)
             }
-            .padding()
-            .padding(.horizontal,10)
-        }
-        .sheet(isPresented: $showMethodSheet) {
-            VStack {
-                SBPaymentMethodView(selectedPayment: $selectedPayment, paymentMethods: availablePaymentMethods)
+            .sheet(isPresented: $showMethodSheet) {
+                VStack {
+                    SBPaymentMethodView(selectedPayment: $selectedPayment, paymentMethods: availablePaymentMethods)
+                }
+                .presentationDetents([.fraction(0.6)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(50)
             }
-            .presentationDetents([.fraction(0.6)])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(50)
-        }
-        .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
-            VStack {
-                SBSuccessfulOrderView()
+            .sheet(isPresented: $paymentViewModel.showSuccessfullyOrderSheet) {
+                VStack {
+                    SBSuccessfulOrderView()
+                }
+                .presentationDetents([.fraction(0.6)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(50)
             }
-            .presentationDetents([.fraction(0.6)])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(50)
-        }
-        .onAppear {
-            if selectedPayment == nil {
-                selectedPayment = paymentMethods[0].id
-            }
-            addressViewModel.requestLocation()
-            // Fetch seller merchant id
-            if let sellerId = products.first?.sellerId {
-                UserRepository.shared.fetchUserById(userId: sellerId) { result in
-                    switch result {
-                    case .success(let user):
-                        sellerMerchantId = user.sellerMerchantId
-                        if let merchantId = user.sellerMerchantId, !merchantId.isEmpty {
-                            availablePaymentMethods = paymentMethods
-                        } else {
+            .onAppear {
+                if selectedPayment == nil {
+                    selectedPayment = paymentMethods[0].id
+                }
+                addressViewModel.requestLocation()
+                // Fetch seller merchant id
+                if let sellerId = products.first?.sellerId {
+                    UserRepository.shared.fetchUserById(userId: sellerId) { result in
+                        switch result {
+                        case .success(let user):
+                            sellerMerchantId = user.sellerMerchantId
+                            if let merchantId = user.sellerMerchantId, !merchantId.isEmpty {
+                                availablePaymentMethods = paymentMethods
+                            } else {
+                                availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
+                                // If current selection is not COD, reset
+                                if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
+                                    selectedPayment = availablePaymentMethods.first?.id
+                                }
+                            }
+                        case .failure:
                             availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
-                            // If current selection is not COD, reset
                             if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
                                 selectedPayment = availablePaymentMethods.first?.id
                             }
                         }
-                    case .failure:
-                        availablePaymentMethods = paymentMethods.filter { $0.name == "COD" }
-                        if let selected = selectedPayment, !availablePaymentMethods.contains(where: { $0.id == selected }) {
-                            selectedPayment = availablePaymentMethods.first?.id
-                        }
                     }
                 }
             }
-        }
-        .navigationBarBackButtonHidden(true)
-        .alert(isPresented: $showPhoneAlert) {
-            Alert(
-                title: Text("Phone Number Required"),
-                message: Text("Please enter your phone number before checking out."),
-                dismissButton: .default(Text("OK"))
-            )
+            .navigationBarBackButtonHidden(true)
+            .alert(isPresented: $showPhoneAlert) {
+                Alert(
+                    title: Text("Phone Number Required"),
+                    message: Text("Please enter your phone number before checking out."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
     }
 }

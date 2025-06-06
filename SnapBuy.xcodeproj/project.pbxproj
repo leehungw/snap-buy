@@ -115,7 +115,7 @@
 		DA8B42542DD9CF4E00A543DD /* SBStatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B42532DD9CF4A00A543DD /* SBStatisticView.swift */; };
 		DA8B42572DD9D93400A543DD /* SBSellerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8B42562DD9D92700A543DD /* SBSellerSettingView.swift */; };
 		DA958F1B2DD1F8EE00A98432 /* ReviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F1A2DD1F8E300A98432 /* ReviewModel.swift */; };
-		DA958F202DD1FFC600A98432 /* SBSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F1F2DD1FFC100A98432 /* SBSetting.swift */; };
+		DA958F202DD1FFC600A98432 /* SBSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F1F2DD1FFC100A98432 /* SBSettingView.swift */; };
 		DA958F232DD2016200A98432 /* SBEditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F222DD2015400A98432 /* SBEditProfileView.swift */; };
 		DA958F262DD2019100A98432 /* SBChangePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F252DD2019100A98432 /* SBChangePasswordView.swift */; };
 		DA958F282DD201AB00A98432 /* SBSecurityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA958F272DD201A900A98432 /* SBSecurityView.swift */; };
@@ -259,7 +259,7 @@
 		DA8B42532DD9CF4A00A543DD /* SBStatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBStatisticView.swift; sourceTree = "<group>"; };
 		DA8B42562DD9D92700A543DD /* SBSellerSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSellerSettingView.swift; sourceTree = "<group>"; };
 		DA958F1A2DD1F8E300A98432 /* ReviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewModel.swift; sourceTree = "<group>"; };
-		DA958F1F2DD1FFC100A98432 /* SBSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSetting.swift; sourceTree = "<group>"; };
+		DA958F1F2DD1FFC100A98432 /* SBSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSettingView.swift; sourceTree = "<group>"; };
 		DA958F222DD2015400A98432 /* SBEditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEditProfileView.swift; sourceTree = "<group>"; };
 		DA958F252DD2019100A98432 /* SBChangePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChangePasswordView.swift; sourceTree = "<group>"; };
 		DA958F272DD201A900A98432 /* SBSecurityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSecurityView.swift; sourceTree = "<group>"; };
@@ -755,7 +755,7 @@
 			isa = PBXGroup;
 			children = (
 				DA958F212DD2013800A98432 /* SettingSubView */,
-				DA958F1F2DD1FFC100A98432 /* SBSetting.swift */,
+				DA958F1F2DD1FFC100A98432 /* SBSettingView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1185,7 +1185,7 @@
 				0A47B13B2DD321B800FBD707 /* SBEmailService.swift in Sources */,
 				0A47C4E32D94F90F0091E2D4 /* ProductModel.swift in Sources */,
 				0A4E667E2DDAD6990082C57D /* SPProductRepo.swift in Sources */,
-				DA958F202DD1FFC600A98432 /* SBSetting.swift in Sources */,
+				DA958F202DD1FFC600A98432 /* SBSettingView.swift in Sources */,
 				0A1C505E2D9E9010005B2130 /* SBAPIService.swift in Sources */,
 				0A47C4AD2D94EEC80091E2D4 /* SBOBView.swift in Sources */,
 				0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */,
