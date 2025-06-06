@@ -84,7 +84,7 @@ final class UserRepository {
             return
         }
         
-        SBAPIService.shared.performRequest(endpoint: "api/users/signUp",
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/signUp",
                                            method: "POST",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
@@ -107,7 +107,7 @@ final class UserRepository {
             return
         }
         
-        SBAPIService.shared.performRequest(endpoint: "api/users/profile",
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/profile",
                                            method: "PUT",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
@@ -130,7 +130,7 @@ final class UserRepository {
             return
         }
         
-        SBAPIService.shared.performRequest(endpoint: "api/users/password",
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/password",
                                            method: "PUT",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
