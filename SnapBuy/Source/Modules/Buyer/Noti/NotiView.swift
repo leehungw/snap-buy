@@ -3,6 +3,10 @@ import SwiftUI
 
 struct SBNotificationView: View {
     @Environment(\.dismiss) var dismiss
+    @State private var notifications: [SBNotification] = []
+    @State private var isLoading = false
+    @State private var error: String?
+    
     var body: some View {
         SBBaseView {
             VStack(alignment: .leading) {
@@ -32,14 +36,38 @@ struct SBNotificationView: View {
                     .padding(.horizontal)
                     .padding(.top, 8)
                 
-                ScrollView {
-                    VStack(spacing: 20) {
-                        ForEach(notifications) { item in
-                            SBNotificationRow(item: item)
+                if isLoading {
+                    ProgressView().padding()
+                } else if let error = error {
+                    Text(error).foregroundColor(.red).padding()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            ForEach(notifications) { item in
+                                SBNotificationRow(item: item)
+                            }
                         }
+                        .padding()
+                        .padding(.horizontal,10)
                     }
-                    .padding()
-                    .padding(.horizontal,10)
+                }
+            }
+        }
+        .onAppear(perform: fetchNotifications)
+    }
+    
+    private func fetchNotifications() {
+        guard let userId = UserRepository.shared.currentUser?.id else { return }
+        isLoading = true
+        error = nil
+        NotificationRepository.shared.fetchNotifications(for: userId) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let notis):
+                    notifications = notis
+                case .failure(let err):
+                    error = err.localizedDescription
                 }
             }
         }
@@ -47,22 +75,20 @@ struct SBNotificationView: View {
 }
 
 struct SBNotificationRow: View {
-    let item: NotificationItem
+    let item: SBNotification
     
     var icon: some View {
-        switch item.type {
-        case .order:
-            return Image(systemName: "cart")
-                .foregroundColor(.black)
-        case .message:
-            return Image(systemName: "ellipsis.message")
-                .foregroundColor(.black)
-        case .sale:
-            return Image(systemName: "tag")
-                .foregroundColor(.black)
-        case .shipment:
-            return Image(systemName: "shippingbox")
-                .foregroundColor(.black)
+        switch item.eventType.lowercased() {
+        case "neworder":
+            return Image(systemName: "cart").foregroundColor(.black)
+        case "message":
+            return Image(systemName: "ellipsis.message").foregroundColor(.black)
+        case "sale":
+            return Image(systemName: "tag").foregroundColor(.black)
+        case "shipment":
+            return Image(systemName: "shippingbox").foregroundColor(.black)
+        default:
+            return Image(systemName: "bell").foregroundColor(.black)
         }
     }
     
@@ -77,23 +103,15 @@ struct SBNotificationRow: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(item.title)
+                        Text(item.eventType)
                             .font(.system(size: 14, weight: .semibold))
                         Spacer()
-                        Text(item.timeAgo)
-                            .font(.system(size: 12))
-                            .foregroundColor(.gray)
+                        // No timeAgo in backend, could add if needed
                     }
                     
                     Text(item.message)
                         .font(.system(size: 13))
                         .foregroundColor(.gray)
-                    
-                    if let reply = item.replyText {
-                        Text(reply)
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundColor(.blue)
-                    }
                 }
             }
             Divider()

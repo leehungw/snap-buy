@@ -154,7 +154,7 @@ struct SBChatView: View {
         }
         .onDisappear {
             stopMessagePolling()
-            signalRService.connection?.stop()
+            signalRService.chatConnection?.stop()
         }
         .alert("Error", isPresented: $showError) {
             Button("OK", role: .cancel) { }
@@ -352,7 +352,7 @@ struct SBChatView: View {
     private func setupSignalR() {
         signalRService.startSignalR()
         
-        signalRService.connection?.on(method: "NewMessage", callback: { (user: String, message: String) in
+        signalRService.chatConnection?.on(method: "NewMessage", callback: { (user: String, message: String) in
             DispatchQueue.main.async {
                 if user != UserRepository.shared.currentUser?.id {
                     let newMessage = ChatMessage(
@@ -382,7 +382,7 @@ struct SBChatView: View {
         }
         
         // Gửi tin nhắn qua SignalR
-        signalRService.connection?.invoke(method: "SendMessage", currentUserId, trimmed) { error in
+        signalRService.chatConnection?.invoke(method: "SendMessage", currentUserId, trimmed) { error in
             if let error = error {
                 print("Error sending message via SignalR: \(error)")
             }

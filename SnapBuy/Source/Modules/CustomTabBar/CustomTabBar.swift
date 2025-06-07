@@ -38,6 +38,7 @@ enum SellerTab: String, CaseIterable {
 struct CustomTabBar: View {
     @Binding var tabSelection: Int
     var animation: Namespace.ID
+    @Binding var showNotificationDot: Bool
     @StateObject private var userModeManager = UserModeManager.shared
     
     private var tabWidth: CGFloat {
@@ -90,6 +91,7 @@ struct CustomTabBar: View {
     
     private func tabButton(title: String, systemImage: String, index: Int, midSize: CGFloat, totalTabs: Int) -> some View {
         let isCurrentTab = tabSelection == index + 1
+        let isNotificationTab = userModeManager.currentMode == .buyer && title == BuyerTab.notification.rawValue
         
         return Button {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7, blendDuration: 0.7)) {
@@ -98,25 +100,32 @@ struct CustomTabBar: View {
             }
         } label: {
             VStack(spacing: 2.0) {
-                Image(systemName: systemImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .aspectRatio(isCurrentTab ? 0.4 : 0.6, contentMode: .fit)
-                    .frame(
-                        width: isCurrentTab ? midSize : 35.0,
-                        height: isCurrentTab ? midSize : 35.0)
-                    .foregroundStyle(
-                        isCurrentTab ? .white : .gray
-                    )
-                    .background {
-                        if isCurrentTab {
-                            Circle()
-                                .fill(.main.gradient)
-                                .matchedGeometryEffect(id: "CurveAnimation", in: animation)
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: systemImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(isCurrentTab ? 0.4 : 0.6, contentMode: .fit)
+                        .frame(
+                            width: isCurrentTab ? midSize : 35.0,
+                            height: isCurrentTab ? midSize : 35.0)
+                        .foregroundStyle(
+                            isCurrentTab ? .white : .gray
+                        )
+                        .background {
+                            if isCurrentTab {
+                                Circle()
+                                    .fill(.main.gradient)
+                                    .matchedGeometryEffect(id: "CurveAnimation", in: animation)
+                            }
                         }
+                        .offset(y: isCurrentTab ? -(midSize/2) : 0.0)
+                    if isNotificationTab && showNotificationDot {
+                        Circle()
+                            .fill(Color.red)
+                            .frame(width: 10, height: 10)
+                            .offset(x: 8, y: -8)
                     }
-                    .offset(y: isCurrentTab ? -(midSize/2) : 0.0)
-                
+                }
                 if !isCurrentTab {
                     Text(title)
                         .font(.caption)

@@ -43,12 +43,6 @@ struct SBHomeView: View {
                         } label: {
                             Image(systemName: "magnifyingglass").foregroundColor(.gray)
                         }
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "bell")
-                            Circle()
-                                .fill(Color.red)
-                                .frame(width: 8, height: 8)
-                        }
                     }
                     .font(.title3)
                 }

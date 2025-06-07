@@ -6,6 +6,8 @@ struct SBHomeTabbarView: View {
     @Namespace private var namespace
     @State private var notificationCancellable: AnyCancellable?
     @StateObject private var userModeManager = UserModeManager.shared
+    @State private var showNotificationDot = false
+    private let signalRService = SignalRService()
     
     var body: some View {
         TabView(selection: $tabSelection) {
@@ -47,13 +49,29 @@ struct SBHomeTabbarView: View {
                         tabSelection = newTab
                     }
                 }
+            print("1231312311231313132")
+            signalRService.startNotificationSignalR { userId in
+                if let currentUserId = UserRepository.shared.currentUser?.id, userId == currentUserId {
+                    showNotificationDot = true
+                }
+            }
+        }
+        .onChange(of: tabSelection) { newTab in
+            // If notification tab is selected, clear the dot and fetch notifications
+            if userModeManager.currentMode == .buyer && newTab == 2 {
+                showNotificationDot = false
+                if let userId = UserRepository.shared.currentUser?.id {
+                    NotificationRepository.shared.fetchNotifications(for: userId) { _ in }
+                }
+            }
         }
         .overlay(alignment: .bottom) {
             if (userModeManager.currentMode == .buyer && tabSelection >= 1 && tabSelection <= 5) ||
                (userModeManager.currentMode == .seller && tabSelection >= 1 && tabSelection <= 4) {
                 CustomTabBar(
                     tabSelection: $tabSelection,
-                    animation: namespace
+                    animation: namespace,
+                    showNotificationDot: $showNotificationDot
                 )
             }
         }
