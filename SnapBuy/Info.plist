@@ -1,7 +1,7 @@
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
 	<key>NSBonjourServices</key>
 	<array>
 		<string></string>
@@ -12,7 +12,7 @@
 	<string>141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
-		***REMOVED***
+		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b</string>
@@ -22,7 +22,7 @@
 			<string>com.ui.se.snapbuy</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-		***REMOVED***
+		</dict>
 	</array>
 	<key>GIDServerClientID</key>
 	<string>141558364034-ag0e3516ejcog5h3286uuk1f2gahplm3.apps.googleusercontent.com</string>
@@ -37,5 +37,5 @@
 	<string>We need your location to show nearby stores and provide accurate delivery information.</string>
 	<key>NSLocationUsageDescription</key>
 	<string>We need your location to show nearby stores and provide accurate delivery information.</string>
-***REMOVED***
-***REMOVED***
+</dict>
+</plist>

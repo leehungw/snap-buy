@@ -39,3 +39,5 @@ SourcePackages/artifacts/
 Podfile.lock
 R.generated.swift
 SnapBuy/PayPalConfig.plist
+SnapBuy/PayPalConfig.plist
+SnapBuy/credentials.plist
