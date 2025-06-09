@@ -137,26 +137,6 @@ struct SBEditProfileView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            fetchProfile()
-        }
-    }
-    
-    private func fetchProfile() {
-        guard let userId = UserRepository.shared.currentUser?.id else { return }
-        isLoading = true
-        
-        UserRepository.shared.fetchUserById(userId: userId) { result in
-            isLoading = false
-            switch result {
-            case .success(let userData):
-                self.username = userData.userName
-                self.email = userData.email
-            case .failure(let error):
-                self.alertMessage = error.localizedDescription
-                self.showAlert = true
-            }
-        }
     }
     
     private func updateProfile() {

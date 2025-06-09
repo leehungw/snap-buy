@@ -58,7 +58,7 @@ struct _R {
     }
 
 
-    /// This `_R.string.localizable` struct is generated, and contains static references to 81 localization keys.
+    /// This `_R.string.localizable` struct is generated, and contains static references to 80 localization keys.
     struct localizable {
       let source: RswiftResources.StringResource.Source
 
@@ -285,13 +285,6 @@ struct _R {
       ///
       /// Locales: en
       var goToHomepage: RswiftResources.StringResource { .init(key: "Go to Homepage", tableName: "Localizable", source: source, developmentValue: "Go to Homepage", comment: nil) }
-
-      /// en translation: Hi, %@
-      ///
-      /// Key: Hi, %@
-      ///
-      /// Locales: en
-      var hi: RswiftResources.StringResource1<String> { .init(key: "Hi, %@", tableName: "Localizable", source: source, developmentValue: "Hi, %@", comment: nil) }
 
       /// en translation: House
       ///
@@ -642,7 +635,7 @@ struct _R {
     var mainColor: RswiftResources.ColorResource { .init(name: "MainColor", path: [], bundle: bundle) }
   }
 
-  /// This `_R.image` struct is generated, and contains static references to 38 images.
+  /// This `_R.image` struct is generated, and contains static references to 37 images.
   struct image {
     let bundle: Foundation.Bundle
 
@@ -681,9 +674,6 @@ struct _R {
 
     /// Image `img_ccard`.
     var img_ccard: RswiftResources.ImageResource { .init(name: "img_ccard", path: [], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
-
-    /// Image `img_default_user_profile`.
-    var img_default_user_profile: RswiftResources.ImageResource { .init(name: "img_default_user_profile", path: [], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
 
     /// Image `img_email`.
     var img_email: RswiftResources.ImageResource { .init(name: "img_email", path: [], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
@@ -811,7 +801,7 @@ struct _R {
     }
   }
 
-  /// This `_R.file` struct is generated, and contains static references to 14 resource files.
+  /// This `_R.file` struct is generated, and contains static references to 13 resource files.
   struct file {
     let bundle: Foundation.Bundle
 
@@ -850,9 +840,6 @@ struct _R {
 
     /// Resource file `Outfit-Thin.ttf`.
     var outfitThinTtf: RswiftResources.FileResource { .init(name: "Outfit-Thin", pathExtension: "ttf", bundle: bundle, locale: LocaleReference.none) }
-
-    /// Resource file `PayPalConfig.plist`.
-    var payPalConfigPlist: RswiftResources.FileResource { .init(name: "PayPalConfig", pathExtension: "plist", bundle: bundle, locale: LocaleReference.none) }
 
     /// Resource file `credentials.plist`.
     var credentialsPlist: RswiftResources.FileResource { .init(name: "credentials", pathExtension: "plist", bundle: bundle, locale: LocaleReference.none) }
