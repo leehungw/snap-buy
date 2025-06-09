@@ -45,34 +45,51 @@ struct SBForgotPasswordSheetView: View {
                 }
                 
                 isLoading = true
-                DispatchQueue.global(qos: .background).async {
-                    SBEmailService.shared.sendTemporaryPassword(to: email) { password in
-                        DispatchQueue.main.async {
-                            isLoading = false
-                            if !password.isEmpty {
-                                temporaryPassword = password
-                                let request = UpdatePasswordRequest(newPassword: password)
-                                UserRepository.shared.updatePassword(request: request) { result in
+                // Fetch user by email to get the id
+                UserRepository.shared.fetchAllUsers { result in
+                    switch result {
+                    case .success(let response):
+                        if let user = response.data.first(where: { $0.email.lowercased() == email.lowercased() }) {
+                            let userId = user.id
+                            DispatchQueue.global(qos: .background).async {
+                                SBEmailService.shared.sendTemporaryPassword(to: email) { password in
                                     DispatchQueue.main.async {
-                                        switch result {
-                                        case .success(let response):
-                                            if response.result == 1 {
-                                                isEnterNewPasswordPresented = true
-                                            } else {
-                                                alertMessage = response.error?.message ?? "Failed to update password"
-                                                showAlert = true
+                                        isLoading = false
+                                        if !password.isEmpty {
+                                            temporaryPassword = password
+                                            let request = UpdatePasswordRequest(id: userId, password: password)
+                                            UserRepository.shared.updatePassword(request: request) { result in
+                                                DispatchQueue.main.async {
+                                                    switch result {
+                                                    case .success(let response):
+                                                        if response.result == 1 {
+                                                            isEnterNewPasswordPresented = true
+                                                        } else {
+                                                            alertMessage = response.error?.message ?? "Failed to update password"
+                                                            showAlert = true
+                                                        }
+                                                    case .failure(let error):
+                                                        alertMessage = error.localizedDescription
+                                                        showAlert = true
+                                                    }
+                                                }
                                             }
-                                        case .failure(let error):
-                                            alertMessage = error.localizedDescription
+                                        } else {
+                                            alertMessage = "Failed to send temporary password"
                                             showAlert = true
                                         }
                                     }
                                 }
-                            } else {
-                                alertMessage = "Failed to send temporary password"
-                                showAlert = true
                             }
+                        } else {
+                            isLoading = false
+                            alertMessage = "No user found with this email."
+                            showAlert = true
                         }
+                    case .failure(let error):
+                        isLoading = false
+                        alertMessage = error.localizedDescription
+                        showAlert = true
                     }
                 }
             }
@@ -121,13 +138,7 @@ struct SBForgotPasswordSuccess: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
             
-            Text("Your temporary password is: \(temporaryPassword)")
-                .font(.body)
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-            
-            Text("Please use this password to log in and change it immediately for security reasons.")
+            Text("Please use that password to log in and change it immediately for security reasons.")
                 .font(.callout)
                 .foregroundColor(.red)
                 .multilineTextAlignment(.center)

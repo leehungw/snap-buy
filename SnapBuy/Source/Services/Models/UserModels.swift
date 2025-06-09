@@ -67,7 +67,8 @@ struct UpdateProfileRequest: Codable {
 }
 
 struct UpdatePasswordRequest: Codable {
-    let newPassword: String
+    let id: String
+    let password: String
 }
 
 
