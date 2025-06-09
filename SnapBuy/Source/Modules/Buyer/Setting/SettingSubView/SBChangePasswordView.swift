@@ -115,8 +115,14 @@ struct SBChangePasswordView: View {
             return
         }
         
+        guard let userId = UserRepository.shared.currentUser?.id else {
+            alertMessage = "User not found. Please log in again."
+            showAlert = true
+            return
+        }
+        
         isLoading = true
-        let request = UpdatePasswordRequest(newPassword: password)
+        let request = UpdatePasswordRequest(id: userId, password: password)
         UserRepository.shared.updatePassword(request: request) { result in
             isLoading = false
             switch result {
