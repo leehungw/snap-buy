@@ -26,9 +26,10 @@ extension CLLocationCoordinate2D: Identifiable {
 
 struct SBPaymentView: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
+    @State private var navigateToUserView = false
     
     let products: [CartItem]
-    let totalPrice: Double 
+    let totalPrice: Double
     @State private var navigateToAddress = false
     @State private var showMethodSheet = false
     @State private var selectedAddress: String = ""
@@ -56,14 +57,18 @@ struct SBPaymentView: View {
         let total = totalPrice + 6
         if selectedMethod.name == "COD" {
             paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress, phoneNumber: phoneNumber) { success, error in
-                // Error handling is already in view model
+                if success {
+                            navigateToUserView = true
+                        }
             }
         } else if selectedMethod.name == "PayPal" {
             Task {
                 await paymentViewModel.processPayment(products: products, totalAmount: total)
                 if paymentViewModel.errorMessage == nil {
                     paymentViewModel.createOrder(products: products, totalAmount: total, shippingAddress: shippingAddress, phoneNumber: phoneNumber) { success, error in
-                        // Error handling is already in view model
+                        if success {
+                                    navigateToUserView = true
+                                }
                     }
                 }
             }
@@ -325,6 +330,9 @@ struct SBPaymentView: View {
                         }
                         .disabled(paymentViewModel.isLoading)
                         .padding()
+                        NavigationLink(destination: SBUserView(), isActive: $navigateToUserView) {
+                            EmptyView()
+                        }
                     }
                 }
             }

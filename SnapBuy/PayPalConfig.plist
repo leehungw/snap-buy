@@ -1,14 +1,14 @@
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AdminPaypalSecret</key>
+	<string>EGF2laQMGsVkkvW5MzOZ_mz-6zAo5btEhJXy0gzfZfmfTUzd75DlTpJEq69dr-e0Vf4kPXU206jaYhw7</string>
+	<key>AdminPaypalClientId</key>
+	<string>AfpeLBPMjYXL50nIplxJfc-q_ltIPTgRtW-VmYIUNiDGNiGQz8UoQ2tafJHOFr8fwoOROh2BeQa_pwKu</string>
+	<key>Secret</key>
+	<string>EK8TnIH5L9e8NwvRyX4z11R7_HoBQJJ10ATlgBpc4JfU3S0ZOPaBNcUCn4R5JT26Y6MvNcm0PIrq18wK</string>
+	<key>PayPalClientId</key>
+	<string>Acd1JrpU7x3qYnA0Hwvpi3ymhFogVwHl7aqV20nFo_6ueExyfPRjSxTA9ljCyVeyxR8rouevPqkqlsvi</string>
+</dict>
+</plist>
