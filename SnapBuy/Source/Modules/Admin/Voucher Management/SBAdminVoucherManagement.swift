@@ -28,27 +28,6 @@ class SBAdminVoucherViewModel: ObservableObject {
         }
     }
     
-    func toggleVoucherStatus(_ voucher: VoucherModel) {
-        isSubmitting = true
-        
-        VoucherRepository.shared.toggleVoucherStatus(
-            id: voucher.id,
-            isDisabled: !voucher.isDisabled
-        ) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isSubmitting = false
-                switch result {
-                case .success:
-                    self?.loadVouchers()
-                case .failure(let error):
-                    self?.alertTitle = "Error"
-                    self?.alertMessage = error.localizedDescription
-                    self?.showAlert = true
-                }
-            }
-        }
-    }
-    
     func deleteVoucher(_ voucher: VoucherModel) {
         isSubmitting = true
         
@@ -78,68 +57,7 @@ struct SBAdminVoucherManagement: View {
             VStack(spacing: 15) {
                 AdminHeader(title: "Voucher Management", dismiss: dismiss)
                 
-                if viewModel.isLoading {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if let error = viewModel.errorMessage {
-                    VStack {
-                        Text("Error loading vouchers")
-                            .font(.headline)
-                        Text(error)
-                            .font(.subheadline)
-                            .foregroundColor(.red)
-                        Button("Try Again") {
-                            viewModel.loadVouchers()
-                        }
-                        .padding()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    List {
-                        ForEach(viewModel.vouchers) { voucher in
-                            VoucherRow(voucher: voucher)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    viewModel.selectedVoucher = voucher
-                                }
-                                .swipeActions(edge: .trailing) {
-                                    Button(role: .destructive) {
-                                        viewModel.deleteVoucher(voucher)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                    
-                                    Button {
-                                        viewModel.toggleVoucherStatus(voucher)
-                                    } label: {
-                                        Label(
-                                            voucher.isDisabled ? "Enable" : "Disable",
-                                            systemImage: voucher.isDisabled ? "checkmark.circle" : "xmark.circle"
-                                        )
-                                    }
-                                    .tint(voucher.isDisabled ? .green : .orange)
-                                }
-                        }
-                    }
-                    .refreshable {
-                        viewModel.loadVouchers()
-                    }
-                    
-                    Button(action: { viewModel.showingCreateSheet = true }) {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Create New Voucher")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 54)
-                        .background(Color.main)
-                        .foregroundColor(.white)
-                        .cornerRadius(27)
-                        .shadow(color: Color.main.opacity(0.3), radius: 8, x: 0, y: 4)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                }
+                mainContent
             }
             .sheet(isPresented: $viewModel.showingCreateSheet) {
                 CreateVoucherView { success in
@@ -173,6 +91,76 @@ struct SBAdminVoucherManagement: View {
             viewModel.loadVouchers()
         }
     }
+    
+    @ViewBuilder
+    private var mainContent: some View {
+        if viewModel.isLoading {
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if let error = viewModel.errorMessage {
+            errorView(message: error)
+        } else {
+            voucherList
+        }
+    }
+    
+    private var voucherList: some View {
+        VStack {
+            List {
+                ForEach(viewModel.vouchers) { voucher in
+                    VoucherRow(voucher: voucher)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            viewModel.selectedVoucher = voucher
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                viewModel.deleteVoucher(voucher)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                }
+            }
+            .refreshable {
+                viewModel.loadVouchers()
+            }
+            
+            createButton
+        }
+    }
+    
+    private var createButton: some View {
+        Button(action: { viewModel.showingCreateSheet = true }) {
+            HStack {
+                Image(systemName: "plus.circle.fill")
+                Text("Create New Voucher")
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 54)
+            .background(Color.main)
+            .foregroundColor(.white)
+            .cornerRadius(27)
+            .shadow(color: Color.main.opacity(0.3), radius: 8, x: 0, y: 4)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+    }
+    
+    private func errorView(message: String) -> some View {
+        VStack {
+            Text("Error loading vouchers")
+                .font(.headline)
+            Text(message)
+                .font(.subheadline)
+                .foregroundColor(.red)
+            Button("Try Again") {
+                viewModel.loadVouchers()
+            }
+            .padding()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
 struct VoucherRow: View {
@@ -190,35 +178,11 @@ struct VoucherRow: View {
             }
             
             HStack {
-                Text("Min. Order: \(voucher.formattedMinOrderValue)")
+                Text("Min Order: \(voucher.formattedMinOrderValue)")
                     .font(R.font.outfitRegular.font(size: 14))
                     .foregroundColor(.gray)
                 Spacer()
-                if voucher.isDisabled {
-                    Text("Disabled")
-                        .font(R.font.outfitMedium.font(size: 12))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.red)
-                        .cornerRadius(4)
-                } else if voucher.isExpired {
-                    Text("Expired")
-                        .font(R.font.outfitMedium.font(size: 12))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.gray)
-                        .cornerRadius(4)
-                } else {
-                    Text("Active")
-                        .font(R.font.outfitMedium.font(size: 12))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.green)
-                        .cornerRadius(4)
-                }
+                voucherStatusBadge
             }
             
             Text("Expires: \(voucher.expiryDate.formatted(date: .abbreviated, time: .shortened))")
@@ -226,6 +190,28 @@ struct VoucherRow: View {
                 .foregroundColor(.gray)
         }
         .padding(.vertical, 8)
+    }
+    
+    private var voucherStatusBadge: some View {
+        Group {
+            if voucher.isDisabled {
+                statusBadge(text: "Disabled", color: .red)
+            } else if voucher.isExpired {
+                statusBadge(text: "Expired", color: .gray)
+            } else {
+                statusBadge(text: "Active", color: .green)
+            }
+        }
+    }
+    
+    private func statusBadge(text: String, color: Color) -> some View {
+        Text(text)
+            .font(R.font.outfitMedium.font(size: 12))
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(color)
+            .cornerRadius(4)
     }
 }
 
@@ -375,14 +361,15 @@ struct VoucherDetailView: View {
                         Text(voucher.code)
                             .foregroundColor(.gray)
                     }
+                    HStack {
+                        Text("Code")
+                        Spacer()
+                        Text(voucher.type)
+                            .foregroundColor(.gray)
+                    }
                 }
                 
                 Section(header: Text("Voucher Details")) {
-                    Picker("Type", selection: $selectedType) {
-                        Text("Fixed Amount").tag(VoucherType.fixed)
-                        Text("Percentage").tag(VoucherType.percentage)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
                     
                     HStack {
                         Text(selectedType == .fixed ? "$" : "")

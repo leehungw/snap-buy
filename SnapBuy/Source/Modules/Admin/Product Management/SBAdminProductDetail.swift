@@ -15,12 +15,29 @@ struct SBAdminProductDetailSheet: View {
                     if !product.productImages.isEmpty {
                         TabView {
                             ForEach(product.productImages, id: \.id) { image in
-                                AsyncImage(url: URL(string: image.url)) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                } placeholder: {
-                                    Color.gray.opacity(0.3)
+                                AsyncImage(url: URL(string: image.url)) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                            .frame(height: 300)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                    case .failure(_):
+                                        VStack {
+                                            Image(systemName: "photo")
+                                                .font(.largeTitle)
+                                                .foregroundColor(.gray)
+                                            Text("Failed to load image")
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                        .frame(height: 300)
+                                    @unknown default:
+                                        Color.gray.opacity(0.3)
+                                            .frame(height: 300)
+                                    }
                                 }
                             }
                         }
@@ -64,11 +81,24 @@ struct SBAdminProductDetailSheet: View {
                             
                             ForEach(product.productVariants, id: \.id) { variant in
                                 HStack {
-                                    Text("\(variant.color) - \(variant.size)")
+                                    // Color circle with hex color
+                                    HStack(spacing: 8) {
+                                        Circle()
+                                            .fill(Color(hex: variant.color) ?? Color.gray)
+                                            .frame(width: 20, height: 20)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.gray, lineWidth: 0.5)
+                                            )
+            
+                                        Text("- \(variant.size)")
+                                            .font(R.font.outfitRegular.font(size: 14))
+                                    }
                                     Spacer()
                                     Text(formatCurrency(variant.price))
+                                        .font(R.font.outfitRegular.font(size: 14))
                                 }
-                                .font(R.font.outfitRegular.font(size: 14))
+                                .padding(.vertical, 2)
                             }
                         }
                     }
@@ -82,12 +112,22 @@ struct SBAdminProductDetailSheet: View {
                                 .font(R.font.outfitBold.font(size: 16))
                             
                             HStack(spacing: 12) {
-                                AsyncImage(url: URL(string: seller.imageURL)) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                } placeholder: {
-                                    Color.gray.opacity(0.3)
+                                AsyncImage(url: URL(string: seller.imageURL)) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                            .frame(width: 50, height: 50)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    case .failure(_):
+                                        Image(systemName: "person.crop.circle.fill")
+                                            .resizable()
+                                            .foregroundColor(.gray)
+                                    @unknown default:
+                                        Color.gray.opacity(0.3)
+                                    }
                                 }
                                 .frame(width: 50, height: 50)
                                 .clipShape(Circle())

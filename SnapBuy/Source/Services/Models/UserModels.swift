@@ -62,6 +62,7 @@ struct UserResponse: Codable {
 
 
 struct UpdateProfileRequest: Codable {
+    let id: String
     let userName: String
     let email: String
 }

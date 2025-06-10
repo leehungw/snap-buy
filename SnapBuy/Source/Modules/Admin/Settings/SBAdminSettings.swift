@@ -20,6 +20,12 @@ class SBAdminSettingsViewModel: ObservableObject {
     
     func logout() {
         UserRepository.shared.logout()
+        // Handle navigation after logout
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let keyWindow = windowScene.windows.first {
+            keyWindow.rootViewController = UIHostingController(rootView: SBLoginView(shouldShowBackButton: false))
+            keyWindow.makeKeyAndVisible()
+        }
     }
 }
 

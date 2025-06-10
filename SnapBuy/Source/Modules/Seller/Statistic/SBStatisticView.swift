@@ -105,6 +105,37 @@ struct SalesStatisticsView: View {
             return viewModel.yearData
         }
     }
+    
+    var chartData: [SalesData] {
+        guard let data = currentData else { return [] }
+        
+        switch selectedFilter {
+        case .week:
+            return [
+                SalesData(label: "Mon", revenue: data.revenue * 0.1),
+                SalesData(label: "Tue", revenue: data.revenue * 0.15),
+                SalesData(label: "Wed", revenue: data.revenue * 0.12),
+                SalesData(label: "Thu", revenue: data.revenue * 0.18),
+                SalesData(label: "Fri", revenue: data.revenue * 0.25),
+                SalesData(label: "Sat", revenue: data.revenue * 0.12),
+                SalesData(label: "Sun", revenue: data.revenue * 0.08)
+            ]
+        case .month:
+            return [
+                SalesData(label: "W1", revenue: data.revenue * 0.2),
+                SalesData(label: "W2", revenue: data.revenue * 0.3),
+                SalesData(label: "W3", revenue: data.revenue * 0.25),
+                SalesData(label: "W4", revenue: data.revenue * 0.25)
+            ]
+        case .year:
+            return [
+                SalesData(label: "Q1", revenue: data.revenue * 0.2),
+                SalesData(label: "Q2", revenue: data.revenue * 0.3),
+                SalesData(label: "Q3", revenue: data.revenue * 0.25),
+                SalesData(label: "Q4", revenue: data.revenue * 0.25)
+            ]
+        }
+    }
 
     var body: some View {
         NavigationView {
@@ -173,6 +204,43 @@ struct SalesStatisticsView: View {
                                 }
                                 .pickerStyle(.segmented)
                                 .padding(.horizontal)
+                                
+                                // Revenue Chart
+                                if !chartData.isEmpty {
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        HStack {
+                                            Text("Revenue Chart")
+                                                .font(R.font.outfitSemiBold.font(size: 18))
+                                                .foregroundColor(.primary)
+                                            Spacer()
+                                        }
+                                        
+                                        ChartView(data: chartData)
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                                    .padding(.horizontal)
+                                }
+                                
+                                // Recent Orders Section
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack {
+                                        Text("Recent Orders")
+                                            .font(R.font.outfitSemiBold.font(size: 18))
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                        NavigationLink(destination: EmptyView()) {
+                                            Text("View All")
+                                                .font(R.font.outfitMedium.font(size: 14))
+                                                .foregroundColor(.main)
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                    
+                                    RecentOrdersList()
+                                }
                                 
                                 if let error = viewModel.error {
                                     Text(error)

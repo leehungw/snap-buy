@@ -15,145 +15,244 @@ struct SBAdminOrderDetail: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            // Order Status Section
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Order Status")
-                                    .font(R.font.outfitBold.font(size: 18))
-                                HStack {
-                                    Image(systemName: statusIcon(order.status))
-                                    Text(order.status)
-                                }
-                                .font(R.font.outfitMedium.font(size: 16))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                .background(colorForStatus(order.status))
-                                .cornerRadius(8)
+                    List {
+                        // Order Status Section
+                        Section(header: Text("Order Status").font(R.font.outfitMedium.font(size: 16))) {
+                            HStack {
+                                Image(systemName: statusIcon(order.status))
+                                Text(order.status)
+                                Spacer()
                             }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-
-                            List {
-                                Section(header: Text("Order Information").font(R.font.outfitMedium.font(size: 16))) {
-                                    Text("Order ID: #\(order.id)")
-                                        .font(R.font.outfitRegular.font(size: 14))
-                                    Text("Status: \(order.status)")
-                                        .font(R.font.outfitRegular.font(size: 14))
-                                        .foregroundColor(colorForStatus(order.status))
-                                }
-                                
-                                Section(header: Text("Buyer Information").font(R.font.outfitMedium.font(size: 16))) {
-                                    if let buyer = buyer {
-                                        HStack {
-                                            AsyncImage(url: URL(string: buyer.imageURL)) { image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                            } placeholder: {
-                                                Color.gray.opacity(0.2)
-                                            }
-                                            .frame(width: 40, height: 40)
-                                            .clipShape(Circle())
-                                            
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text(buyer.name)
-                                                    .font(R.font.outfitMedium.font(size: 14))
-                                                Text(buyer.email)
-                                                    .font(R.font.outfitRegular.font(size: 12))
-                                                    .foregroundColor(.gray)
-                                            }
-                                        }
-                                        .padding(.vertical, 4)
-                                    }
-                                    Text("Address: \(order.shippingAddress)")
-                                        .font(R.font.outfitRegular.font(size: 14))
-                                }
-                                
-                                Section(header: Text("Seller Information").font(R.font.outfitMedium.font(size: 16))) {
-                                    if let seller = seller {
-                                        HStack {
-                                            AsyncImage(url: URL(string: seller.imageURL)) { image in
-                                                image
-                                                    .resizable()
-                                                    .scaledToFill()
-                                            } placeholder: {
-                                                Color.gray.opacity(0.2)
-                                            }
-                                            .frame(width: 40, height: 40)
-                                            .clipShape(Circle())
-                                            
-                                            VStack(alignment: .leading, spacing: 4) {
-                                                Text(seller.name)
-                                                    .font(R.font.outfitMedium.font(size: 14))
-                                                Text(seller.email)
-                                                    .font(R.font.outfitRegular.font(size: 12))
-                                                    .foregroundColor(.gray)
-                                            }
-                                        }
-                                        .padding(.vertical, 4)
-                                    }
-                                }
-                                
-                                Section(header: Text("Order Items").font(R.font.outfitMedium.font(size: 16))) {
-                                    ForEach(order.orderItems) { item in
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            HStack(alignment: .top) {
-                                                AsyncImage(url: URL(string: item.productImageUrl)) { image in
-                                                    image
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                } placeholder: {
-                                                    Color.gray.opacity(0.2)
-                                                }
-                                                .frame(width: 60, height: 60)
-                                                .cornerRadius(8)
-                                                
-                                                VStack(alignment: .leading, spacing: 4) {
-                                                    Text(item.productName)
-                                                        .font(R.font.outfitMedium.font(size: 14))
-                                                    if !item.productNote.isEmpty {
-                                                        Text(item.productNote)
-                                                            .font(R.font.outfitRegular.font(size: 12))
-                                                            .foregroundColor(.gray)
-                                                    }
-                                                    Text("Quantity: \(item.quantity)")
-                                                        .font(R.font.outfitRegular.font(size: 12))
-                                                        .foregroundColor(.gray)
-                                                    Text("Price: $\(String(format: "%.2f", item.unitPrice))")
-                                                        .font(R.font.outfitRegular.font(size: 12))
-                                                        .foregroundColor(.gray)
-                                                }
-                                            }
+                            .font(R.font.outfitMedium.font(size: 16))
+                            .foregroundColor(colorForStatus(order.status))
+                            .padding(.vertical, 4)
+                        }
+                        
+                        Section(header: Text("Order Information").font(R.font.outfitMedium.font(size: 16))) {
+                            HStack {
+                                Text("Order ID")
+                                Spacer()
+                                Text("#\(order.id)")
+                                    .foregroundColor(.gray)
+                            }
+                            .font(R.font.outfitRegular.font(size: 14))
+                            
+                            HStack {
+                                Text("Total Amount")
+                                Spacer()
+                                Text("$\(String(format: "%.2f", order.totalAmount))")
+                                    .foregroundColor(.green)
+                                    .fontWeight(.semibold)
+                            }
+                            .font(R.font.outfitRegular.font(size: 14))
+                            
+                           
+                        }
+                        
+                        Section(header: Text("Shipping Address").font(R.font.outfitMedium.font(size: 16))) {
+                            Text(order.shippingAddress)
+                                .font(R.font.outfitRegular.font(size: 14))
+                                .fixedSize(horizontal: false, vertical: true)
+                                .foregroundColor(.gray)
+                            HStack {
+                                Text("Phone Number")
+                                Spacer()
+                                Text(order.phoneNumber)
+                                    .foregroundColor(.gray)
+                            }
+                            .font(R.font.outfitRegular.font(size: 14))
+                        }
+                        
+                        Section(header: Text("Buyer Information").font(R.font.outfitMedium.font(size: 16))) {
+                            if let buyer = buyer {
+                                HStack {
+                                    AsyncImage(url: URL(string: buyer.imageURL)) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                                .frame(width: 40, height: 40)
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        case .failure(_):
+                                            Image(systemName: "person.crop.circle.fill")
+                                                .resizable()
+                                                .foregroundColor(.gray)
+                                        @unknown default:
+                                            Color.gray.opacity(0.2)
                                         }
                                     }
-                                }
-                                
-                                Section(header: Text("Order Summary").font(R.font.outfitMedium.font(size: 16))) {
-                                    HStack {
-                                        Text("Total Items")
-                                            .font(R.font.outfitRegular.font(size: 14))
-                                        Spacer()
-                                        Text("\(order.orderItems.count)")
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(buyer.name)
                                             .font(R.font.outfitMedium.font(size: 14))
+                                        Text(buyer.email)
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
+                                        Text("@\(buyer.userName)")
+                                            .font(R.font.outfitRegular.font(size: 11))
+                                            .foregroundColor(.secondary)
                                     }
                                     
-                                    HStack {
-                                        Text("Total Amount")
-                                            .font(R.font.outfitRegular.font(size: 14))
-                                        Spacer()
-                                        Text("$\(String(format: "%.2f", order.totalAmount))")
-                                            .font(R.font.outfitMedium.font(size: 14))
-                                            .foregroundColor(.green)
+                                    Spacer()
+                                    
+                                    VStack(alignment: .trailing) {
+                                        if buyer.isPremium {
+                                            Label("Premium", systemImage: "star.fill")
+                                                .font(.caption)
+                                                .foregroundColor(.yellow)
+                                        }
+                                        if buyer.isBanned {
+                                            Label("Banned", systemImage: "exclamationmark.triangle.fill")
+                                                .font(.caption)
+                                                .foregroundColor(.red)
+                                        }
                                     }
                                 }
+                                .padding(.vertical, 4)
+                            } else {
+                                Text("Loading buyer information...")
+                                    .font(R.font.outfitRegular.font(size: 14))
+                                    .foregroundColor(.gray)
                             }
                         }
+                        
+                        Section(header: Text("Seller Information").font(R.font.outfitMedium.font(size: 16))) {
+                            if let seller = seller {
+                                HStack {
+                                    AsyncImage(url: URL(string: seller.imageURL)) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                                .frame(width: 40, height: 40)
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        case .failure(_):
+                                            Image(systemName: "person.crop.circle.fill")
+                                                .resizable()
+                                                .foregroundColor(.gray)
+                                        @unknown default:
+                                            Color.gray.opacity(0.2)
+                                        }
+                                    }
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(seller.name)
+                                            .font(R.font.outfitMedium.font(size: 14))
+                                        Text(seller.email)
+                                            .font(R.font.outfitRegular.font(size: 12))
+                                            .foregroundColor(.gray)
+                                        Text("@\(seller.userName)")
+                                            .font(R.font.outfitRegular.font(size: 11))
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .padding(.vertical, 4)
+                            } else {
+                                Text("Loading seller information...")
+                                    .font(R.font.outfitRegular.font(size: 14))
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        
+                        Section(header: Text("Order Items (\(order.orderItems.count))").font(R.font.outfitMedium.font(size: 16))) {
+                            ForEach(order.orderItems) { item in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(alignment: .top, spacing: 12) {
+                                        AsyncImage(url: URL(string: item.productImageUrl)) { phase in
+                                            switch phase {
+                                            case .empty:
+                                                ProgressView()
+                                                    .frame(width: 60, height: 60)
+                                            case .success(let image):
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                            case .failure(_):
+                                                Image(systemName: "photo")
+                                                    .foregroundColor(.gray)
+                                                    .frame(width: 60, height: 60)
+                                            @unknown default:
+                                                Color.gray.opacity(0.2)
+                                                    .frame(width: 60, height: 60)
+                                            }
+                                        }
+                                        .frame(width: 60, height: 60)
+                                        .cornerRadius(8)
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(item.productName)
+                                                .font(R.font.outfitMedium.font(size: 14))
+                                                .lineLimit(2)
+                                            
+                                            if !item.productNote.isEmpty {
+                                                Text(item.productNote)
+                                                    .font(R.font.outfitRegular.font(size: 12))
+                                                    .foregroundColor(.gray)
+                                                    .lineLimit(1)
+                                            }
+                                            
+                                            HStack {
+                                                Text("Qty: \(item.quantity)")
+                                                    .font(R.font.outfitRegular.font(size: 12))
+                                                    .foregroundColor(.gray)
+                                                
+                                                Spacer()
+                                                
+                                                Text("$\(String(format: "%.2f", item.unitPrice))")
+                                                    .font(R.font.outfitSemiBold.font(size: 14))
+                                                    .foregroundColor(.green)
+                                            }
+                                            
+                                            Text("Total: $\(String(format: "%.2f", Double(item.quantity) * item.unitPrice))")
+                                                .font(R.font.outfitMedium.font(size: 12))
+                                                .foregroundColor(.blue)
+                                        }
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                        
+                        Section(header: Text("Order Summary").font(R.font.outfitMedium.font(size: 16))) {
+                            HStack {
+                                Text("Total Items")
+                                    .font(R.font.outfitRegular.font(size: 14))
+                                Spacer()
+                                Text("\(order.orderItems.count)")
+                                    .font(R.font.outfitMedium.font(size: 14))
+                            }
+                            
+                            HStack {
+                                Text("Subtotal")
+                                    .font(R.font.outfitRegular.font(size: 14))
+                                Spacer()
+                                Text("$\(String(format: "%.2f", order.totalAmount))")
+                                    .font(R.font.outfitMedium.font(size: 14))
+                            }
+                            
+                            HStack {
+                                Text("Total Amount")
+                                    .font(R.font.outfitBold.font(size: 16))
+                                Spacer()
+                                Text("$\(String(format: "%.2f", order.totalAmount))")
+                                    .font(R.font.outfitBold.font(size: 16))
+                                    .foregroundColor(.green)
+                            }
+                            .padding(.top, 4)
+                        }
                     }
+                    .listStyle(InsetGroupedListStyle())
                 }
             }
             .navigationTitle("Order Details")
@@ -179,30 +278,34 @@ struct SBAdminOrderDetail: View {
         // Fetch buyer details
         group.enter()
         UserRepository.shared.fetchUserById(userId: order.buyerId) { result in
-            switch result {
-            case .success(let userData):
-                self.buyer = userData
-            case .failure(let error):
-                print("Failed to fetch buyer: \(error)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let userData):
+                    self.buyer = userData
+                case .failure(let error):
+                    print("Failed to fetch buyer: \(error)")
+                }
+                group.leave()
             }
-            group.leave()
         }
         
         // Fetch seller details
         group.enter()
         UserRepository.shared.fetchUserById(userId: order.sellerId) { result in
-            switch result {
-            case .success(let userData):
-                self.seller = userData
-            case .failure(let error):
-                print("Failed to fetch seller: \(error)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let userData):
+                    self.seller = userData
+                case .failure(let error):
+                    print("Failed to fetch seller: \(error)")
+                }
+                group.leave()
             }
-            group.leave()
         }
         
         // When both fetches are complete
         group.notify(queue: .main) {
-            isLoading = false
+            self.isLoading = false
         }
     }
     

@@ -66,8 +66,7 @@
 		0A5ECDB42DE4E37100E49072 /* ProductFormComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDB32DE4E37100E49072 /* ProductFormComponents.swift */; };
 		0A5ECDB62DE4E85D00E49072 /* ImgurService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5ECDB52DE4E85D00E49072 /* ImgurService.swift */; };
 		0A61F9A22DAF481F003A9DAD /* SBUserRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */; };
-		0A68BEDB2DF4975400F1DD7B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A68BED92DF4975400F1DD7B /* Info.plist */; };
-		0A68BEDC2DF4975400F1DD7B /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A68BEDA2DF4975400F1DD7B /* PayPalConfig.plist */; };
+		0A68BEDC2DF4975400F1DD7B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		0A921A122DF34CB000E69388 /* SBNotificationRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A921A112DF34CB000E69388 /* SBNotificationRepo.swift */; };
 		0A9FC9422DE8C882001A0343 /* SBAddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9FC9412DE8C882001A0343 /* SBAddressViewModel.swift */; };
 		0AA4788D2DEA088900FF4C10 /* OrderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4788C2DEA088900FF4C10 /* OrderModels.swift */; };
@@ -100,7 +99,6 @@
 		0AB9B0672DBFC56700E54E28 /* AddressModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B05F2DBFC56700E54E28 /* AddressModel.swift */; };
 		0AB9B0682DBFC56700E54E28 /* PopularModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0632DBFC56700E54E28 /* PopularModel.swift */; };
 		0AB9B0692DBFC56700E54E28 /* PaymentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9B0622DBFC56700E54E28 /* PaymentModel.swift */; };
-		0ABB7D202DC4B29600AD897B /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ABB7D1F2DC4B29600AD897B /* credentials.plist */; };
 		0AF9F5A32DE1F929000B9B6D /* SBTagRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */; };
 		0AF9F5A52DE1FDBD000B9B6D /* TagModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */; };
 		0AF9F5A72DE2294A000B9B6D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A62DE2294A000B9B6D /* SearchViewModel.swift */; };
@@ -207,7 +205,6 @@
 		0A5ECDB52DE4E85D00E49072 /* ImgurService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImgurService.swift; sourceTree = "<group>"; };
 		0A61F9A12DAF47FE003A9DAD /* SBUserRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBUserRepo.swift; sourceTree = "<group>"; };
 		0A68BED92DF4975400F1DD7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0A68BEDA2DF4975400F1DD7B /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		0A921A112DF34CB000E69388 /* SBNotificationRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBNotificationRepo.swift; sourceTree = "<group>"; };
 		0A9FC9412DE8C882001A0343 /* SBAddressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAddressViewModel.swift; sourceTree = "<group>"; };
 		0AA4788C2DEA088900FF4C10 /* OrderModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModels.swift; sourceTree = "<group>"; };
@@ -240,7 +237,6 @@
 		0AB9B0612DBFC56700E54E28 /* ColorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		0AB9B0622DBFC56700E54E28 /* PaymentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModel.swift; sourceTree = "<group>"; };
 		0AB9B0632DBFC56700E54E28 /* PopularModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularModel.swift; sourceTree = "<group>"; };
-		0ABB7D1F2DC4B29600AD897B /* credentials.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
 		0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBTagRepo.swift; sourceTree = "<group>"; };
 		0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModels.swift; sourceTree = "<group>"; };
 		0AF9F5A62DE2294A000B9B6D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
@@ -275,6 +271,8 @@
 		DA958F402DD484A400A98432 /* SBProductManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBProductManagementView.swift; sourceTree = "<group>"; };
 		DA9BD5BE2DF0A84D00C3B1A4 /* SignalRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalRService.swift; sourceTree = "<group>"; };
 		DA9BD5C02DF0B71400C3B1A4 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
+		DACEC0992DF755F100D93A84 /* credentials.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
+		DACEC09A2DF755F100D93A84 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		DADEB30A2DE363EF00DED0A1 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
 		DADEB30C2DE3649600DED0A1 /* SBChatRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatRepo.swift; sourceTree = "<group>"; };
 		DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminVoucherManagement.swift; sourceTree = "<group>"; };
@@ -658,9 +656,9 @@
 		0AA7A10B2D91CD9D00EB5684 /* SnapBuy */ = {
 			isa = PBXGroup;
 			children = (
+				DACEC0992DF755F100D93A84 /* credentials.plist */,
+				DACEC09A2DF755F100D93A84 /* PayPalConfig.plist */,
 				0A68BED92DF4975400F1DD7B /* Info.plist */,
-				0A68BEDA2DF4975400F1DD7B /* PayPalConfig.plist */,
-				0ABB7D1F2DC4B29600AD897B /* credentials.plist */,
 				0AA7A0ED2D91CD9D00EB5684 /* Resource */,
 				0AA7A1092D91CD9D00EB5684 /* Source */,
 			);
@@ -989,13 +987,13 @@
 				0AA7A1102D91CD9D00EB5684 /* Outfit-Bold.ttf in Resources */,
 				0AA7A1112D91CD9D00EB5684 /* Outfit-ExtraBold.ttf in Resources */,
 				0AA7A1122D91CD9D00EB5684 /* Outfit-ExtraLight.ttf in Resources */,
-				0ABB7D202DC4B29600AD897B /* credentials.plist in Resources */,
 				0AA7A1132D91CD9D00EB5684 /* Outfit-Light.ttf in Resources */,
 				0AA7A1142D91CD9D00EB5684 /* Outfit-Medium.ttf in Resources */,
 				0AA7A1152D91CD9D00EB5684 /* Outfit-Regular.ttf in Resources */,
 				0AA7A1162D91CD9D00EB5684 /* Outfit-SemiBold.ttf in Resources */,
-				0A68BEDB2DF4975400F1DD7B /* Info.plist in Resources */,
-				0A68BEDC2DF4975400F1DD7B /* PayPalConfig.plist in Resources */,
+
+				0A68BEDC2DF4975400F1DD7B /* (null) in Resources */,
+
 				0AA7A1172D91CD9D00EB5684 /* Outfit-Thin.ttf in Resources */,
 				0AA7A1182D91CD9D00EB5684 /* Assets.xcassets in Resources */,
 				0AA7A1192D91CD9D00EB5684 /* Localizable.strings in Resources */,
@@ -1032,13 +1030,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1355,10 +1349,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Preview Content\"";
-				DEVELOPMENT_TEAM = 7SS5ZMN85B;
+				DEVELOPMENT_TEAM = JB8Z9HTB6G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SnapBuy/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs access to your local network to communicate with your server.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "We need your location to show nearby stores and provide accurate delivery information.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show nearby stores and provide accurate delivery information.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1369,7 +1366,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ui.se.snapbuy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snapbuy.se;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1386,10 +1383,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SnapBuy/Preview Content\"";
-				DEVELOPMENT_TEAM = 7SS5ZMN85B;
+				DEVELOPMENT_TEAM = JB8Z9HTB6G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SnapBuy/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app needs access to your local network to communicate with your server.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "We need your location to show nearby stores and provide accurate delivery information.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show nearby stores and provide accurate delivery information.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1400,7 +1400,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ui.se.snapbuy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snapbuy.se;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

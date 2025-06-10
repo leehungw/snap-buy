@@ -75,8 +75,13 @@ struct SBLoginView: View {
                                 if response.result == 1, let userData = response.data {
                                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                        let keyWindow = windowScene.windows.first {
-                                        keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                        if userData.isAdmin {
+                                            keyWindow.rootViewController = UIHostingController(rootView: SBAdminDashboardView())
+                                        } else {
+                                            keyWindow.rootViewController = UIHostingController(rootView: SBHomeTabbarView())
+                                        }
                                         keyWindow.makeKeyAndVisible()
+                                    
                                     }
                                 } else if let errorInfo = response.error {
                                     showAlert(message: errorInfo.message)
