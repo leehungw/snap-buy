@@ -80,7 +80,7 @@ struct SBCombinedSearchView: View {
                 .font(R.font.outfitRegular.font(size: 16))
                 .sheet(isPresented: $isSheetPresented) {
                     SBFilterSheetView(viewModel: viewModel, shouldNavigateToSearch: $shouldShowSearchView)
-                        .presentationDetents([.fraction(0.4)])
+                        .presentationDetents([.height(450)])
                         .presentationDragIndicator(.visible)
                         .presentationCornerRadius(50)
                 }
