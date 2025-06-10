@@ -147,34 +147,44 @@ struct SBEditProfileView: View {
         isLoading = true
         
         UserRepository.shared.fetchUserById(userId: userId) { result in
-            isLoading = false
-            switch result {
-            case .success(let userData):
-                self.username = userData.userName
-                self.email = userData.email
-            case .failure(let error):
-                self.alertMessage = error.localizedDescription
-                self.showAlert = true
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let userData):
+                    self.username = userData.userName
+                    self.email = userData.email
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert = true
+                }
             }
         }
     }
     
     private func updateProfile() {
-        isLoading = true
-        let request = UpdateProfileRequest(userName: username, email: email)
-        UserRepository.shared.updateProfile(request: request) { result in
-            isLoading = false
-            switch result {
-            case .success(let response):
-                if response.result == 1 {
-                    alertMessage = "Profile updated successfully"
-                } else {
-                    alertMessage = response.error?.message ?? "Failed to update profile"
-                }
-            case .failure(let error):
-                alertMessage = error.localizedDescription
-            }
+        guard let userId = UserRepository.shared.currentUser?.id else {
+            alertMessage = "User not found. Please log in again."
             showAlert = true
+            return
+        }
+        
+        isLoading = true
+        let request = UpdateProfileRequest(id: userId, userName: username, email: email)
+        UserRepository.shared.updateProfile(request: request) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let response):
+                    if response.result == 1 {
+                        alertMessage = "Profile updated successfully"
+                    } else {
+                        alertMessage = response.error?.message ?? "Failed to update profile"
+                    }
+                case .failure(let error):
+                    alertMessage = error.localizedDescription
+                }
+                showAlert = true
+            }
         }
     }
 }

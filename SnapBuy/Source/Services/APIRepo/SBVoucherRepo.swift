@@ -132,158 +132,87 @@ final class VoucherRepository {
     ) {
         print("🎫 Updating voucher \(id)")
         
-        // Format dates using ISO8601
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime]
-        
-        let voucher = [
-            "id": id,
-            "code": "VCH-\(dateFormatter.string(from: Date()).prefix(8))-\(String(format: "%04d", id))",  // Format: VCH-YYYYMMDD-{id}
-            "type": type.rawValue,
-            "value": value,
-            "minOrderValue": minOrderValue,
-            "expiryDate": dateFormatter.string(from: expiryDate),
-            "canUse": !isDisabled  // Convert isDisabled to canUse
-        ] as [String : Any]
-        
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: voucher, options: .prettyPrinted) else {
-            let error = NSError(
-                domain: "VoucherRepository",
-                code: -1,
-                userInfo: [NSLocalizedDescriptionKey: "Failed to encode voucher data"]
-            )
-            completion(.failure(error))
-            return
-        }
-        
-        let headers = ["Content-Type": "application/json"]
-        
-        print("🌐 Request Body: \(String(data: jsonData, encoding: .utf8) ?? "")")
-        
-        SBAPIService.shared.performRequest(
-            endpoint: "order/api/vouchers/\(id)",  // Add id to endpoint
-            method: "PUT",  // Try PUT again with correct format
-            body: jsonData,
-            headers: headers
-        ) { (result: Result<VoucherResponse, Error>) in
-            switch result {
-            case .success(let response):
-                if let voucher = response.data {
-                    print("✅ Successfully updated voucher")
-                    completion(.success(voucher))
-                } else if let error = response.error {
-                    print("❌ API Error: \(error)")
-                    let apiError = NSError(
-                        domain: "VoucherRepository",
-                        code: error.code,
-                        userInfo: [NSLocalizedDescriptionKey: error.message ?? "Failed to update voucher"]
-                    )
-                    completion(.failure(apiError))
-                } else {
-                    print("❌ Failed to update voucher")
-                    let error = NSError(
-                        domain: "VoucherRepository",
-                        code: -1,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to update voucher"]
-                    )
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                print("❌ Network Error: \(error.localizedDescription)")
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    // MARK: - Delete Voucher
-    func deleteVoucher(id: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-        print("🎫 Deleting voucher \(id)")
-        
-        let headers = ["Content-Type": "application/json"]
-        
+        // First fetch the current voucher to get its code and createdAt
         SBAPIService.shared.performRequest(
             endpoint: "order/api/vouchers/\(id)",
-            method: "DELETE",
+            method: "GET",
             body: nil,
-            headers: headers
-        ) { (result: Result<DeleteVoucherResponse, Error>) in
+            headers: ["Content-Type": "application/json"]
+        ) { [weak self] (result: Result<VoucherResponse, Error>) in
             switch result {
             case .success(let response):
-                if response.result > 0 {
-                    print("✅ Successfully deleted voucher")
-                    completion(.success(()))
-                } else if let error = response.error {
-                    print("❌ API Error: \(error)")
-                    let apiError = NSError(
-                        domain: "VoucherRepository",
-                        code: error.code,
-                        userInfo: [NSLocalizedDescriptionKey: error.message ?? "Failed to delete voucher"]
-                    )
-                    completion(.failure(apiError))
+                if let currentVoucher = response.data {
+                    // Create ISO8601 formatter with milliseconds
+                    let dateFormatter = ISO8601DateFormatter()
+                    dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    
+                    let voucher = [
+                        "id": currentVoucher.id,
+                        "code": currentVoucher.code,  // Keep existing code
+                        "type": currentVoucher.type,  // Keep existing type
+                        "value": value,  // Can update
+                        "minOrderValue": minOrderValue,  // Can update
+                        "expiryDate": dateFormatter.string(from: expiryDate),  // Can update
+                        "isDisabled": isDisabled,  // Can update
+                        "createdAt": dateFormatter.string(from: currentVoucher.createdAt)  // Keep existing createdAt
+                    ] as [String : Any]
+                    
+                    guard let jsonData = try? JSONSerialization.data(withJSONObject: voucher) else {
+                        let error = NSError(
+                            domain: "VoucherRepository",
+                            code: -1,
+                            userInfo: [NSLocalizedDescriptionKey: "Failed to encode voucher data"]
+                        )
+                        completion(.failure(error))
+                        return
+                    }
+                    
+                    let headers = ["Content-Type": "application/json"]
+                    
+                    print("🌐 Request Body: \(String(data: jsonData, encoding: .utf8) ?? "")")
+                    
+                    SBAPIService.shared.performRequest(
+                        endpoint: "order/api/vouchers",  // Base endpoint without ID
+                        method: "PUT",
+                        body: jsonData,
+                        headers: headers
+                    ) { (result: Result<VoucherResponse, Error>) in
+                        switch result {
+                        case .success(let response):
+                            if let voucher = response.data {
+                                print("✅ Successfully updated voucher")
+                                completion(.success(voucher))
+                            } else if let error = response.error {
+                                print("❌ API Error: \(error)")
+                                let apiError = NSError(
+                                    domain: "VoucherRepository",
+                                    code: error.code,
+                                    userInfo: [NSLocalizedDescriptionKey: error.message ?? "Failed to update voucher"]
+                                )
+                                completion(.failure(apiError))
+                            } else {
+                                print("❌ Failed to update voucher")
+                                let error = NSError(
+                                    domain: "VoucherRepository",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "Failed to update voucher"]
+                                )
+                                completion(.failure(error))
+                            }
+                        case .failure(let error):
+                            print("❌ Network Error: \(error.localizedDescription)")
+                            completion(.failure(error))
+                        }
+                    }
                 } else {
-                    print("❌ Failed to delete voucher")
                     let error = NSError(
                         domain: "VoucherRepository",
                         code: -1,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to delete voucher"]
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to fetch current voucher data"]
                     )
                     completion(.failure(error))
                 }
             case .failure(let error):
-                print("❌ Network Error: \(error.localizedDescription)")
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    // MARK: - Toggle Voucher Status
-    func toggleVoucherStatus(id: Int, isDisabled: Bool, completion: @escaping (Result<VoucherModel, Error>) -> Void) {
-        print("🎫 Toggling voucher \(id) status to \(isDisabled ? "disabled" : "enabled")")
-        
-        let status = ["isDisabled": isDisabled]
-        
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: status) else {
-            let error = NSError(
-                domain: "VoucherRepository",
-                code: -1,
-                userInfo: [NSLocalizedDescriptionKey: "Failed to encode status data"]
-            )
-            completion(.failure(error))
-            return
-        }
-        
-        let headers = ["Content-Type": "application/json"]
-        
-        SBAPIService.shared.performRequest(
-            endpoint: "order/api/vouchers/\(id)",
-            method: "PUT",
-            body: jsonData,
-            headers: headers
-        ) { (result: Result<VoucherResponse, Error>) in
-            switch result {
-            case .success(let response):
-                if let voucher = response.data {
-                    print("✅ Successfully toggled voucher status")
-                    completion(.success(voucher))
-                } else if let error = response.error {
-                    print("❌ API Error: \(error)")
-                    let apiError = NSError(
-                        domain: "VoucherRepository",
-                        code: error.code,
-                        userInfo: [NSLocalizedDescriptionKey: error.message ?? "Failed to toggle voucher status"]
-                    )
-                    completion(.failure(apiError))
-                } else {
-                    print("❌ Failed to toggle voucher status")
-                    let error = NSError(
-                        domain: "VoucherRepository",
-                        code: -1,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to toggle voucher status"]
-                    )
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                print("❌ Network Error: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -374,6 +303,47 @@ final class VoucherRepository {
                 }
             case .failure(let error):
                 print("❌ Failed to record voucher usage: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // MARK: - Delete Voucher
+    func deleteVoucher(id: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+        print("🎫 Deleting voucher \(id)")
+        
+        let headers = ["Content-Type": "application/json"]
+        
+        SBAPIService.shared.performRequest(
+            endpoint: "order/api/vouchers/\(id)",
+            method: "DELETE",
+            body: nil,
+            headers: headers
+        ) { (result: Result<DeleteVoucherResponse, Error>) in
+            switch result {
+            case .success(let response):
+                if response.result > 0 {
+                    print("✅ Successfully deleted voucher")
+                    completion(.success(()))
+                } else if let error = response.error {
+                    print("❌ API Error: \(error)")
+                    let apiError = NSError(
+                        domain: "VoucherRepository",
+                        code: error.code,
+                        userInfo: [NSLocalizedDescriptionKey: error.message ?? "Failed to delete voucher"]
+                    )
+                    completion(.failure(apiError))
+                } else {
+                    print("❌ Failed to delete voucher")
+                    let error = NSError(
+                        domain: "VoucherRepository",
+                        code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to delete voucher"]
+                    )
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                print("❌ Network Error: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

@@ -1,7 +1,7 @@
 import Foundation
 
 enum VoucherType: String, Codable, CaseIterable {
-    case fixed = "fixed"
+    case fixed = "fix"
     case percentage = "percentage"
 }
 

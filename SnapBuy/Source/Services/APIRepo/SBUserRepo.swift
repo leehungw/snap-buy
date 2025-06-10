@@ -107,13 +107,13 @@ final class UserRepository {
             return
         }
         
-        SBAPIService.shared.performRequest(endpoint: "user/api/users/profile",
+        SBAPIService.shared.performRequest(endpoint: "user/api/users/\(request.id)",
                                            method: "PUT",
                                            body: jsonData,
                                            headers: nil) { (result: Result<UserLoginResponse, Error>) in
             switch result {
             case .success(let response):
-                if let userData = response.data {
+                if response.result == 1, let userData = response.data {
                     UserRepository.shared.currentUser = userData
                 }
                 completion(.success(response))
