@@ -29,7 +29,7 @@ struct SBFilterSheetView: View {
                     lowerValue: $viewModel.minPrice,
                     upperValue: $viewModel.maxPrice,
                     minValue: 0,
-                    maxValue: 80
+                    maxValue: 1000
                 )
                 .padding(.horizontal, 20)
             }
@@ -131,7 +131,6 @@ struct SBFilterSheetView: View {
         }
         .font(R.font.outfitRegular.font(size: 16))
         .padding(.horizontal, 25)
-        .padding(.bottom)
-        .presentationDetents([.medium, .large])
+        .padding(.bottom,20)
     }
 }

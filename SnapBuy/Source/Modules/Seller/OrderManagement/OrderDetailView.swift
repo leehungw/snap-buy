@@ -2,6 +2,7 @@ import SwiftUI
 
 class OrderDetailViewModel: ObservableObject {
     @Published var order: SBOrderModel?
+    @Published var buyer: UserData?
     @Published var isLoading = false
     @Published var error: String?
     
@@ -15,6 +16,22 @@ class OrderDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let order):
                     self?.order = order
+                    // Fetch buyer information after getting order
+                    self?.fetchBuyerInfo(buyerId: order.buyerId)
+                case .failure(let error):
+                    self?.error = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    private func fetchBuyerInfo(buyerId: String) {
+        UserRepository.shared.fetchUserById(userId: buyerId) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let userData):
+                    self?.buyer = userData
                 case .failure(let error):
                     self?.error = error.localizedDescription
                 }
@@ -120,9 +137,21 @@ struct OrderDetailView: View {
                             // Buyer Information
                             InfoCard(title: "Buyer Information") {
                                 VStack(alignment: .leading, spacing: 12) {
-                                    InfoRow(icon: "person.circle", title: "ID", value: order.buyerId)
-                                    InfoRow(icon: "location", title: "Address", value: order.shippingAddress)
-                                    InfoRow(icon: "phone", title: "Phone", value: order.phoneNumber)
+                                    InfoRow(
+                                        icon: "person.circle", 
+                                        title: "Name", 
+                                        value: viewModel.buyer?.name ?? "Loading..."
+                                    )
+                                    InfoRow(
+                                        icon: "location", 
+                                        title: "Address", 
+                                        value: order.shippingAddress
+                                    )
+                                    InfoRow(
+                                        icon: "phone", 
+                                        title: "Phone", 
+                                        value: order.phoneNumber
+                                    )
                                 }
                             }
                             

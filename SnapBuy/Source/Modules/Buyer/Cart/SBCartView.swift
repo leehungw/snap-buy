@@ -504,15 +504,24 @@ struct SBCartView: View {
     private func calculateDiscount() -> Double {
         guard let voucher = selectedVoucher else { return 0 }
         
+        let subtotal = totalPrice()
         if voucher.type == VoucherType.percentage.rawValue {
-            return totalPrice() * (voucher.value / 100.0)
+            let discount = subtotal * (voucher.value / 100.0)
+            // Ensure discount doesn't exceed subtotal
+            return min(discount, subtotal)
         } else {
-            return voucher.value
+            // For fixed amount vouchers, also ensure discount doesn't exceed subtotal
+            return min(voucher.value, subtotal)
         }
     }
     
     private func finalTotal() -> Double {
-        return totalPrice() + 6.0 - calculateDiscount()
+        let subtotal = totalPrice()
+        let discount = calculateDiscount()
+        let total = subtotal + 6.0 - discount // Add shipping fee
+        
+        // Ensure total is not negative, minimum should be 0
+        return max(0, total)
     }
 }
 

@@ -179,9 +179,6 @@ struct SBProductDetailView: View {
                 Text("Detail Product")
                     .font(R.font.outfitRegular.font(size:16))
                 Spacer()
-                Image(systemName: "bag")
-                    .font(.title2)
-                    .foregroundColor(.black)
             }
             
             .padding()
@@ -314,12 +311,18 @@ struct SBProductDetailView: View {
                     Text("Tags")
                         .font(R.font.outfitBold.font(size:14))
                         .padding(.top, 10)
-                    WrapHStack(items: product.listTag) { tag in
-                        Text(tag)
-                            .font(.caption)
-                            .padding(6)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(6)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(product.listTag, id: \.self) { tag in
+                                Text(tag)
+                                    .font(.caption)
+                                    .padding(6)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(6)
+                            }
+                        }
+                        .padding(.horizontal, 4)
                     }
                     HStack {
                         HStack(alignment: .firstTextBaseline, spacing: 0) {
@@ -333,12 +336,32 @@ struct SBProductDetailView: View {
                         Spacer()
                         Button(action: {
                             if selectedVariant != nil {
-                                SBUserDefaultService.instance.addToCart(
-                                    productId: product.id,
-                                    variantId: selectedVariant!.id,
-                                    quantity: quantity
-                                )
-                                addToCartMessage = "Added \(quantity) item\(quantity > 1 ? "s" : "") to cart"
+                                // Get current cart items
+                                var currentCartItems = SBUserDefaultService.instance.cartItems
+                                
+                                // Check if the same product variant already exists in cart
+                                if let existingItemIndex = currentCartItems.firstIndex(where: { item in
+                                    item.productId == product.id && item.variantId == selectedVariant!.id
+                                }) {
+                                    // Update quantity of existing item
+                                    let newQuantity = currentCartItems[existingItemIndex].quantity + quantity
+                                    currentCartItems[existingItemIndex] = SBCartStorageItem(
+                                        productId: product.id,
+                                        variantId: selectedVariant!.id,
+                                        quantity: newQuantity
+                                    )
+                                    SBUserDefaultService.instance.cartItems = currentCartItems
+                                    addToCartMessage = "Updated quantity in cart (+\(quantity))"
+                                } else {
+                                    // Add new item to cart
+                                    SBUserDefaultService.instance.addToCart(
+                                        productId: product.id,
+                                        variantId: selectedVariant!.id,
+                                        quantity: quantity
+                                    )
+                                    addToCartMessage = "Added \(quantity) item\(quantity > 1 ? "s" : "") to cart"
+                                }
+                                
                                 showAddedToCartAlert = true
                                 
                                 // Hide the alert after 2 seconds
@@ -413,15 +436,6 @@ struct SBProductDetailView: View {
                                 
                                 Spacer()
                                 
-//                                Button(action: {}) {
-//                                    Text(R.string.localizable.follow())
-//                                        .font(R.font.outfitSemiBold.font(size: 14))
-//                                        .padding(.horizontal, 16)
-//                                        .padding(.vertical, 8)
-//                                        .background(Color.main)
-//                                        .foregroundColor(.white)
-//                                        .cornerRadius(20)
-//                                }
                             }
                         }
                         Text(R.string.localizable.rating)
