@@ -1,14 +1,14 @@
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
 	<key>SchemeUserState</key>
-	***REMOVED***
+	<dict>
 		<key>SnapBuy.xcscheme_^#shared#^_</key>
-		***REMOVED***
+		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
-		***REMOVED***
-	***REMOVED***
-***REMOVED***
-***REMOVED***
+			<integer>29</integer>
+		</dict>
+	</dict>
+</dict>
+</plist>

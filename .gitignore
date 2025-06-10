@@ -31,3 +31,13 @@ SourcePackages/artifacts/
 *.swp
 *.swo
 
+#Pods
+*.Pods/
+*.Podfile.lock
+
+/Pods
+Podfile.lock
+R.generated.swift
+SnapBuy/PayPalConfig.plist
+SnapBuy/PayPalConfig.plist
+SnapBuy/credentials.plist

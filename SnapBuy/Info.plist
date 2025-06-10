@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string></string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app needs access to your local network to communicate with your server.</string>
+	<key>GIDClientID</key>
+	<string>141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.141558364034-j5b3cht76epvpbet3i412i6a1rhroo2b</string>
+				<string>com.ui.se.snapbuy</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.ui.se.snapbuy</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
+	<key>GIDServerClientID</key>
+	<string>141558364034-ag0e3516ejcog5h3286uuk1f2gahplm3.apps.googleusercontent.com</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Outfit-SemiBold.ttf</string>
+		<string>Outfit-Medium.ttf</string>
+		<string>Outfit-Regular.ttf</string>
+		<string>Outfit-Bold.ttf</string>
+	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show nearby stores and provide accurate delivery information.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We need your location to show nearby stores and provide accurate delivery information.</string>
+</dict>
+</plist>
