@@ -12,6 +12,19 @@ struct SBPayPalOnboardingView: View {
             if userModeManager.isOnboardingPayPal {
                 ProgressView("Setting up PayPal...")
                     .progressViewStyle(CircularProgressViewStyle())
+            } else if userModeManager.isPayPalConnected {
+                Image("img_paypal")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 100)
+                Text("PayPal account connected successfully!")
+                    .font(R.font.outfitBold.font(size: 22))
+                    .foregroundColor(.green)
+                Text("Your PayPal account is connected. You can now receive payments from buyers.")
+                    .font(R.font.outfitRegular.font(size: 16))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.gray)
+                    .padding(.horizontal)
             } else {
                 Image("img_paypal")
                     .resizable()

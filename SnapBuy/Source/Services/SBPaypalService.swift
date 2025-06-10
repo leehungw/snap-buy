@@ -380,6 +380,11 @@ class SBPaypalService {
         }
         request.httpBody = "grant_type=client_credentials".data(using: .utf8)
         let (data, response) = try await URLSession.shared.data(for: request)
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("📥 Raw Response Data: \(response)")
+            print(responseString)
+        }
+        
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw NSError(domain: "PayPal", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get admin access token"])
         }

@@ -56,12 +56,14 @@ final class UserModeManager: ObservableObject {
             onboardingError = nil
             
             if let merchantId = user.sellerMerchantId {
-                let status = try await SBPaypalService.shared.checkSellerStatus(sellerMerchantId: merchantId)
-                if status.isFullyOnboarded {
-                    isPayPalConnected = true
-                    self.merchantId = merchantId
-                    isOnboardingPayPal = false
-                    return
+                if merchantId.isEmpty == false {
+                    let status = try await SBPaypalService.shared.checkSellerStatus(sellerMerchantId: merchantId)
+                    if status.isFullyOnboarded {
+                        isPayPalConnected = true
+                        self.merchantId = merchantId
+                        isOnboardingPayPal = false
+                        return
+                    }
                 }
             }
             

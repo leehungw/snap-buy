@@ -102,6 +102,8 @@
 		0AF9F5A32DE1F929000B9B6D /* SBTagRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */; };
 		0AF9F5A52DE1FDBD000B9B6D /* TagModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */; };
 		0AF9F5A72DE2294A000B9B6D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9F5A62DE2294A000B9B6D /* SearchViewModel.swift */; };
+		0AFE519E2DF88B3900F9D609 /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0AFE519C2DF886DD00F9D609 /* credentials.plist */; };
+		0AFE519F2DF88B3900F9D609 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0AFE519D2DF886DD00F9D609 /* PayPalConfig.plist */; };
 		1136D81B7CB8C1798433F2A6 /* Pods_SnapBuy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68E662488D45EFC313A2A406 /* Pods_SnapBuy.framework */; };
 		DA5045712DC0AD9800DCE3EA /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5045702DC0AD9400DCE3EA /* MessageModel.swift */; };
 		DA6BBB682DE61D05005BF7E7 /* OrderModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6BBB672DE61D01005BF7E7 /* OrderModels.swift */; };
@@ -134,8 +136,6 @@
 		DAE23DEB2DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */; };
 		DAE23DED2DEDA3C60044BAA9 /* VoucherModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */; };
 		DAE23DEF2DEDA3D20044BAA9 /* SBVoucherRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */; };
-		DAEB4BC32DF833F2009CCEC8 /* PayPalConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAEB4BC22DF833F2009CCEC8 /* PayPalConfig.plist */; };
-		DAEB4BC42DF833F2009CCEC8 /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = DAEB4BC12DF833F2009CCEC8 /* credentials.plist */; };
 		DAF3BC452DDD73D20099DBE7 /* SBAdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */; };
 		DAF3BC492DDDB3440099DBE7 /* SBAdminUserManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */; };
 		DAF3BC4B2DDDB4AF0099DBE7 /* SBAdminUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */; };
@@ -242,6 +242,8 @@
 		0AF9F5A22DE1F923000B9B6D /* SBTagRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBTagRepo.swift; sourceTree = "<group>"; };
 		0AF9F5A42DE1FDB9000B9B6D /* TagModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModels.swift; sourceTree = "<group>"; };
 		0AF9F5A62DE2294A000B9B6D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		0AFE519C2DF886DD00F9D609 /* credentials.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
+		0AFE519D2DF886DD00F9D609 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		68E662488D45EFC313A2A406 /* Pods_SnapBuy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SnapBuy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0B829D058138A7823F66B5 /* Pods-SnapBuy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.debug.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.debug.xcconfig"; sourceTree = "<group>"; };
 		8BDE79FAB67DEB8843E5A04A /* Pods-SnapBuy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SnapBuy.release.xcconfig"; path = "Target Support Files/Pods-SnapBuy/Pods-SnapBuy.release.xcconfig"; sourceTree = "<group>"; };
@@ -278,8 +280,6 @@
 		DAE23DE92DEDA3A60044BAA9 /* SBAdminVoucherManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminVoucherManagement.swift; sourceTree = "<group>"; };
 		DAE23DEC2DEDA3C60044BAA9 /* VoucherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoucherModels.swift; sourceTree = "<group>"; };
 		DAE23DEE2DEDA3D20044BAA9 /* SBVoucherRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBVoucherRepo.swift; sourceTree = "<group>"; };
-		DAEB4BC12DF833F2009CCEC8 /* credentials.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
-		DAEB4BC22DF833F2009CCEC8 /* PayPalConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PayPalConfig.plist; sourceTree = "<group>"; };
 		DAF3BC442DDD73CE0099DBE7 /* SBAdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminDashboard.swift; sourceTree = "<group>"; };
 		DAF3BC482DDDB3320099DBE7 /* SBAdminUserManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserManagement.swift; sourceTree = "<group>"; };
 		DAF3BC4A2DDDB4A50099DBE7 /* SBAdminUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAdminUserDetail.swift; sourceTree = "<group>"; };
@@ -658,8 +658,8 @@
 		0AA7A10B2D91CD9D00EB5684 /* SnapBuy */ = {
 			isa = PBXGroup;
 			children = (
-				DAEB4BC12DF833F2009CCEC8 /* credentials.plist */,
-				DAEB4BC22DF833F2009CCEC8 /* PayPalConfig.plist */,
+				0AFE519C2DF886DD00F9D609 /* credentials.plist */,
+				0AFE519D2DF886DD00F9D609 /* PayPalConfig.plist */,
 				0A68BED92DF4975400F1DD7B /* Info.plist */,
 				0AA7A0ED2D91CD9D00EB5684 /* Resource */,
 				0AA7A1092D91CD9D00EB5684 /* Source */,
@@ -982,10 +982,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AFE519E2DF88B3900F9D609 /* credentials.plist in Resources */,
+				0AFE519F2DF88B3900F9D609 /* PayPalConfig.plist in Resources */,
 				0AA7A10C2D91CD9D00EB5684 /* Inter-Bold.ttf in Resources */,
 				0AA7A10D2D91CD9D00EB5684 /* Inter-Regular.ttf in Resources */,
-				DAEB4BC32DF833F2009CCEC8 /* PayPalConfig.plist in Resources */,
-				DAEB4BC42DF833F2009CCEC8 /* credentials.plist in Resources */,
 				0AA7A10E2D91CD9D00EB5684 /* Inter-SemiBold.ttf in Resources */,
 				0AA7A10F2D91CD9D00EB5684 /* Outfit-Black.ttf in Resources */,
 				0AA7A1102D91CD9D00EB5684 /* Outfit-Bold.ttf in Resources */,
@@ -1032,9 +1032,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SnapBuy/Pods-SnapBuy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
