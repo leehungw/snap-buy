@@ -1,30 +1,29 @@
 import SwiftUI
 
 struct SBEditProfileView: View {
-    @State private var username: String = ""
-    @State private var email: String = ""
-    @State private var showAlert = false
-    @State private var alertMessage = ""
-    @State private var isLoading = false
+    @State private var name: String = ""
+    @State private var imageUrl: String = ""
+    @State private var address: String = ""
     @StateObject private var userModeManager = UserModeManager.shared
-    
-    init() {
-        if let currentUser = UserRepository.shared.currentUser {
-            _username = State(initialValue: currentUser.userName)
-            _email = State(initialValue: currentUser.email)
-        }
-    }
-    
+
     var body: some View {
-        SBSettingBaseView(title: "Edit Profile") {
+        SBSettingBaseView(title: "Profile") {
             VStack(spacing: 24) {
-                Image("cat_access")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-                    .padding(.top, 20)
+                // Profile Image
+                AsyncImage(url: URL(string: imageUrl)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    Image("cat_access")
+                        .resizable()
+                        .scaledToFill()
+                }
+                .frame(width: 100, height: 100)
+                .clipShape(Circle())
+                .padding(.top, 20)
                 
+                // Switch Mode or Upgrade Button
                 if let user = UserRepository.shared.currentUser {
                     if user.isPremium {
                         Button(action: {
@@ -54,13 +53,14 @@ struct SBEditProfileView: View {
                     }
                 }
                 
+                // Name Display
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Username")
+                    Text("Name")
                         .font(R.font.outfitSemiBold.font(size: 16))
                     HStack {
                         Image(systemName: "person")
                             .foregroundColor(.main)
-                        TextField("Username", text: $username)
+                        Text(name)
                             .font(R.font.outfitRegular.font(size: 16))
                     }
                     .padding()
@@ -69,125 +69,20 @@ struct SBEditProfileView: View {
                     .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
                 }
                 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Email or Phone Number")
-                        .font(R.font.outfitSemiBold.font(size: 16))
-                    HStack {
-                        Image(systemName: "envelope")
-                            .foregroundColor(.main)
-                        TextField("Email", text: $email)
-                            .keyboardType(.emailAddress)
-                            .font(R.font.outfitRegular.font(size: 16))
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
-                }
                 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Account Liked With")
-                        .font(R.font.outfitSemiBold.font(size: 16))
-                    HStack {
-                        Image("img_google_icon")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding(.trailing,10)
-                        Text("Google")
-                            .foregroundColor(.black)
-                            .font(R.font.outfitRegular.font(size: 16))
-                        Spacer()
-                        Image(systemName: "link")
-                            .foregroundColor(.gray)
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
-                }
+                
                 Spacer()
-                
-                Button(action: {
-                    updateProfile()
-                }) {
-                    Text("Save Changes")
-                        .foregroundColor(.white)
-                        .font(R.font.outfitSemiBold.font(size: 16))
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.main)
-                        .cornerRadius(30)
-                }
             }
             .padding(.horizontal, 20)
-            .navigationBarBackButtonHidden(true)
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Profile Update"),
-                    message: Text(alertMessage),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-            .overlay {
-                if isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .scaleEffect(1.5)
-                }
-            }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            fetchProfile()
-        }
+
     }
     
-    private func fetchProfile() {
-        guard let userId = UserRepository.shared.currentUser?.id else { return }
-        isLoading = true
-        
-        UserRepository.shared.fetchUserById(userId: userId) { result in
-            DispatchQueue.main.async {
-                isLoading = false
-                switch result {
-                case .success(let userData):
-                    self.username = userData.userName
-                    self.email = userData.email
-                case .failure(let error):
-                    self.alertMessage = error.localizedDescription
-                    self.showAlert = true
-                }
-            }
-        }
-    }
-    
-    private func updateProfile() {
-        guard let userId = UserRepository.shared.currentUser?.id else {
-            alertMessage = "User not found. Please log in again."
-            showAlert = true
-            return
-        }
-        
-        isLoading = true
-        let request = UpdateProfileRequest(id: userId, userName: username, email: email)
-        UserRepository.shared.updateProfile(request: request) { result in
-            DispatchQueue.main.async {
-                isLoading = false
-                switch result {
-                case .success(let response):
-                    if response.result == 1 {
-                        alertMessage = "Profile updated successfully"
-                    } else {
-                        alertMessage = response.error?.message ?? "Failed to update profile"
-                    }
-                case .failure(let error):
-                    alertMessage = error.localizedDescription
-                }
-                showAlert = true
-            }
-        }
-    }
+   
 }
+
 #Preview {
     SBEditProfileView()
 }
+

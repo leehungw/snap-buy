@@ -2,6 +2,12 @@ import SwiftUI
 import Combine
 import PhotosUI
 
+// Add notification name
+extension Notification.Name {
+    static let hideTabBar = Notification.Name("hideTabBar")
+    static let showTabBar = Notification.Name("showTabBar")
+}
+
 struct SBChatView: View {
     let chatRoom: ChatRoom
     @State private var inputText: String = ""
@@ -57,9 +63,6 @@ struct SBChatView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(chatRoom.name)
                         .font(R.font.outfitSemiBold.font(size: 16))
-                    Text("Online")
-                        .font(.caption)
-                        .foregroundColor(.green)
                 }
                 Spacer()
             }
@@ -100,7 +103,7 @@ struct SBChatView: View {
                     }
                 }
             }
-            
+            Spacer()
             // MARK: - Input Bar
             HStack(spacing: 10) {
                 HStack {
@@ -151,10 +154,14 @@ struct SBChatView: View {
             setupSignalR()
             fetchMessages()
             startMessagePolling()
+            // Post notification to hide tab bar
+            NotificationCenter.default.post(name: .hideTabBar, object: nil)
         }
         .onDisappear {
             stopMessagePolling()
             signalRService.chatConnection?.stop()
+            // Post notification to show tab bar
+            NotificationCenter.default.post(name: .showTabBar, object: nil)
         }
         .alert("Error", isPresented: $showError) {
             Button("OK", role: .cancel) { }

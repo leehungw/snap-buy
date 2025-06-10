@@ -40,26 +40,26 @@ struct SBCartView: View {
     var body: some View {
         SBBaseView {
             VStack(spacing: 0) {
-        HStack {
-            Button(action: {
-                toggleSelectAll()
-            }) {
                 HStack {
-                    Image(systemName: allItemsSelected() ? "checkmark.square.fill" : "square")
-                    Text(allItemsSelected() ? "Unselect All" : "Select All")
-                        .font(R.font.outfitMedium.font(size: 14))
-                }
+                    Button(action: {
+                        toggleSelectAll()
+                    }) {
+                        HStack {
+                            Image(systemName: allItemsSelected() ? "checkmark.square.fill" : "square")
+                            Text(allItemsSelected() ? "Unselect All" : "Select All")
+                                .font(R.font.outfitMedium.font(size: 14))
+                        }
                         .foregroundColor(canSelectAnyProduct() ? .main : .gray)
-                .frame(width: 105)
-            }
-
-            Spacer()
-
-            Text(R.string.localizable.myCart())
-                .font(R.font.outfitRegular.font(size: 16))
-        }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 10)
+                        .frame(width: 105)
+                    }
+                    
+                    Spacer()
+                    
+                    Text(R.string.localizable.myCart())
+                        .font(R.font.outfitRegular.font(size: 16))
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
                 
                 if isLoading {
                     ProgressView()
@@ -72,12 +72,12 @@ struct SBCartView: View {
                     Text("Your cart is empty")
                         .font(R.font.outfitMedium.font(size: 16))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
+                } else {
                     ScrollView(showsIndicators: false) {
                         ForEach(cartProducts) { product in
                             fullCartItemView(product: product)
                                 .opacity(canSelectProduct(product) ? 1.0 : 0.5)
-        }
+                        }
                         .padding(.horizontal, 20)
                         .padding(.bottom, 200) // Add padding at bottom for footer
                     }
@@ -91,12 +91,13 @@ struct SBCartView: View {
                                         .foregroundColor(.orange)
                                     
                                     VStack(alignment: .leading) {
-                                        Text(selectedVoucher.code)
-                                            .font(R.font.outfitMedium.font(size: 16))
+                                        
                                         Text(selectedVoucher.type == "percentage" ? "\(Int(selectedVoucher.value))% off" : "$\(String(format: "%.1f", selectedVoucher.value)) off")
+                                            .font(R.font.outfitMedium.font(size: 16))
+                                        Text(selectedVoucher.code)
                                             .font(R.font.outfitRegular.font(size: 14))
                                             .foregroundColor(.gray)
-                                        Text("Min. Order: $\(String(format: "%.1f", selectedVoucher.minOrderValue))")
+                                        Text("Min Order: $\(String(format: "%.1f", selectedVoucher.minOrderValue))")
                                             .font(R.font.outfitRegular.font(size: 12))
                                             .foregroundColor(.gray)
                                     }
@@ -154,19 +155,19 @@ struct SBCartView: View {
                                     }
                                 }
                                 
-                    HStack {
-                        Text(R.string.localizable.shipping)
-                            .font(R.font.outfitMedium.font(size: 16))
-                            .foregroundColor(.gray)
-                        Spacer()
-                        HStack(alignment: .top) {
-                            Text("$")
-                                .font(R.font.outfitBold.font(size: 15))
-                            Text(String(format: "%.2f", 6.00))
-                                .font(R.font.outfitBold.font(size: 20))
-                        }
-                    }
-                               
+                                HStack {
+                                    Text(R.string.localizable.shipping)
+                                        .font(R.font.outfitMedium.font(size: 16))
+                                        .foregroundColor(.gray)
+                                    Spacer()
+                                    HStack(alignment: .top) {
+                                        Text("$")
+                                            .font(R.font.outfitBold.font(size: 15))
+                                        Text(String(format: "%.2f", 6.00))
+                                            .font(R.font.outfitBold.font(size: 20))
+                                    }
+                                }
+                                
                                 if let voucher = selectedVoucher {
                                     HStack {
                                         Text("Discount")
@@ -196,20 +197,21 @@ struct SBCartView: View {
                                             .font(R.font.outfitBold.font(size: 20))
                                     }
                                 }
-
+                                
                                 
                                 NavigationLink(destination: SBPaymentView(
                                     products: convertToCartItems(selectedCartProducts()),
                                     totalPrice: finalTotal()
                                 )) {
-                    Text("Checkout")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .font(R.font.outfitMedium.font(size: 20))
-                        .background(Color.main)
-                        .foregroundColor(.white)
-                        .cornerRadius(50)
+                                    Text("Checkout")
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .font(R.font.outfitMedium.font(size: 20))
+                                        .background(Color.main)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(50)
                                 }
+                                .padding(.bottom,30)
                             }
                         }
                         .padding()
@@ -224,7 +226,6 @@ struct SBCartView: View {
                 .presentationDetents([.fraction(0.6)])
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(50)
-
         }
         .alert("Remove from Cart", isPresented: $showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {
@@ -244,7 +245,9 @@ struct SBCartView: View {
         }
         .onAppear {
             loadCartProducts()
+
         }
+
         .navigationBarBackButtonHidden(true)
     }
     
@@ -536,6 +539,28 @@ struct VoucherSelectionView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     
+    private func isVoucherValid(_ voucher: VoucherModel) -> Bool {
+        return !voucher.isExpired && 
+               !voucher.isDisabled && 
+               orderTotal >= voucher.minOrderValue
+    }
+    
+    private func sortedVouchers() -> [VoucherModel] {
+        return availableVouchers.sorted { v1, v2 in
+            // Sort by validity first
+            let v1Valid = isVoucherValid(v1)
+            let v2Valid = isVoucherValid(v2)
+            if v1Valid != v2Valid {
+                return v1Valid
+            }
+            
+            // Then sort by discount value (assuming higher value is better)
+            let v1Value = v1.type == "percentage" ? orderTotal * (v1.value / 100.0) : v1.value
+            let v2Value = v2.type == "percentage" ? orderTotal * (v2.value / 100.0) : v2.value
+            return v1Value > v2Value
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("Available Vouchers")
@@ -553,45 +578,57 @@ struct VoucherSelectionView: View {
             } else {
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(availableVouchers, id: \.id) { voucher in
+                        ForEach(sortedVouchers(), id: \.id) { voucher in
+                            let isValid = isVoucherValid(voucher)
                             VStack(alignment: .leading) {
                                 HStack {
                                     Image(systemName: "ticket.fill")
-                                        .foregroundColor(.orange)
+                                        .foregroundColor(isValid ? .orange : .gray)
                                     
                                     VStack(alignment: .leading) {
-                                        
                                         Text(voucher.type == "percentage" ? "\(Int(voucher.value))% off" : "$\(String(format: "%.1f", voucher.value)) off")
                                             .font(R.font.outfitMedium.font(size: 16))
                                         Text(voucher.code)
                                             .font(R.font.outfitRegular.font(size: 14))
                                             .foregroundColor(.gray)
-                                        Text("For order at least: $\(String(format: "%.1f", voucher.minOrderValue))")
+                                        Text("Min Order: $\(String(format: "%.1f", voucher.minOrderValue))")
                                             .font(R.font.outfitRegular.font(size: 12))
                                             .foregroundColor(.gray)
+                                        
+                                        if !isValid {
+                                            Text(voucher.isExpired ? "Expired" : 
+                                                 voucher.isDisabled ? "Disabled" : 
+                                                 "Order total not met")
+                                                .font(R.font.outfitRegular.font(size: 12))
+                                                .foregroundColor(.red)
+                                        }
                                     }
                                     
                                     Spacer()
                                     
                                     Button(action: {
-                                        selectedVoucher = voucher
-                                        dismiss()
+                                        if isValid {
+                                            selectedVoucher = voucher
+                                            dismiss()
+                                        }
                                     }) {
                                         Text("Use")
                                             .font(R.font.outfitMedium.font(size: 14))
                                             .foregroundColor(.white)
                                             .padding(.horizontal, 20)
                                             .padding(.vertical, 8)
-                                            .background(Color.main)
+                                            .background(isValid ? Color.main : Color.gray)
                                             .cornerRadius(15)
                                     }
+                                    .disabled(!isValid)
                                 }
                             }
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color.orange.opacity(0.5))
+                                    .stroke(isValid ? Color.orange.opacity(0.5) : Color.gray.opacity(0.3))
                             )
+                            .opacity(isValid ? 1 : 0.7)
                         }
                     }
                     .padding()

@@ -224,23 +224,6 @@ struct SalesStatisticsView: View {
                                     .padding(.horizontal)
                                 }
                                 
-                                // Recent Orders Section
-                                VStack(alignment: .leading, spacing: 12) {
-                                    HStack {
-                                        Text("Recent Orders")
-                                            .font(R.font.outfitSemiBold.font(size: 18))
-                                            .foregroundColor(.primary)
-                                        Spacer()
-                                        NavigationLink(destination: EmptyView()) {
-                                            Text("View All")
-                                                .font(R.font.outfitMedium.font(size: 14))
-                                                .foregroundColor(.main)
-                                        }
-                                    }
-                                    .padding(.horizontal)
-                                    
-                                    RecentOrdersList()
-                                }
                                 
                                 if let error = viewModel.error {
                                     Text(error)
@@ -333,31 +316,6 @@ struct ChartView: View {
     }
 }
 
-struct RecentOrdersList: View {
-    var body: some View {
-        VStack(spacing: 12) {
-            ForEach(0..<3) { index in
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Order #\(index + 1)")
-                            .font(R.font.outfitMedium.font(size: 16))
-                        Text("2 items • $99.99")
-                            .font(R.font.outfitRegular.font(size: 14))
-                            .foregroundColor(.gray)
-                    }
-                    
-                    Spacer()
-                    
-                    OrderStatusBadge(status: "Pending")
-                }
-                .padding()
-                .background(Color.white)
-                .cornerRadius(12)
-            }
-        }
-        .padding(.horizontal)
-    }
-}
 
 struct OrderStatusBadge: View {
     let status: String

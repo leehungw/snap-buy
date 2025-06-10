@@ -35,6 +35,7 @@ struct SBUserView: View {
                     NavigationLink(destination: SBMessageView()) {
                         Image(systemName: "ellipsis.message")
                             .padding(.trailing)
+                            .foregroundColor(.black)
                     }
                 }
                 .padding()
@@ -186,6 +187,7 @@ struct SBOrderCardView: View {
             }
             
             HStack {
+                Spacer()
                 Button(action: {
                     showingDetail = true
                 }) {
@@ -199,17 +201,7 @@ struct SBOrderCardView: View {
                                 .stroke(Color.gray.opacity(0.5))
                         )
                 }
-                Button(action: {
-                    
-                }) {
-                    Text("Tracking")
-                        .frame(maxWidth: .infinity)
-                        .font(R.font.outfitSemiBold.font(size: 16))
-                        .padding()
-                        .background(Color.main)
-                        .foregroundColor(.white)
-                        .cornerRadius(25)
-                }
+                
             }
         }
         .frame(width: UIScreen.main.bounds.width*0.8, height: 160)

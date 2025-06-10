@@ -19,12 +19,6 @@ struct MessageHeaderView: View {
                 .font(R.font.outfitRegular.font(size: 16))
                 .padding(.trailing,10)
             Spacer()
-            ZStack(alignment: .topTrailing) {
-                Image(systemName: "bell")
-                Circle()
-                    .fill(Color.red)
-                    .frame(width: 8, height: 8)
-            }
         }
     }
 }

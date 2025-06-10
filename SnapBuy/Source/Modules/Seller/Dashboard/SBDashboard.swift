@@ -92,7 +92,7 @@ struct SBSellerDashboardView: View {
                         }
                         HStack(spacing: 16) {
                                 DashboardCard(
-                                    title: "Completed",
+                                    title: "Success",
                                     value: "\(stats.completedOrders)",
                                     systemImage: "checkmark.circle"
                                 )

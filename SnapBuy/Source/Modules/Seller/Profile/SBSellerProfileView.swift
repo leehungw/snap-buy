@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SBSellerProfileView: View {
     @StateObject private var userModeManager = UserModeManager.shared
@@ -6,6 +7,7 @@ struct SBSellerProfileView: View {
     @State private var user: UserData? = nil
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
+    @State private var showLogoutAlert = false
     
     var body: some View {
         NavigationView{
@@ -93,9 +95,7 @@ struct SBSellerProfileView: View {
                     }
                 }
                 Spacer()
-                Button(role: .destructive) {
-                    print("User logged out")
-                } label: {
+                Button(action: handleLogout) {
                     Text("Log Out")
                         .font(R.font.outfitBold.font(size: 16))
                         .frame(maxWidth: .infinity)
@@ -106,6 +106,24 @@ struct SBSellerProfileView: View {
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 32)
+            }
+            .alert("Logout", isPresented: $showLogoutAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Logout", role: .destructive) {
+                    UserRepository.shared.logout()
+                    // Navigate to login screen
+                    DispatchQueue.main.async {
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let keyWindow = windowScene.windows.first {
+                            let loginView = SBLoginView(shouldShowBackButton: false)
+                            let hostingController = UIHostingController(rootView: loginView)
+                            keyWindow.rootViewController = hostingController
+                            keyWindow.makeKeyAndVisible()
+                        }
+                    }
+                }
+            } message: {
+                Text("Are you sure you want to logout?")
             }
             .sheet(isPresented: $showPayPalOnboarding) {
                 SBPayPalOnboardingView()
@@ -134,6 +152,9 @@ struct SBSellerProfileView: View {
                 }
             }
         }
+    }
+    private func handleLogout() {
+        showLogoutAlert = true
     }
 }
  

@@ -13,13 +13,6 @@ extension ChatRoom {
     }
 }
 
-//enum StoreTab: String, CaseIterable {
-//    case main = "Mainpage"
-//
-//    static var allCases: [StoreTab] {
-//        return [.main]
-//    }
-//}
 
 struct SBStoreView: View {
     @Environment(\.dismiss) var dismiss
@@ -60,9 +53,6 @@ struct SBStoreView: View {
                     Text(R.string.localizable.store())
                         .font(R.font.outfitRegular.font(size: 16))
                     Spacer()
-                    Image(systemName: "bag")
-                        .font(.title2)
-                        .foregroundColor(Color.black)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
@@ -110,6 +100,7 @@ struct SBStoreView: View {
                                     initializeChat(with: user)
                                 }) {
                                     Image(systemName: "ellipsis.message")
+                                        .foregroundColor(.black)
                                 }
                             }
                         }

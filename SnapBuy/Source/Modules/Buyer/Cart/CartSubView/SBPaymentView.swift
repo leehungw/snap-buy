@@ -360,6 +360,9 @@ struct SBPaymentView: View {
                 selectedPayment = paymentMethods[0].id
             }
             addressViewModel.requestLocation()
+            // Post notification to hide tab bar
+            NotificationCenter.default.post(name: .hideTabBar, object: nil)
+            
             // Fetch seller merchant id
             if let sellerId = products.first?.sellerId {
                 UserRepository.shared.fetchUserById(userId: sellerId) { result in
@@ -383,6 +386,10 @@ struct SBPaymentView: View {
                     }
                 }
             }
+        }
+        .onDisappear {
+            // Post notification to show tab bar
+            NotificationCenter.default.post(name: .showTabBar, object: nil)
         }
         .navigationBarBackButtonHidden(true)
         .alert(isPresented: $showPhoneAlert) {
