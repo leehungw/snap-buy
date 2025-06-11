@@ -124,7 +124,7 @@ class SBPaypalService {
     private func convertVNDtoUSD(_ amountVND: Double) -> Double {
         // Using a fixed conversion rate of 1 USD = ~24,500 VND
         // In a production app, you should use a real-time exchange rate API
-        return 10
+        return amountVND
     }
     
     // MARK: - Seller Management
@@ -217,7 +217,7 @@ class SBPaypalService {
     /// Create a platform order with connected seller
     func createPlatformOrder(amount: Double, sellerId: String, sellerPaypalMerchantId: String) async throws -> String {
         let accessToken = try await getAccessToken()
-        let amountUSD = convertVNDtoUSD(amount)
+        let amountUSD = amount
         
         // Platform fee (e.g., 10%)
         let platformFee = (amountUSD * 0.1 * 100).rounded() / 100
